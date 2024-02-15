@@ -1,13 +1,25 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { signOut } from "firebase/auth";
 
 import { useNavigate } from "react-router-dom";
-import { auth } from "./components/firebase";
+import { auth } from "./firebase";
+import axios from 'axios';
 
-import "./App.css";
+import "../App.css";
 
 const Feed = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/post').then((res) => {
+      // get all posts on page load
+      const posts = res.data;
+      console.log(posts);
+      
+    }).catch((err) => {
+      console.log(err);
+    })
+  }, []);
 
   const handleSignOut = () => {
     signOut(auth)

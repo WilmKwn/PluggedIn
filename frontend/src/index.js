@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import App from "./App";
-import Feed from "./feed";
-import Onboarding from "./onboarding";
+import App from "./components/App";
+import Feed from "./components/feed";
+import Onboarding from "./components/onboarding";
 
 const Root = () => {
   return (

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./components/firebase";
+import { auth } from "./firebase";
 import { updateProfile, signOut } from "firebase/auth";
+import axios from 'axios';
 
 const Onboarding = () => {
   const navigate = useNavigate();
@@ -29,7 +30,17 @@ const Onboarding = () => {
           displayName: displayName,
           photoURL: profilePic,
         });
-        navigate("/feed");
+        
+        const data = {
+          username: displayName,
+          accountType: 1,
+          profilePhoto: profilePic,
+        };
+        axios.post('http://localhost:5000/user', data).then(() => {
+          console.log('successfully onboarded');
+          navigate("/feed");
+        });
+
       } catch (error) {
         console.error("Error updating profile: ", error);
       }

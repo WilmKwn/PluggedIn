@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./components/firebase";
+import { auth } from "./firebase";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import "./App.css";
+import "../App.css";
 
 const App = () => {
   const navigate = useNavigate();
