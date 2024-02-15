@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 
 import userRoute from './routes/userRoute.js';
+import postRoute from './routes/postRoute.js';
 
 // env setup
 import dotenv from 'dotenv';
@@ -14,6 +15,7 @@ app.use(cors());
 
 // routes
 app.use('/user', userRoute);
+app.use('/post', postRoute);
 
 // connect to db
 mongoose.connect(process.env.MONGODB_URL).then(() => {

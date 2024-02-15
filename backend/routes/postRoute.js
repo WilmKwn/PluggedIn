@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { User } from '../models/userModel.js';
+import { Post } from '../models/postModel.js';
 
 const router = express.Router()
 
@@ -8,8 +8,10 @@ const router = express.Router()
 router.post('/', async(req, res) => {
     try {
         const data = req.body;
-        const user = data;
-        await User.create(user);
+        const post = {
+            email: data.email,
+        }
+        await Post.create(post);
         return res.status(200).send('successfully created');
     } catch (err) {
         return res.status(500).send(err.message);
@@ -19,40 +21,40 @@ router.post('/', async(req, res) => {
 // get all
 router.get('/', async(req, res) => {
     try {
-        const users = await User.find({});
+        const users = await Post.find({});
         return res.status(200).json(users);
     } catch (err) {
         return res.status(500).send(err.message);
     }
 });
 
-// get user with id
+// get post with id
 router.get('/:id', async(req, res) => {
     try {
         const {id} = req.params;
-        const user = await User.findById(id);
-        return res.status(200).json(user);
+        const post = await Post.findById(id);
+        return res.status(200).json(post);
     } catch (err) {
         return res.status(500).send(err.message);
     }
 });
 
-// update user with id
+// update post with id
 router.put('/:id', async(req, res) => {
     try {
         const {id} = req.params;
-        await User.findByIdAndUpdate(id, req.body);
+        await Post.findByIdAndUpdate(id, req.body);
         return res.status(200).send('successfully updated');
     } catch (err) {
         return res.status(500).send(err.message);
     }
 });
 
-// delete user with id
+// delete post with id
 router.delete('/:id', async(req, res) => {
     try {
         const {id} = req.params;
-        await User.findByIdAndDelete(id);
+        await Post.findByIdAndDelete(id);
         return res.status(200).send('successfully deleted');
     } catch (err) {
         return res.status(500).send(err.message);
