@@ -1,14 +1,26 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 
+import userRoute from './routes/userRoute.js';
+
+// env setup
+import dotenv from 'dotenv';
 dotenv.config()
 
 const app = express();
-
 app.use(express.json());
 app.use(cors());
 
-app.listen(process.env.PORT, () => {
-    console.log("Listening on port", process.env.PORT);
+// routes
+app.use('/user', userRoute);
+
+// connect to db
+mongoose.connect(process.env.MONGODB_URL).then(() => {
+    console.log('Successfully connected to database');
+    app.listen(process.env.PORT, () => {
+        console.log("Listening on port", process.env.PORT);
+    });
+}).catch(err => {
+    console.log(err);
 });
