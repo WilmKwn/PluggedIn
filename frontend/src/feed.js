@@ -9,7 +9,6 @@ import "./App.css";
 const Feed = () => {
   const navigate = useNavigate();
 
-  //signs out of google account
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
@@ -24,12 +23,13 @@ const Feed = () => {
     <div className="app">
       <header className="app-header">
         <div>PluggedIn</div>
+        <input type="text" placeholder="Search" className="search-bar" />
         <nav>
           <button onClick={handleSignOut}>Sign Out</button>
         </nav>
       </header>
 
-      <div>
+      <div className="landing">
         <div>Hello! This is your feed, a place to view humblebrags.</div>
       </div>
 

@@ -7,7 +7,6 @@ import "./App.css";
 const App = () => {
   const navigate = useNavigate();
 
-  //signs in with google account
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
@@ -22,9 +21,9 @@ const App = () => {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>PluggedIn</h1>
+        <div>PluggedIn</div>
         <nav>
-          <button onClick={signInWithGoogle}>Sign in with Google</button>
+          <button onClick={signInWithGoogle}>Sign In</button>
         </nav>
       </header>
 
