@@ -11,6 +11,7 @@ import { faList } from '@fortawesome/free-solid-svg-icons';
 import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
 
 import "../App.css";
+import "../index.css";
 
 const MainBanner = () => {
   const navigate = useNavigate();
@@ -40,8 +41,8 @@ const MainBanner = () => {
     navigate("/news");
   }
   return (
-    <div className="app">
-      <header className="app-header">
+    <div className="">
+      <div className="fixed w-full flex justify-between items-center p-3 pl-10 pr-10 bg-emerald-950">
         <div>
           <button onClick={handleSearch}
             className="button">
@@ -59,7 +60,7 @@ const MainBanner = () => {
             <a onClick={handleFeed}>
             <img src="/PI.png"
             alt="PluggedIn Logo"
-            className="logo"
+            className="w-20 cursor-pointer"
             ></img>
             </a>
         </div>
@@ -73,7 +74,7 @@ const MainBanner = () => {
             className="button">
                 Your Profile <FontAwesomeIcon icon={faUser} /></button>
         </nav>
-      </header>
+      </div>
     </div>
   );
 };
