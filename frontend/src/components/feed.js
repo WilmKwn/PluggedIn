@@ -4,11 +4,11 @@ import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 import axios from 'axios';
-
+import MainBanner from './MainBanner';
 import "../App.css";
 
 const Feed = () => {
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     axios.get('http://localhost:5000/post').then((res) => {
@@ -21,25 +21,11 @@ const Feed = () => {
     })
   }, []);
 
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        navigate("/");
-      })
-      .catch((error) => {
-        console.error("Sign out error:", error);
-      });
-  };
+
 
   return (
     <div className="app">
-      <header className="app-header">
-        <div>PluggedIn</div>
-        <input type="text" placeholder="Search" className="search-bar" />
-        <nav>
-          <button onClick={handleSignOut}>Sign Out</button>
-        </nav>
-      </header>
+      <MainBanner />
 
       <div className="landing">
         <div>Hello! This is your feed, a place to view humblebrags.</div>
