@@ -69,6 +69,7 @@
 }
 .logo {
   width:20%;
+  cursor: pointer;
 }
 .landing label {
   margin: 10px;
