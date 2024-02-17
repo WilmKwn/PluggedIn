@@ -1,8 +1,20 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "./firebase";
 
 const Banner = () => {
     const navigate = useNavigate();
+
+    const handleSignOut = () => {
+        signOut(auth)
+            .then(() => {
+                navigate("/");
+            })
+            .catch((error) => {
+                console.error("Sign out error:", error);
+            });
+    };
 
     const handleFeed = () => {
         navigate("/feed");
@@ -26,7 +38,7 @@ const Banner = () => {
                 </div>
                 <div>
                     <nav>
-                        <button
+                        <button onClick={handleSignOut}
                             className="button">
                             Sign Out
                         </button>
@@ -88,13 +100,25 @@ const Activity = () => {
     )
 }
 
+const ProfileInfo = () => {
+    return (
+        <div className="w-1/3 h-full text-center pt-28">
+            <div>Profile Pic</div>
+            <div>Name</div>
+            <div>Genre</div>
+            <div>Description</div>
+            <div>Projects</div>
+        </div>
+    )
+}
+
 const Profile = () => {
     return (
         <div>
             <Banner />
-            <div className="flex w-full flex justify-between items-center">
+            <div className="w-full h-full flex justify-between items-center">
                 <Gallery />
-                <div>Profile Information </div>
+                <ProfileInfo />
                 <Activity />
             </div>
             <Footer />
