@@ -7,6 +7,7 @@ import axios from 'axios';
 import MainBanner from './MainBanner';
 import "../App.css";
 import '../index.css';
+import MainBottomBar from "./MainBottomBar";
 
 const Feed = () => {
   const [posts, setPosts] = useState([{},{},{},{}]);
@@ -41,9 +42,7 @@ const Feed = () => {
             ))}
         </div>
 
-        <footer className="app-footer">
-          <div>CS 307 Team 40</div>
-        </footer>
+        <MainBottomBar />
       </div>
     </React.Fragment>
   );

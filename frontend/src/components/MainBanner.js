@@ -12,7 +12,7 @@ import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
 
 import "../App.css";
 import "../index.css";
-
+// Feed, News, Gallery, Search
 const MainBanner = () => {
   const navigate = useNavigate();
 
