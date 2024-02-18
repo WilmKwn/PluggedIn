@@ -2,6 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons';
 import MainBanner from './MainBottomBar';
 import MainBottomBar from "./MainBottomBar";
 
@@ -28,7 +30,7 @@ const Banner = () => {
                 <div>
                     <button onClick={handleFeed}
                         className="button">
-                        Back
+                        <FontAwesomeIcon icon={faArrowLeftLong} /> Back
                     </button>
                 </div>
                 <div>

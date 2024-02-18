@@ -10,6 +10,8 @@ import Gallery from "./components/gallery";
 import News from "./components/news";
 import Search from "./components/search";
 import Settings from "./components/settings";
+import AddPost from "./components/AddPost";
+
 const Root = () => {
   return (
     <Router>
@@ -22,6 +24,7 @@ const Root = () => {
         <Route path="/news" element={<News />} />
         <Route path="/search" element={<Search />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/addpost" element={<AddPost />} />
       </Routes>
     </Router>
   );

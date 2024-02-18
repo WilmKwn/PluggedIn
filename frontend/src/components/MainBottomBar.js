@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { signOut } from "firebase/auth";
 
 import { useNavigate } from "react-router-dom";
@@ -15,8 +15,13 @@ import "../index.css";
 
 const MainBottomBar = () => {
     const navigate = useNavigate();
+
     const handleSettings = () => {
         navigate("/settings");
+    }
+
+    const handleAddPost = () => {
+        navigate("/addpost");
     }
     return (
 
@@ -24,19 +29,19 @@ const MainBottomBar = () => {
             <div className="pl-4">
                 <button onClick={handleSettings}
                     className="button">
-                    Settings <FontAwesomeIcon icon={faGear}/>
+                    Settings <FontAwesomeIcon icon={faGear} />
                 </button>
             </div>
             <div>
-                <button
+                <button onClick={handleAddPost}
                     className="button">
-                    Add Post <FontAwesomeIcon icon={faAdd}/>
+                    Add Post <FontAwesomeIcon icon={faAdd} />
                 </button>
             </div>
             <div className="pr-4">
                 <button
                     className="button">
-                    Messages <FontAwesomeIcon icon={faMessage}/>
+                    Messages <FontAwesomeIcon icon={faMessage} />
                 </button>
             </div>
         </footer>
