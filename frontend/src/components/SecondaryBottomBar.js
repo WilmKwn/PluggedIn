@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
+import Messaging from "./Messaging";
 
 import "../App.css";
 import "../index.css";
@@ -29,10 +30,7 @@ const SecondaryBottomBar = () => {
             </div>
   
             <div className="pr-4">
-                <button
-                    className="button">
-                    Messages <FontAwesomeIcon icon={faMessage}/>
-                </button>
+                <Messaging title="Messages" content="Here you will see your conversations." />
             </div>
         </footer>
     );
