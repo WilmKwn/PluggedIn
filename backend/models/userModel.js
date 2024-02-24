@@ -4,15 +4,11 @@ const userSchema = mongoose.Schema(
 
     // Replace the ref: parameters with the correct table name
     {
+        uid: {
+            type: String,
+            required: true,
+        },
         username: {
-            type: String,
-            required: true,
-        },
-        email: {
-            type: String,
-            required: true,
-        },
-        password: {
             type: String,
             required: true,
         },
@@ -20,7 +16,9 @@ const userSchema = mongoose.Schema(
             type: Number,
             required: true,
         },
-        profilePic: String,
+        profilePic: {
+            type: String,
+        },
         genre: {
             type: String,
             required: true,
@@ -59,10 +57,7 @@ const userSchema = mongoose.Schema(
             required: true,
         },
         recentActivity: {
-            type: [{
-                type: String,
-                required: true,
-            }],
+            type: [mongoose.Schema.Types.ObjectId],
             validate: {
                 validator: function(arr) {
                     return arr.length <= 5;

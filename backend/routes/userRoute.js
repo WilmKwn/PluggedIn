@@ -2,14 +2,14 @@ import express from 'express';
 
 import { User } from '../models/userModel.js';
 
+import { ObjectId } from 'mongodb';
+
 const router = express.Router()
 
 // create new 
 router.post('/', async(req, res) => {
     try {
-        const data = req.body;
-        const user = data;
-        await User.create(user);
+        await User.create(req.body);
         return res.status(200).send('successfully created');
     } catch (err) {
         return res.status(500).send(err.message);
@@ -30,7 +30,13 @@ router.get('/', async(req, res) => {
 router.get('/:id', async(req, res) => {
     try {
         const {id} = req.params;
-        const user = await User.findById(id);
+        const query = {
+            uid: id,
+        }
+        const user = await User.findOne({uid: id});
+        if (user === null) {
+            return res.status(500).send("null");
+        }
         return res.status(200).json(user);
     } catch (err) {
         return res.status(500).send(err.message);
