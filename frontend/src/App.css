@@ -1,3 +1,15 @@
+::-webkit-scrollbar {
+  width: 7px;
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+body {
+  overflow-y: scroll;
+}
+
 .app {
   text-align: center;
 }
@@ -14,6 +26,7 @@
 
 .app-header h1 {
   margin: 0;
+  
 }
 
 
@@ -104,6 +117,17 @@
   position: fixed;
   bottom: 0;
   width: 100%;
+}
+
+.messaging-banner {
+  background-color: #283e4a;
+  left: 'auto';
+  top: 'auto';
+  margin-right: '10px';
+  margin-bottom: '10px';
+  border: 'none';
+  width: 100%;
+  border-radius: 5px;
 }
 
 body, h1, h2, p {

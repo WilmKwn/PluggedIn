@@ -31,16 +31,16 @@ const Onboarding = () => {
           photoURL: profilePic,
         });
         
-        const data = {
-          username: displayName,
-          accountType: 1,
-          profilePhoto: profilePic,
-        };
-        axios.post('http://localhost:5000/user', data).then(() => {
-          console.log('successfully onboarded');
-          navigate("/feed");
-        });
-
+        // const data = {
+        //   username: displayName,
+        //   accountType: 1,
+        //   profilePhoto: profilePic,
+        // };
+        // axios.post('http://localhost:5000/user', data).then(() => {
+        //   console.log('successfully onboarded');
+        //   navigate("/feed");
+        // });
+        navigate("/feed");
       } catch (error) {
         console.error("Error updating profile: ", error);
       }

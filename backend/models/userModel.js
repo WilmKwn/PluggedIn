@@ -31,7 +31,7 @@ const userSchema = mongoose.Schema(
         },
         projects: {
             type: [mongoose.Schema.Types.ObjectId],
-            ref: 'Project',
+            ref: 'project',
             required: true,
         },
         skills: {
@@ -40,22 +40,22 @@ const userSchema = mongoose.Schema(
         },
         tracks: {
             type: [mongoose.Schema.Types.ObjectId],
-            ref: 'Track',
+            ref: 'songs',
             required: true,
         },
         friends: {
             type: [mongoose.Schema.Types.ObjectId],
-            ref: 'User',
+            ref: 'users',
             required: true,
         },
         endorsed: {
             type: [mongoose.Schema.Types.ObjectId],
-            ref: 'User',
+            ref: 'users',
             required: true,
         },
         outgoingRequests: {
             type: [mongoose.Schema.Types.ObjectId],
-            ref: 'User',
+            ref: 'users',
             required: true,
         },
         recentActivity: {
@@ -74,4 +74,4 @@ const userSchema = mongoose.Schema(
     }
 );
 
-export const User = mongoose.model('User', userSchema);
+export const User = mongoose.model('users', userSchema);

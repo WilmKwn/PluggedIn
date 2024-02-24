@@ -5,15 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeftLong, faSearch, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
 
 import "../App.css";
 import "../index.css";
-// Feed, News, Gallery, Search
-const MainBanner = () => {
+// Settings, Add Post, Other User Profiles
+const ProfileBanner = () => {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
@@ -25,58 +25,46 @@ const MainBanner = () => {
         console.error("Sign out error:", error);
       });
   };
-  const handleSearch = () => {
-    navigate("/search");
+  
+  const handleBack = () => {
+    window.history.back();
   }
-  const handleGallery = () => {
-    navigate("/gallery");
-  }
+
   const handleProfile = () => {
     navigate("/profile");
   }
   const handleFeed = () => {
     navigate("/feed");
   }
-  const handleNews = () => {
-    navigate("/news");
-  }
+  
   return (
     <div className="">
       <div className="fixed w-full flex justify-between items-center p-3 pl-10 pr-10 bg-emerald-950">
         <div>
-          <button onClick={handleSearch}
+          <button onClick={handleBack}
             className="button">
-                Search <FontAwesomeIcon icon={faSearch} />
+                <FontAwesomeIcon icon={faArrowLeftLong} /> Back
           </button>
         </div>
 
-        <div>
-          <button onClick={handleGallery}
-            className="button">
-               Gallery <FontAwesomeIcon icon={faList} />
-          </button>
-        </div>
-        <div className="flex items-center pl-7">
+        
+        <div className="flex items-center pl-14">
             <a onClick={handleFeed}>
             <img src="/PI.png"
             alt="PluggedIn Logo"
-            className="w-20 cursor-pointer "
+            className="w-20 cursor-pointer"
             ></img>
             </a>
         </div>
+        
         <nav>
-          <button onClick={handleNews}
+          <button onClick={handleSignOut}
             className="button">
-                News <FontAwesomeIcon icon={faNewspaper} /></button>
-        </nav>
-        <nav>
-          <button onClick={handleProfile}
-            className="button">
-                Your Profile <FontAwesomeIcon icon={faUser} /></button>
+                Sign Out <FontAwesomeIcon icon={faUserSlash} /></button>
         </nav>
       </div>
     </div>
   );
 };
 
-export default MainBanner;
+export default ProfileBanner;
