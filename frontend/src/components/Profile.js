@@ -9,6 +9,8 @@ import MainBottomBar from "./MainBottomBar";
 import ProfileBottomBar from "./ProfileBottomBar";
 import ProfileBanner from "./ProfileBanner";
 
+const axios = require('axios');
+
 
 const Banner = () => {
     const navigate = useNavigate();
@@ -84,9 +86,36 @@ const Activity = () => {
 }
 
 const ProfileInfo = () => {
+    const userId = auth.currentUser.uid;
+
+    fetch(`http://localhost:5000/user/${userId}/info`)
+    .then((res) => {
+        if (res.status === 200) {
+            return res.json(); // Parse JSON response
+        } else if (res.status === 500) {
+            console.log("Server error: Failed to get user info");
+            // Handle the case when the server returns a 500 status code
+            // You can display an error message to the user or handle it as needed
+        } else {
+            console.log("Failed to get info");
+            // Handle other status codes if necessary
+        }
+    })
+    .then((userData) => {
+        // Process the user data here if the response was successful (status 200)
+        console.log("got user data");
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+        // Handle any errors that occur during the fetch request
+    });
+    
+
+
+
     return (
         <div className="w-1/3 h-full text-center pt-28">
-            <div>Profile Pic</div>
+            <div>userData.uid</div>
             <div>Name</div>
             <div>Genre</div>
             <div>Description</div>

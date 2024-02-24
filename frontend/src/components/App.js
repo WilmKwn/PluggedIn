@@ -18,6 +18,7 @@ const App = () => {
 
         fetch(`http://localhost:5000/user/${userId}`).then((res) => {
           console.log(res);
+          
           if (res.status === 500) {
             navigate("/onboarding");
           } else {

@@ -28,6 +28,7 @@ router.get('/', async(req, res) => {
 
 // get user with id
 router.get('/:id', async(req, res) => {
+
     try {
         const {id} = req.params;
         const query = {
@@ -41,6 +42,28 @@ router.get('/:id', async(req, res) => {
     } catch (err) {
         return res.status(500).send(err.message);
     }
+});
+
+router.get('/:id/info', async(req, res) => {
+       const userId = req.params.id;
+    try {
+        // Find the user by uid
+        const user = await User.findOne({ uid: userId });
+
+        // If user found, return user data
+        if (user) {
+            console.log('User found:', user);
+            return res.status(200).json(user);
+        } else {
+            console.log('User not found');
+            return res.status(500).send("null");
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        return res.status(500).send(err.message);
+    }
+
+
 });
 
 // update user with id
