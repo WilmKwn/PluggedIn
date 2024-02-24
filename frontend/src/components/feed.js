@@ -7,6 +7,7 @@ import axios from 'axios';
 import MainBanner from './MainBanner';
 import "../App.css";
 import '../index.css';
+import MainBottomBar from "./MainBottomBar";
 
 const Feed = () => {
   const [posts, setPosts] = useState([{},{},{},{}]);
@@ -31,20 +32,17 @@ const Feed = () => {
   }
 
   return (
-    <React.Fragment>
+    <React.Fragment className='container'>
       <MainBanner />
       <div className="w-full h-full text-center pt-28">
-        <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
+        <div className="w-full h-full flex flex-col items-center pt-5 pb-20">
           {posts.length===0 && <div>Hello! This is your feed, a place to view humblebrags.</div>}
           {posts.map((post, index) => (
             <Card key={index} post={post}/>
-            ))}
+          ))}
         </div>
-
-        <footer className="app-footer">
-          <div>CS 307 Team 40</div>
-        </footer>
       </div>
+      <MainBottomBar />
     </React.Fragment>
   );
 };
