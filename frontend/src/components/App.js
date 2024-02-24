@@ -14,7 +14,16 @@ const App = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        navigate("/feed");
+        const userId = result.user.providerData[0].uid;
+
+        fetch(`http://localhost:5000/user/${userId}`).then((res) => {
+          console.log(res);
+          if (res.status === 500) {
+            navigate("/onboarding");
+          } else {
+            navigate("/feed");
+          }
+        });
       })
       .catch((error) => {
         console.error(error);

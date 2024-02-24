@@ -14,9 +14,9 @@ const Search = () => {
         {by: 'Posts', checked: true},
     ]);
 
-    const [artists, setArtists] = useState([{}]);
-    const [songs, setSongs] = useState([{}]);
-    const [posts, setPosts] = useState([{}]);
+    const [artists, setArtists] = useState([]);
+    const [songs, setSongs] = useState([]);
+    const [posts, setPosts] = useState([]);
 
     const changeCheckbox = (index) => {
         const newObject = filters.map((filter, i) => {
@@ -29,21 +29,27 @@ const Search = () => {
     const updateSeatch = (e) => {
         setSearchText(e.target.value);
 
+        const filterFetched = (arr) => {
+            const filtered = arr.map((item) => {
+                return item;
+            });
+            return filtered;
+        }
+
         if (filters[0].checked) {
             axios.get("http://localhost:5000/user").then((res) => {
-                setArtists(res.data);
+                setArtists(filterFetched(res.data));
             }).catch(err => console.log(err.message));
 
         } else if (filters[1].checked) {
             axios.get("http://localhost:5000/song").then((res) => {
-                setSongs(res.data);
+                setSongs(filterFetched(res.data));
             }).catch(err => console.log(err.message));
 
         } else if (filters[1].checked) {
             axios.get("http://localhost:5000/post").then((res) => {
-                setPosts(res.data);
+                setPosts(filterFetched(res.data));
             }).catch(err => console.log(err.message));
-
         }
     }
     
