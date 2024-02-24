@@ -73,7 +73,7 @@ const Footer = () => {
         </footer>
     )
 }
- 
+
 const Gallery = () => {
     return (
         <div className="w-1/3 h-full text-center pt-28 border-2 border-black">
