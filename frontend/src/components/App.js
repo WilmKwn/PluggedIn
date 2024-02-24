@@ -14,7 +14,7 @@ const App = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        const userId = result.user.providerData[0].uid;
+        const userId = auth.currentUser.uid;
 
         fetch(`http://localhost:5000/user/${userId}`).then((res) => {
           console.log(res);

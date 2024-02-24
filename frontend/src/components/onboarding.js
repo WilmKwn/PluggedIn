@@ -26,20 +26,25 @@ const Onboarding = () => {
 
     if (auth.currentUser) {
       try {
-        await updateProfile(auth.currentUser, {
-          displayName: displayName,
-          photoURL: profilePic,
+        const data = {
+          uid: auth.currentUser.uid,
+          username: displayName,
+          accountType: 1,
+          profilePic: profilePic,
+          genre: "...",
+          description: description,
+          projects: [],
+          skills: [],
+          tracks: [],
+          friends: [],
+          endorsed: [],
+          outgoingRequests: [],
+          recentActivity: [],
+        };
+        axios.post('http://localhost:5000/user', data).then(() => {
+          console.log('successfully onboarded');
+          navigate("/feed");
         });
-        
-        // const data = {
-        //   username: displayName,
-        //   accountType: 1,
-        //   profilePhoto: profilePic,
-        // };
-        // axios.post('http://localhost:5000/user', data).then(() => {
-        //   console.log('successfully onboarded');
-        //   navigate("/feed");
-        // });
         navigate("/feed");
       } catch (error) {
         console.error("Error updating profile: ", error);
@@ -58,7 +63,6 @@ const Onboarding = () => {
     <div className="app">
       <header className="app-header">
         <div>PluggedIn</div>
-        <input type="text" placeholder="Search" className="search-bar" />
         <nav>
           <button onClick={handleSignOut}>Sign Out</button>
         </nav>

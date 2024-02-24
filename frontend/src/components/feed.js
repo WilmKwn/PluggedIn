@@ -10,7 +10,7 @@ import '../index.css';
 import MainBottomBar from "./MainBottomBar";
 
 const Feed = () => {
-  const [posts, setPosts] = useState([{},{},{},{}]);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:5000/post').then((res) => {
