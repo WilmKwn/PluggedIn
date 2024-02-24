@@ -101,6 +101,12 @@ const Activity = () => {
 }
 
 const ProfileInfo = () => {
+    const user = auth.currentUser;
+if (user) {
+  console.log("Current User ID:", user.uid);
+} else {
+  console.log("No user is currently signed in.");
+}
     return (
         <div className="w-1/3 h-full text-center pt-28">
             <div>Profile Pic</div>
