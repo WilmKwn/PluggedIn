@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import "../App.css";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 library.add(faSearch);
 
 const App = () => {
@@ -16,9 +16,9 @@ const App = () => {
       .then((result) => {
         const userId = auth.currentUser.uid;
 
-        fetch(`http://localhost:5000/user/${userId}`).then((res) => {
+        fetch(`http://localhost:5001/user/${userId}`).then((res) => {
           console.log(res);
-          
+
           if (res.status === 500) {
             navigate("/onboarding");
           } else {

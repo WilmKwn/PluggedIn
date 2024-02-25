@@ -11,7 +11,7 @@ import News from "./components/news";
 import Search from "./components/search";
 import Settings from "./components/settings";
 import AddPost from "./components/AddPost";
-
+import Post from "./components/Post";
 
 const Root = () => {
   return (
@@ -26,6 +26,7 @@ const Root = () => {
         <Route path="/search" element={<Search />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/addpost" element={<AddPost />} />
+        <Route path="/post" element={<Post />} />
       </Routes>
     </Router>
   );

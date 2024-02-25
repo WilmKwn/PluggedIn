@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 import { updateProfile, signOut } from "firebase/auth";
-import axios from 'axios';
+import axios from "axios";
 
 const Onboarding = () => {
   const navigate = useNavigate();
@@ -41,8 +41,8 @@ const Onboarding = () => {
           outgoingRequests: [],
           recentActivity: [],
         };
-        axios.post('http://localhost:5000/user', data).then(() => {
-          console.log('successfully onboarded');
+        axios.post("http://localhost:5001/user", data).then(() => {
+          console.log("successfully onboarded");
           navigate("/feed");
         });
         navigate("/feed");
