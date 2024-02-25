@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
-import { updateProfile, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import axios from "axios";
 
 const Onboarding = () => {
@@ -33,7 +33,7 @@ const Onboarding = () => {
                     realname: realname,
                     username: username,
                     accountType: 0,
-                    profilePic: profilePic,
+                    profilePic: fileLabel,
                     genre: genre,
                     description: description,
                     projects: [],
@@ -44,7 +44,7 @@ const Onboarding = () => {
                     outgoingRequests: [],
                     recentActivity: [],
                 };
-                axios.post('http://localhost:5000/user', data).then(() => {
+                axios.post('http://localhost:5001/user', data).then(() => {
                     console.log('successfully onboarded');
                     navigate("/feed");
                 });

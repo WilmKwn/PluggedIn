@@ -52,7 +52,7 @@ const Search = () => {
         .catch((err) => console.log(err.message));
     } else if (filters[1].checked) {
       axios
-        .get("http://localhost:5000/post")
+        .get("http://localhost:5001/post")
         .then((res) => {
           setPosts(filterFetched(res.data));
         })
