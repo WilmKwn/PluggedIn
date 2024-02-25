@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 import { updateProfile, signOut } from "firebase/auth";
-import axios from 'axios';
+import axios from "axios";
 
 const Onboarding = () => {
     const navigate = useNavigate();
