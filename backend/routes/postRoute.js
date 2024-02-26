@@ -5,12 +5,10 @@ import { Post } from '../models/postModel.js';
 const router = express.Router()
 
 // create new 
-router.post('/', async(req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const data = req.body;
-        const post = {
-            email: data.email,
-        }
+        console.log(req.body)
+        const post = req.body;
         await Post.create(post);
         return res.status(200).send('successfully created');
     } catch (err) {
@@ -19,7 +17,7 @@ router.post('/', async(req, res) => {
 });
 
 // get all
-router.get('/', async(req, res) => {
+router.get('/', async (req, res) => {
     try {
         const users = await Post.find({});
         return res.status(200).json(users);
@@ -29,9 +27,9 @@ router.get('/', async(req, res) => {
 });
 
 // get post with id
-router.get('/:id', async(req, res) => {
+router.get('/:id', async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         const post = await Post.findById(id);
         return res.status(200).json(post);
     } catch (err) {
@@ -40,9 +38,9 @@ router.get('/:id', async(req, res) => {
 });
 
 // update post with id
-router.put('/:id', async(req, res) => {
+router.put('/:id', async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         await Post.findByIdAndUpdate(id, req.body);
         return res.status(200).send('successfully updated');
     } catch (err) {
@@ -51,9 +49,9 @@ router.put('/:id', async(req, res) => {
 });
 
 // delete post with id
-router.delete('/:id', async(req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         await Post.findByIdAndDelete(id);
         return res.status(200).send('successfully deleted');
     } catch (err) {

@@ -19,7 +19,7 @@ const AddPost = () => {
         const archived = false;
         const news = false;
         const post = {
-            id: postID,
+            uid: postID,
             title: postTitle,
             description: postDescription,
             media: postMedia,
@@ -31,7 +31,7 @@ const AddPost = () => {
 
         // submit the post to the database
         try {
-            await axios.post("http://localhost:5000/post", post);
+            await axios.post("http://localhost:5001/post", post);
             console.log("Post submitted successfully")
         } catch (err) {
             console.log("Error submitting post", err.message);
