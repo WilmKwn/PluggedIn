@@ -5,6 +5,7 @@ import { auth } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 import MainBanner from "./MainBottomBar";
 import MainBottomBar from "./MainBottomBar";
 import ProfileBottomBar from "./ProfileBottomBar";
@@ -12,43 +13,12 @@ import ProfileBanner from "./ProfileBanner";
 
 import { useState, useEffect } from 'react';
 
-const axios = require('axios');
-
-
 const Banner = () => {
   const navigate = useNavigate();
 
   const handleFeed = () => {
     navigate("/feed");
   };
-  // return (
-  //     <div className="">
-  //         <div className="fixed w-full flex justify-between items-center p-3 pl-10 pr-10 bg-emerald-950">
-  //             <div>
-  //                 <button onClick={handleFeed}
-  //                     className="button">
-  //                     <FontAwesomeIcon icon={faArrowLeftLong} /> Back
-  //                 </button>
-  //             </div>
-  //             <div>
-  //                 <a onClick={handleFeed}>
-  //                     <img src="/PI.png"
-  //                         alt="PluggedIn Logo"
-  //                         className="w-20 cursor-pointer"
-  //                     ></img>
-  //                 </a>
-  //             </div>
-  //             <div>
-  //                 <nav>
-  //                     <button onClick={handleSignOut}
-  //                         className="button">
-  //                         Sign Out
-  //                     </button>
-  //                 </nav>
-  //             </div>
-  //         </div>
-  //     </div>
-  // )
   return <ProfileBanner />;
 };
 
@@ -56,95 +26,91 @@ const Footer = () => {
   return <ProfileBottomBar />;
 };
 
-const Gallery = () => {
-  return (
-    <div className="w-1/3 h-full text-center pt-28 border-2 border-black">
-      <div>Gallery</div>
-      <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
-        <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
-          <p>HI</p>
-        </div>
-      </div>
-    </div>
-  );
-};
 
-const Activity = () => {
-  return (
-    <div className="w-1/3 h-full text-center pt-28 border-2 border-black">
-      <div>Activity</div>
-      <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
-        <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
-          <p>HI</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ProfileInfo = () => {
-
-    const userId = auth.currentUser.uid;
-    const [userData, setUserData] = useState(null);
-
-    useEffect(() => {
-        fetch(`http://localhost:5000/user/${userId}/info`)
-            .then((res) => {
-                if (res.status === 200) {
-                    return res.json(); // Parse JSON response
-                } else if (res.status === 500) {
-                    console.log("Server error: Failed to get user info");
-                    // Handle the case when the server returns a 500 status code
-                    // You can display an error message to the user or handle it as needed
-                } else {
-                    console.log("Failed to get info");
-                    // Handle other status codes if necessary
-                }
-            })
-            .then((userData) => {
-                // Process the user data here if the response was successful (status 200)
-                console.log("got user data");
-                console.log(userData);
-                setUserData(userData); // Update state with user data
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                // Handle any errors that occur during the fetch request
-            });
-    }, [userId]);   
-
-
-    // check for profile pic
-    if (!userData.profilePic || userData.profilePic === null) {
-        userData.profilePic = "No Profile Picture";
-    }
-
-    // check for null skills and description and projects
-    if (!userData.skills ||userData.skills.length === 0) {
-        userData.skills = "No Skills";
-    }
-
-    if (userData.description === null) {
-        userData.description = "No Description";
-    }
-
-    if (!userData.projects || userData.projects.length === 0) {
-        userData.projects = "No Projects";
-    }
-
-    return (
-        <div className="w-1/3 h-full text-center pt-28">
-            <div>{userData.profilePic}</div>
-            <div>{userData.name}</div>
-            <div>{userData.genre}</div>
-            <div>{userData.description}</div>
-            <div>{userData.skills}</div>
-            <div>{userData.projects}</div>
-        </div>
-    )
-}
 
 const Profile = () => {
+  const [userData, setUserData] = useState({
+    profilePic: "",
+    name: "",
+    genre: "",
+    description: "",
+    skills: [],
+    projects: [],
+  });
+  const userId = auth.currentUser.uid;
+
+  useEffect(() => {
+    axios.get(`http://localhost:5001/user/${userId}`)
+        .then((res) => {
+            // Process the user data here if the response was successful (status 200)
+            console.log("got user data");
+            setUserData(res.data); // Update state with user data
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            // Handle any errors that occur during the fetch request
+        });
+  }, []); 
+
+
+  const Gallery = () => {
+    return (
+      <div className="w-1/3 h-full text-center pt-28 border-2 border-black">
+        <div>Gallery</div>
+        <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
+          <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
+            <p>HI</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+  const Activity = () => {
+    return (
+      <div className="w-1/3 h-full text-center pt-28 border-2 border-black">
+        <div>Activity</div>
+        <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
+          <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
+            <p>HI</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+  const ProfileInfo = () => {  
+      // // check for profile pic
+      if (!userData.profilePic || userData.profilePic === null) {
+          userData.profilePic = "No Profile Picture";
+      }
+  
+      // check for null skills and description and projects
+      if (!userData.skills ||userData.skills.length === 0) {
+          userData.skills = "No Skills";
+      }
+  
+      if (userData.description === null) {
+          userData.description = "No Description";
+      }
+  
+      if (!userData.projects || userData.projects.length === 0) {
+          userData.projects = "No Projects";
+      }
+  
+      return (
+          <div className="w-1/3 h-full text-center pt-28">
+              <div>{userData.profilePic}</div>
+              <div>{userData.name}</div>
+              <div>{userData.genre}</div>
+              <div>{userData.description}</div>
+              <div>{userData.skills}</div>
+              <div>{userData.projects}</div>
+          </div>
+      )
+      // return <p></p>
+  }
+
   return (
     <div>
       <Banner />
