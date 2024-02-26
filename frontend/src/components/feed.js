@@ -34,7 +34,7 @@ const Feed = () => {
   };
 
   return (
-    <React.Fragment className="container">
+    <div className="container">
       <MainBanner />
       <div className="w-full h-full text-center pt-28">
         <div className="w-full h-full flex flex-col items-center pt-5 pb-20">
@@ -47,7 +47,7 @@ const Feed = () => {
         </div>
       </div>
       <MainBottomBar />
-    </React.Fragment>
+    </div>
   );
 };
 

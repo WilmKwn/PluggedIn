@@ -43,14 +43,16 @@ const Search = () => {
           setArtists(filterFetched(res.data));
         })
         .catch((err) => console.log(err.message));
-    } else if (filters[1].checked) {
+    }
+    if (filters[1].checked) {
       axios
         .get("http://localhost:5001/song")
         .then((res) => {
           setSongs(filterFetched(res.data));
         })
         .catch((err) => console.log(err.message));
-    } else if (filters[1].checked) {
+    }
+    if (filters[2].checked) {
       axios
         .get("http://localhost:5001/post")
         .then((res) => {
