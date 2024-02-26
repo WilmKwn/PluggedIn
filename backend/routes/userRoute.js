@@ -7,7 +7,7 @@ import { ObjectId } from 'mongodb';
 const router = express.Router()
 
 // create new 
-router.post('/', async(req, res) => {
+router.post('/', async (req, res) => {
     try {
         await User.create(req.body);
         return res.status(200).send('successfully created');
@@ -17,7 +17,7 @@ router.post('/', async(req, res) => {
 });
 
 // get all
-router.get('/', async(req, res) => {
+router.get('/', async (req, res) => {
     try {
         const users = await User.find({});
         return res.status(200).json(users);
@@ -27,14 +27,14 @@ router.get('/', async(req, res) => {
 });
 
 // get user with id
-router.get('/:id', async(req, res) => {
+router.get('/:id', async (req, res) => {
 
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         const query = {
             uid: id,
         }
-        const user = await User.findOne({uid: id});
+        const user = await User.findOne({ uid: id });
         if (user === null) {
             return res.status(500).send("null");
         }
@@ -44,8 +44,8 @@ router.get('/:id', async(req, res) => {
     }
 });
 
-router.get('/:id/info', async(req, res) => {
-       const userId = req.params.id;
+router.get('/:id/info', async (req, res) => {
+    const userId = req.params.id;
     try {
         // Find the user by uid
         const user = await User.findOne({ uid: userId });
@@ -67,9 +67,9 @@ router.get('/:id/info', async(req, res) => {
 });
 
 // update user with id
-router.put('/:id', async(req, res) => {
+router.put('/:id', async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         await User.findByIdAndUpdate(id, req.body);
         return res.status(200).send('successfully updated');
     } catch (err) {
@@ -78,9 +78,9 @@ router.put('/:id', async(req, res) => {
 });
 
 // delete user with id
-router.delete('/:id', async(req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         await User.findByIdAndDelete(id);
         return res.status(200).send('successfully deleted');
     } catch (err) {
