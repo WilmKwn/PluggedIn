@@ -2,12 +2,20 @@ import React, { useState } from "react";
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const Messaging = ({ title }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const profileImages = ["/PFP1.jpg", "/PFP2.jpg", "/PFP3.jpg", "/PFP4.jpg", "/PFP1.jpg", "/PFP2.jpg", "/PFP3.jpg", "/PFP4.jpg"];
-
+  const templateMessages = [
+    { sender: 'User 1', message: 'Hey, how\'s it going?' },
+    { sender: 'You', message: 'Not bad! What about you?' },
+    { sender: 'User 1', message: 'What\'s your favorite genre?' },
+    { sender: 'You', message: 'Black banjocore fasho!' },
+    { sender: 'User 1', message: 'No way, I\'m a huge fan' },
+    { sender: 'You', message: 'Right? The modern instrumentation combined with the classic banjo sound provide a wholly original experiece.' },
+    { sender: 'User 1', message: 'Exactly. Who doesn\'t like some nice twanging every now and then?' },
+  ];
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
@@ -59,26 +67,42 @@ const Messaging = ({ title }) => {
           <div className="text-center">
             {/* Other content in the center if any */}
           </div>
-          <div className="flex-1 flex overflow-y-hidden">
-            {/* Sidebar with profile images */}
-            <div className="w-1/4 p-4 bg-gray-100 overflow-y-scroll" style={{ marginBottom: '5px', height: '475px', borderRadius: '5px' }}>
-              {profileImages.map((profileImage, index) => (
-                <div key={index} className="flex items-center border-b border-gray-300 p-2">
-                  <div>
-                    <img
-                      src={profileImage}
-                      alt={`Profile ${index + 1}`}
-                      className="w-12 h-12 rounded-full cursor-pointer"
-                      onClick={() => console.log(`Clicked on profile ${index + 1}`)}
-                    />
+          <div className="flex-1 flex flex-col overflow-y-hidden">
+            <div className="flex">
+              {/* Sidebar with profile images */}
+              <div className="w-1/4 p-4 bg-gray-100 overflow-y-scroll" style={{ marginBottom: '5px', height: '400px', borderRadius: '5px' }}>
+                {profileImages.map((profileImage, index) => (
+                  <div key={index} className="flex items-center border-b border-gray-300 p-2">
+                    <div>
+                      <img
+                        src={profileImage}
+                        alt={`Profile ${index + 1}`}
+                        className="w-12 h-12 rounded-full cursor-pointer"
+                        onClick={() => console.log(`Clicked on profile ${index + 1}`)}
+                      />
+                    </div>
+                    {/*  actions for each profile card */}
+                    <div className="ml-4">
+                      <p className="text-gray-800 font-semibold">User {index + 1}</p>
+                      {/* Add more information or actions here */}
+                    </div>
                   </div>
-                  {/* You can add more details or actions for each profile card */}
-                  <div className="ml-4">
-                    <p className="text-gray-800 font-semibold">User {index + 1}</p>
-                    {/* Add more information or actions here */}
+                ))}
+              </div>
+              <div className="p-4 bg-gray-200 overflow-y-scroll" style={{ marginBottom: '5px', maxWidth: '600px', maxHeight: '400px', borderRadius: '5px' }}>
+                {templateMessages.map((message, index) => (
+                  <div key={index} className={`mb-2 ${message.sender === 'You' ? ' text-sm ml-auto bg-gray-300' : ' text-sm bg-blue-500 text-white'} p-2 rounded-md`} style={{ maxWidth: '75%'}}>
+                    <p className="font-semibold">{message.sender}:</p>
+                    <p>{message.message}</p>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center mt-4">
+              <input type="text" placeholder="Type your message..." className="w-full p-3 ml-1 mb-1 border border-gray-300 rounded-l-md" />
+              <button className="button rounded-r-md ml-2 mb-1">
+                <FontAwesomeIcon icon={faPaperPlane} />
+              </button>
             </div>
           </div>
         </div>
