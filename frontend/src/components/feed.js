@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
 
+import {storage, ref, getDownloadURL} from './firebase';
+
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 import axios from "axios";
@@ -32,9 +34,14 @@ const Feed = () => {
     useEffect(() => {
       axios.get(`http://localhost:5001/user/${post.owner}`).then((res) => {
         const user = res.data;
-        console.log(user);
         setName(user.realname);
-        setImage(user.profilePic);
+
+        const picRef = ref(storage, user.profilePic);
+        getDownloadURL(picRef).then((url) => {
+          setImage(url);
+        }).catch(err => {
+          console.log(err);
+        });
       });
     }, [])
 
@@ -45,7 +52,7 @@ const Feed = () => {
             {image === 'No file chosen' ? 
               <div className="w-12 h-12 bg-white rounded-xl m-1"></div>
               :
-              <image className='w-12 rounded-xl' src={image} />
+              <img className='w-12 rounded-xl' src={image} />
             }
             <p className="text-md pl-2">{name}</p>
           </div>

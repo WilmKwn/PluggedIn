@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { storage, ref, getDownloadURL } from "./firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
@@ -97,10 +98,25 @@ const Profile = () => {
       if (!userData.projects || userData.projects.length === 0) {
           userData.projects = "No Projects";
       }
-  
+
+      // GET IMAGE FROM FIREBASE STORAGE
+      const [image, setImage] = useState('');
+      useEffect(() => {
+        const picRef = ref(storage, userData.profilePic);
+        getDownloadURL(picRef).then((url) => {
+          setImage(url);
+        }).catch(err => {
+          console.log(err);
+        });
+      }, []);
+
       return (
-          <div className="w-1/3 h-full text-center pt-28">
-              <div>{userData.profilePic}</div>
+          <div className="w-1/3 h-full pt-28 flex flex-col items-center">
+              {userData.profilePic==="No file chosen" ? 
+                <div className="w-40 h-40 bg-gray-300"></div>
+                :
+                <img className="w-40" src={image} />
+              }
               <div>{userData.name}</div>
               <div>{userData.genre}</div>
               <div>{userData.description}</div>
