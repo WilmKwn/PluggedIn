@@ -29,8 +29,9 @@ const Search = () => {
   const updateSeatch = (e) => {
     setSearchText(e.target.value);
 
-    const filterFetched = (arr) => {
+    const filterFetched = (arr, type) => {
       const filtered = arr.map((item) => {
+
         return item;
       });
       return filtered;

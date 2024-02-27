@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import SecondaryBanner from './SecondaryBanner';
 import SecondaryBottomBar from "./SecondaryBottomBar";
 import axios from 'axios';
+import {auth} from './firebase';
+import { useNavigate } from "react-router-dom";
+
 
 // Still need to format CSS
 
@@ -11,6 +14,8 @@ const AddPost = () => {
     const [postDescription, setPostDescription] = useState("");
     const [postMedia, setPostMedia] = useState("");
     const [postTags, setPostTags] = useState("");
+
+    const navigate = useNavigate();
 
     const handleSubmit = async () => {
         // create a post object
@@ -26,13 +31,15 @@ const AddPost = () => {
             tags: postTags,
             archived: archived,
             news: news,
-            date: creationDate
+            date: creationDate,
+            owner: auth.currentUser.uid
         }
 
         // submit the post to the database
         try {
             await axios.post("http://localhost:5001/post", post);
-            console.log("Post submitted successfully")
+            console.log("Post submitted successfully");
+            navigate("/feed");
         } catch (err) {
             console.log("Error submitting post", err.message);
         }

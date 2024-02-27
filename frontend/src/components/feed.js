@@ -26,9 +26,35 @@ const Feed = () => {
   }, []);
 
   const Card = ({ post }) => {
+    const [name, setName] = useState('');
+    const [image, setImage] = useState('');
+
+    useEffect(() => {
+      axios.get(`http://localhost:5001/user/${post.owner}`).then((res) => {
+        const user = res.data;
+        console.log(user);
+        setName(user.realname);
+        setImage(user.profilePic);
+      });
+    }, [])
+
     return (
       <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
-        <p>HI</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            {image === 'No file chosen' ? 
+              <div className="w-12 h-12 bg-white rounded-xl m-1"></div>
+              :
+              <image className='w-12 rounded-xl' src={image} />
+            }
+            <p className="text-md pl-2">{name}</p>
+          </div>
+          <p className="mr-2">{post.date.substring(0, 10)}</p>
+        </div>
+        <p className="pb-2 font-bold">{post.title}</p>
+        <div className="w-full bg-gray-200 h-auto">
+          <p>{post.description}</p>
+        </div>
       </div>
     );
   };
