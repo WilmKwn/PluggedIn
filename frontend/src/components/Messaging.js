@@ -19,7 +19,7 @@ const Messaging = ({ title }) => {
   });
   const [friendObjArr, setFriendObjArr] = useState([]);
   const userId = auth.currentUser.uid;
-
+  
   useEffect(() => { 
     axios.get(`http://localhost:5001/user/${userId}`)
         .then((res) => {
@@ -53,11 +53,14 @@ const Messaging = ({ title }) => {
             // Handle any errors that occur during the fetch request
         });
   }, []); 
-
-
+  //const currFriendId = friendObjArr[0] ? friendObjArr[0].uid : "None";
+  const [currFriendObj, setCurrFriendObj] = useState({
+    uid: "",
+    realname: "",
+  });
   const profileImages = ["/PFP1.jpg", "/PFP2.jpg", "/PFP3.jpg", "/PFP4.jpg", "/PFP1.jpg", "/PFP2.jpg", "/PFP3.jpg", "/PFP4.jpg"];
   const connectionNames = [];
-  const templateMessages = [
+  /*const templateMessages = [
     { sender: 'User 1', message: 'Hey, how\'s it going?' },
     { sender: 'You', message: 'Not bad! What about you?' },
     { sender: 'User 1', message: 'What\'s your favorite genre?' },
@@ -65,7 +68,7 @@ const Messaging = ({ title }) => {
     { sender: 'User 1', message: 'No way, I\'m a huge fan' },
     { sender: 'You', message: 'Right? The modern instrumentation combined with the classic banjo sound provide a wholly original experiece.' },
     { sender: 'User 1', message: 'Exactly. Who doesn\'t like some nice twanging every now and then?' },
-  ];
+  ];*/
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
   
@@ -128,7 +131,7 @@ const Messaging = ({ title }) => {
                         src={friend.url}
                         alt={`Profile ${index + 1}`}
                         className="w-12 h-12 rounded-full cursor-pointer"
-                        onClick={() => console.log(`Clicked on profile ${friend.uid + 1}`)}
+                        onClick={() => setCurrFriendObj({ uid: friend.uid, realname: friend.realname })} /*console.log(`Clicked on profile ${friend.uid + 1}`)*/
                 />
                     </div>
                     {/*  actions for each profile card */}
@@ -139,13 +142,12 @@ const Messaging = ({ title }) => {
                   </div>
                 ))}
               </div>
-              <div className="p-4 bg-gray-200 overflow-y-scroll" style={{ marginBottom: '5px', maxWidth: '600px', maxHeight: '400px', borderRadius: '5px' }}>
-                {templateMessages.map((message, index) => (
-                  <div key={index} className={`mb-2 ${message.sender === 'You' ? ' text-sm ml-auto bg-gray-300' : ' text-sm bg-blue-500 text-white'} p-2 rounded-md`} style={{ maxWidth: '75%'}}>
-                    <p className="font-semibold">{message.sender}:</p>
-                    <p>{message.message}</p>
-                  </div>
-                ))}
+              <div className="p-4 bg-gray-200 overflow-y-scroll" style={{ marginBottom: '5px', width: '600px', maxHeight: '400px', borderRadius: '5px' }}>
+              {currFriendObj.realname === "" ? (
+    <p>Select a user to view your conversation!</p>
+  ) : (
+    <p>You have no conversation with {currFriendObj.realname}. Send a message to start a new conversation!</p>
+  )}
               </div>
             </div>
             <div className="flex items-center mt-4">
