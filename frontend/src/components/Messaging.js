@@ -11,16 +11,16 @@ import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 //import {useState, useEffect} from 'react';
 
 const Messaging = ({ title }) => {
+
   const [isModalOpen, setModalOpen] = useState(false);
   const [userData, setUserData] = useState({
     realname: "",
     friends: [],
   });
   const [friendObjArr, setFriendObjArr] = useState([]);
-  const [pfpArr, setpfpArr] = useState([]);
   const userId = auth.currentUser.uid;
-  //const friendObjArr = [];
-  useEffect(() => {
+
+  useEffect(() => { 
     axios.get(`http://localhost:5001/user/${userId}`)
         .then((res) => {
             // Process the user data here if the response was successful (status 200)

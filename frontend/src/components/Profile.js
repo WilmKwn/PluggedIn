@@ -39,6 +39,7 @@ const Profile = () => {
     projects: [],
   });
   const userId = auth.currentUser.uid;
+  
 
   useEffect(() => {
     axios.get(`http://localhost:5001/user/${userId}`)
