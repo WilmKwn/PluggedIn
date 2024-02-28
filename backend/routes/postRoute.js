@@ -7,7 +7,6 @@ const router = express.Router()
 // create new 
 router.post('/', async (req, res) => {
     try {
-        console.log(req.body)
         const post = req.body;
         await Post.create(post);
         return res.status(200).send('successfully created');

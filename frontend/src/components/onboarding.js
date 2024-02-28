@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase";
+import { auth, storage, ref, uploadBytes } from "./firebase";
 import { signOut } from "firebase/auth";
 import axios from "axios";
 
@@ -25,6 +25,15 @@ const Onboarding = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (profilePic) {
+            const picRef = ref(storage, "user/"+fileLabel);
+            uploadBytes(picRef, profilePic).then(() => {
+                console.log("Successfully uploaded image");
+            }).catch((err) => {
+                console.log(err.message);
+            })
+        }
 
         if (auth.currentUser) {
             try {
@@ -60,8 +69,8 @@ const Onboarding = () => {
             setProfilePic(file);
             setFileLabel(file.name);
         } else {
-            setFileLabel("No file chosen");
             setProfilePic(null);
+            setFileLabel("No file chosen");
         }
     };
 
