@@ -37,7 +37,7 @@ const userSchema = mongoose.Schema(
             required: true,
         },
         skills: {
-            type: [String],
+            type: [String], 
             required: true,
         },
         tracks: {
@@ -46,8 +46,7 @@ const userSchema = mongoose.Schema(
             required: true,
         },
         friends: {
-            type: [mongoose.Schema.Types.ObjectId],
-            ref: 'users',
+            type: [String],
             required: true,
         },
         endorsed: {

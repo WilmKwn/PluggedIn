@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 import userRoute from './routes/userRoute.js';
 import postRoute from './routes/postRoute.js';
+import conversationRoute from './routes/conversationRoute.js';
 
 // env setup
 import dotenv from 'dotenv';
@@ -16,7 +17,7 @@ app.use(cors());
 // routes
 app.use('/user', userRoute);
 app.use('/post', postRoute);
-
+app.use('/conversation', conversationRoute);
 // connect to db
 mongoose.connect(process.env.MONGODB_URL).then(() => {
     console.log('Successfully connected to database');

@@ -1,12 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from 'react-modal';
+import axios from "axios";
+import { auth } from "./firebase";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
 import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
+//import {useState, useEffect} from 'react';
+
 const Messaging = ({ title }) => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [userData, setUserData] = useState({
+    realname: "",
+    friends: []
+  });
+  const [friendObjArr, setFriendObjArr] = useState([]);
+  const userId = auth.currentUser.uid;
+  //const friendObjArr = [];
+  useEffect(() => {
+    axios.get(`http://localhost:5001/user/${userId}`)
+        .then((res) => {
+            // Process the user data here if the response was successful (status 200)
+            console.log(`http://localhost:5001/user/${userId}`);
+            console.log(res.data);
+            setUserData(res.data); // Update state with user data
+            res.data.friends.forEach(friendId => {
+              axios.get(`http://localhost:5001/user/${friendId}`)
+                .then((friendRes) => {
+                  console.log("inner");
+                  console.log(friendRes.data);
+                  const {profilePic, realname} = friendRes.data;
+                  setFriendObjArr(prevArr=> [...prevArr, { profilePic, realname }]);
+                })
+                .catch((error) => {
+                  console.error("Error fetching friend data:", error);
+              });
+            });
+          })
+        .catch((error) => {
+            console.error("Error fetching user data:", error);
+            // Handle any errors that occur during the fetch request
+        });
+  }, []); 
+
+
   const profileImages = ["/PFP1.jpg", "/PFP2.jpg", "/PFP3.jpg", "/PFP4.jpg", "/PFP1.jpg", "/PFP2.jpg", "/PFP3.jpg", "/PFP4.jpg"];
+  const connectionNames = [];
   const templateMessages = [
     { sender: 'User 1', message: 'Hey, how\'s it going?' },
     { sender: 'You', message: 'Not bad! What about you?' },
@@ -18,7 +58,7 @@ const Messaging = ({ title }) => {
   ];
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
-
+  
   const modalStyles = {
     content: {
       position: 'absolute',
@@ -71,19 +111,19 @@ const Messaging = ({ title }) => {
             <div className="flex">
               {/* Sidebar with profile images */}
               <div className="w-1/4 p-4 bg-gray-100 overflow-y-scroll" style={{ marginBottom: '5px', height: '400px', borderRadius: '5px' }}>
-                {profileImages.map((profileImage, index) => (
+                {(friendObjArr).map((friend, index) => (
                   <div key={index} className="flex items-center border-b border-gray-300 p-2">
                     <div>
-                      <img
+                      {/*<img
                         src={profileImage}
                         alt={`Profile ${index + 1}`}
                         className="w-12 h-12 rounded-full cursor-pointer"
                         onClick={() => console.log(`Clicked on profile ${index + 1}`)}
-                      />
+                />*/}
                     </div>
                     {/*  actions for each profile card */}
                     <div className="ml-4">
-                      <p className="text-gray-800 font-semibold">User {index + 1}</p>
+                      <p className="text-gray-800 font-semibold">{friend.realname}</p>
                       {/* Add more information or actions here */}
                     </div>
                   </div>
