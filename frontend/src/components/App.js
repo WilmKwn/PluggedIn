@@ -16,6 +16,7 @@ const App = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const userId = auth.currentUser.uid;
+        localStorage.setItem("userId", userId);
 
         axios.get(`http://localhost:5001/user/${userId}`).then((res) => {
           navigate("/feed");

@@ -38,7 +38,7 @@ const Profile = () => {
     skills: [],
     projects: [],
   });
-  const userId = auth.currentUser.uid;
+  const userId = localStorage.getItem("userId");
   
 
   useEffect(() => {

@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../App.css";
 
-const Post = () => {
-  const [post] = useState({
-    title: "Title",
-    description: "Funny Photo",
-    media: "https://i.imgur.com/RVqv6n9.jpeg",
-    tags: ["Funny"],
-  });
+import {storage, ref, getDownloadURL} from './firebase';
+
+const Post = ({postParam}) => {
+  const [post] = useState(postParam);
 
   const [likeStatus, setLikeStatus] = useState(false);
   const [dislikeStatus, setDislikeStatus] = useState(false);
@@ -17,6 +14,7 @@ const Post = () => {
   const [laughs, setLaughs] = useState(0);
   const [comments, setComments] = useState([]);
   const [commentInput, setCommentInput] = useState("");
+  const [media, setMedia] = useState("");
 
   const handleLike = () => {
     setLikeStatus(!likeStatus);
@@ -65,14 +63,23 @@ const Post = () => {
     }
   };
 
+  useEffect(() => {
+    const picRef = ref(storage, "user/"+post.media);
+    getDownloadURL(picRef).then((url) => {
+      setMedia(url);
+    }).catch(err => {
+      console.log(err);
+    });
+  }, []);
+
   return (
     <div className="post-card">
       <div className="post-header">
-        <h2>{post.title}</h2>
+        <h2 className="font-bold">{post.title}</h2>
         <p>{post.description}</p>
       </div>
       {post.media && (
-        <img src={post.media} alt="Post media" className="post-image" />
+        <img src={media} alt="Post media" className="post-image w-1/2" />
       )}
       {post.tags && <p className="post-tags">Tags: {post.tags.join(", ")}</p>}
       <div className="post-interactions">

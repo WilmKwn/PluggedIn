@@ -10,6 +10,7 @@ import MainBanner from "./MainBanner";
 import "../App.css";
 import "../index.css";
 import MainBottomBar from "./MainBottomBar";
+import Post from './Post';
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -84,7 +85,8 @@ const Feed = () => {
             <div>Hello! This is your feed, a place to view humblebrags.</div>
           )}
           {posts.map((post, index) => (
-            <Card key={index} post={post} />
+            // <Card key={index} post={post} />
+            <Post key={index} postParam={post} />
           ))}
         </div>
       </div>
