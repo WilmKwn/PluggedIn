@@ -102,7 +102,7 @@ const Profile = () => {
       // GET IMAGE FROM FIREBASE STORAGE
       const [image, setImage] = useState('');
       useEffect(() => {
-        const picRef = ref(storage, userData.profilePic);
+        const picRef = ref(storage, "user/"+userData.profilePic);
         getDownloadURL(picRef).then((url) => {
           setImage(url);
         }).catch(err => {

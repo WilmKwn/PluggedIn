@@ -30,15 +30,23 @@ const Feed = () => {
   const Card = ({ post }) => {
     const [name, setName] = useState('');
     const [image, setImage] = useState('');
+    const [media, setMedia] = useState(null);
 
     useEffect(() => {
       axios.get(`http://localhost:5001/user/${post.owner}`).then((res) => {
         const user = res.data;
         setName(user.realname);
 
-        const picRef = ref(storage, user.profilePic);
+        const picRef = ref(storage, "user/"+user.profilePic);
         getDownloadURL(picRef).then((url) => {
           setImage(url);
+        }).catch(err => {
+          console.log(err);
+        });
+
+        const mediaRef = ref(storage, "post/"+post.media);
+        getDownloadURL(mediaRef).then((url) => {
+          setMedia(url);
         }).catch(err => {
           console.log(err);
         });
@@ -59,9 +67,10 @@ const Feed = () => {
           <p className="mr-2">{post.date.substring(0, 10)}</p>
         </div>
         <p className="pb-2 font-bold">{post.title}</p>
-        <div className="w-full bg-gray-200 h-auto">
+        <div className="w-full bg-gray-200 h-auto flex flex-col">
           <p>{post.description}</p>
         </div>
+        <img className="w-full h-24" src={media} />
       </div>
     );
   };

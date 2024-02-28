@@ -27,7 +27,7 @@ const Onboarding = () => {
         e.preventDefault();
 
         if (profilePic) {
-            const picRef = ref(storage, fileLabel);
+            const picRef = ref(storage, "user/"+fileLabel);
             uploadBytes(picRef, profilePic).then(() => {
                 console.log("Successfully uploaded image");
             }).catch((err) => {

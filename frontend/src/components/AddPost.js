@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SecondaryBanner from './SecondaryBanner';
 import SecondaryBottomBar from "./SecondaryBottomBar";
 import axios from 'axios';
-import {auth} from './firebase';
+import { auth, storage, ref, uploadBytes } from "./firebase";
 import { useNavigate } from "react-router-dom";
 
 
@@ -12,7 +12,8 @@ import { useNavigate } from "react-router-dom";
 const AddPost = () => {
     const [postTitle, setPostTitle] = useState("");
     const [postDescription, setPostDescription] = useState("");
-    const [postMedia, setPostMedia] = useState("");
+    const [postMedia, setPostMedia] = useState(null);
+    const [postMediaName, setPostMediaName] = useState("");
     const [postTags, setPostTags] = useState("");
 
     const navigate = useNavigate();
@@ -27,7 +28,7 @@ const AddPost = () => {
             uid: postID,
             title: postTitle,
             description: postDescription,
-            media: postMedia,
+            media: postMediaName,
             tags: postTags,
             archived: archived,
             news: news,
@@ -37,6 +38,13 @@ const AddPost = () => {
 
         // submit the post to the database
         try {
+            if (postMedia) {
+                console.log("post/"+postMediaName);
+                const picRef = ref(storage, "post/"+postMediaName);
+                uploadBytes(picRef, postMedia).then(() => {
+                    console.log("Successfully uploaded image");
+                });
+            }
             await axios.post("http://localhost:5001/post", post);
             console.log("Post submitted successfully");
             navigate("/feed");
@@ -46,7 +54,8 @@ const AddPost = () => {
 
         setPostTitle("");
         setPostDescription("");
-        setPostMedia("");
+        setPostMediaName("");
+        setPostMedia(null);
         setPostTags("");
     }
     return (
@@ -71,8 +80,7 @@ const AddPost = () => {
                         <input
                             type="file"
                             placeholder="Media"
-                            value={postMedia}
-                            onChange={(e) => setPostMedia(e.target.value)}
+                            onChange={(e) => {setPostMedia(e.target.files[0]); setPostMediaName(e.target.files[0].name)}}
                             className="w-full h-10 mb-3 border-2 border-black"
                         />
                         <input
