@@ -18,6 +18,37 @@ const Search = () => {
   const [songs, setSongs] = useState([]);
   const [posts, setPosts] = useState([]);
 
+  const [showArtists, setShowArtists] = useState([]);
+  const [showSongs, setShowSongs] = useState([]);
+  const [showPosts, setShowPosts] = useState([]);
+
+  useEffect(() => {
+    if (filters[0].checked) {
+      axios
+        .get("http://localhost:5001/user")
+        .then((res) => {
+          setArtists(res.data);
+        })
+        .catch((err) => console.log(err.message));
+    }
+    if (filters[1].checked) {
+      axios
+        .get("http://localhost:5001/song")
+        .then((res) => {
+          setSongs(res.data);
+        })
+        .catch((err) => console.log(err.message));
+    }
+    if (filters[2].checked) {
+      axios
+        .get("http://localhost:5001/post")
+        .then((res) => {
+          setPosts(res.data);
+        })
+        .catch((err) => console.log(err.message));
+    }
+  }, []);
+
   const changeCheckbox = (index) => {
     const newObject = filters.map((filter, i) => {
       if (i === index) return { ...filter, checked: !filter.checked };
@@ -27,51 +58,50 @@ const Search = () => {
   };
 
   const updateSeatch = (e) => {
-    setSearchText(e.target.value);
+    const search = e.target.value.toLowerCase();
+    setSearchText(search);
 
-    const filterFetched = (arr, type) => {
-      const filtered = arr.map((item) => {
+    let temp = [];
+    temp = artists.filter((artist) => {
+      if (artist.realname.toLowerCase().includes(search)) {
+        return artist;
+      }
+    });
+    setShowArtists(temp);
 
-        return item;
-      });
-      return filtered;
-    };
+    temp = songs.filter((song) => {
+      // TODO
+      return song;
+    });
+    setShowSongs(temp);
 
-    if (filters[0].checked) {
-      axios
-        .get("http://localhost:5001/user")
-        .then((res) => {
-          setArtists(filterFetched(res.data));
-        })
-        .catch((err) => console.log(err.message));
-    }
-    if (filters[1].checked) {
-      axios
-        .get("http://localhost:5001/song")
-        .then((res) => {
-          setSongs(filterFetched(res.data));
-        })
-        .catch((err) => console.log(err.message));
-    }
-    if (filters[2].checked) {
-      axios
-        .get("http://localhost:5001/post")
-        .then((res) => {
-          setPosts(filterFetched(res.data));
-        })
-        .catch((err) => console.log(err.message));
-    }
+    temp = posts.filter((post) => {
+      if (post.title.toLowerCase().includes(search) || post.description.toLowerCase().includes(search)) {
+        return post;
+      }
+    });
+    setShowPosts(temp);
   };
 
   const ArtistCard = ({ artist }) => {
-    return <div className="w-auto m-2 p-2 h-32 bg-gray-400">Artist</div>;
+    return (
+      <div className="w-auto m-2 p-2 h-32 bg-gray-400">
+        {artist.realname}
+      </div>
+    );
   };
   const SongCard = ({ song }) => {
-    return <div className="w-auto m-2 p-2 h-32 bg-gray-400">Song</div>;
-  };
+    return (
+      <div className="w-auto m-2 p-2 h-32 bg-gray-400">
+        Song
+      </div>
+    );  };
   const PostCard = ({ post }) => {
-    return <div className="w-auto m-2 p-2 h-32 bg-gray-400">Post</div>;
-  };
+    return (
+      <div className="w-auto m-2 p-2 h-32 bg-gray-400">
+        {post.title}
+      </div>
+    );  };
 
   return (
     <div>
@@ -105,32 +135,32 @@ const Search = () => {
         </div>
 
         <div className="w-4/5 h-full flex justify-center ">
-          {artists.length > 0 && filters[0].checked && (
+          {showArtists.length > 0 && filters[0].checked && (
             <div className="flex flex-col w-1/3">
               <p className="text-2xl text-center pt-1 border-2 border-black">
                 Artists
               </p>
-              {artists.map((artist, index) => (
+              {showArtists.map((artist, index) => (
                 <ArtistCard key={index} artist={artist} />
               ))}
             </div>
           )}
-          {songs.length > 0 && filters[1].checked && (
+          {showSongs.length > 0 && filters[1].checked && (
             <div className="flex flex-col w-1/3">
               <p className="text-2xl text-center pt-1 border-2 border-black">
                 Songs
               </p>
-              {songs.map((song, index) => (
+              {showSongs.map((song, index) => (
                 <SongCard key={index} song={song} />
               ))}
             </div>
           )}
-          {posts.length > 0 && filters[2].checked && (
+          {showPosts.length > 0 && filters[2].checked && (
             <div className="flex flex-col w-1/3">
               <p className="text-2xl text-center pt-1 border-2 border-black">
                 Posts
               </p>
-              {posts.map((post, index) => (
+              {showPosts.map((post, index) => (
                 <PostCard key={index} post={post} />
               ))}
             </div>
