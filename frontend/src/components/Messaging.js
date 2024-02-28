@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import axios from "axios";
 import { auth } from "./firebase";
+import {storage, ref, getDownloadURL} from './firebase';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
@@ -13,9 +14,10 @@ const Messaging = ({ title }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [userData, setUserData] = useState({
     realname: "",
-    friends: []
+    friends: [],
   });
   const [friendObjArr, setFriendObjArr] = useState([]);
+  const [pfpArr, setpfpArr] = useState([]);
   const userId = auth.currentUser.uid;
   //const friendObjArr = [];
   useEffect(() => {
@@ -30,8 +32,16 @@ const Messaging = ({ title }) => {
                 .then((friendRes) => {
                   console.log("inner");
                   console.log(friendRes.data);
-                  const {profilePic, realname} = friendRes.data;
-                  setFriendObjArr(prevArr=> [...prevArr, { profilePic, realname }]);
+                  const {uid, profilePic, realname} = friendRes.data;
+                  const picRef = ref(storage, "user/"+profilePic);
+                  getDownloadURL(picRef).then((url) => {
+                    setFriendObjArr(prevArr=> [...prevArr, { uid, profilePic, realname, url}]);
+                    console.log(url)
+                    //setpfpArr(pArr => [...pArr, url]);                  
+                  }).catch(error => {
+                    console.error("Error getting pfp url:", error);
+                  });
+
                 })
                 .catch((error) => {
                   console.error("Error fetching friend data:", error);
@@ -114,12 +124,12 @@ const Messaging = ({ title }) => {
                 {(friendObjArr).map((friend, index) => (
                   <div key={index} className="flex items-center border-b border-gray-300 p-2">
                     <div>
-                      {/*<img
-                        src={profileImage}
+                      <img
+                        src={friend.url}
                         alt={`Profile ${index + 1}`}
                         className="w-12 h-12 rounded-full cursor-pointer"
-                        onClick={() => console.log(`Clicked on profile ${index + 1}`)}
-                />*/}
+                        onClick={() => console.log(`Clicked on profile ${friend.uid + 1}`)}
+                />
                     </div>
                     {/*  actions for each profile card */}
                     <div className="ml-4">
