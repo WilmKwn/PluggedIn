@@ -18,8 +18,9 @@ const Messaging = ({ title }) => {
     friends: [],
   });
   const [friendObjArr, setFriendObjArr] = useState([]);
-  const userId = auth.currentUser.uid;
-  
+  const userId = localStorage.getItem("userId");
+  console.log("--");
+  console.log(userId);
   useEffect(() => { 
     axios.get(`http://localhost:5001/user/${userId}`)
         .then((res) => {
