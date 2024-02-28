@@ -64,7 +64,8 @@ const Post = ({postParam}) => {
   };
 
   useEffect(() => {
-    const picRef = ref(storage, "user/"+post.media);
+    console.log(post.media);
+    const picRef = ref(storage, "post/"+post.media);
     getDownloadURL(picRef).then((url) => {
       setMedia(url);
     }).catch(err => {
