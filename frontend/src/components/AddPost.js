@@ -13,6 +13,7 @@ const AddPost = () => {
   const [postMediaName, setPostMediaName] = useState("");
   const [postTags, setPostTags] = useState("");
   const [isSong, setIsSong] = useState(false);
+  const [isNews, setIsNews] = useState(false);
 
   const navigate = useNavigate();
 
@@ -25,7 +26,23 @@ const AddPost = () => {
     const file = e.target.files[0];
     setPostMedia(file);
     setPostMediaName(file.name);
+    // Reset both toggles when a new media is selected
     setIsSong(false);
+    setIsNews(false);
+  };
+
+  const handleSongSwitchChange = (newValue) => {
+    setIsSong(newValue);
+    if (newValue) {
+      setIsNews(false); // Turn off news if song is turned on
+    }
+  };
+
+  const handleNewsSwitchChange = (newValue) => {
+    setIsNews(newValue);
+    if (newValue) {
+      setIsSong(false); // Turn off song if news is turned on
+    }
   };
 
   const handleSubmit = async () => {
@@ -47,7 +64,7 @@ const AddPost = () => {
       media: postMediaName,
       tags: formattedTags,
       archived: false,
-      news: false,
+      news: isNews,
       date: creationDate,
       owner: auth.currentUser.uid,
       comments: [],
@@ -111,12 +128,21 @@ const AddPost = () => {
                 <span className="mr-2">Song</span>
                 <Switch
                   checked={isSong}
-                  onChange={setIsSong}
+                  onChange={handleSongSwitchChange} // Updated to use the new handler
                   onColor="#007AFF"
                   offColor="#E5E5EA"
                 />
               </div>
             )}
+            <div className="flex items-center justify-center mb-3">
+              <span className="mr-2">News</span>
+              <Switch
+                checked={isNews}
+                onChange={handleNewsSwitchChange} // Updated to use the new handler
+                onColor="#007AFF"
+                offColor="#E5E5EA"
+              />
+            </div>
             <input
               type="text"
               placeholder="Tags"
