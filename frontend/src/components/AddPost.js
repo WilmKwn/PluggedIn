@@ -19,13 +19,10 @@ const AddPost = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async () => {
-        // create a post object
-        const postID = Date.now().toString();
         const creationDate = new Date();
         const archived = false;
         const news = false;
         const post = {
-            uid: postID,
             title: postTitle,
             description: postDescription,
             media: postMediaName,
@@ -33,14 +30,20 @@ const AddPost = () => {
             archived: archived,
             news: news,
             date: creationDate,
-            owner: auth.currentUser.uid
+            owner: auth.currentUser.uid,
+            comments: [],
+            reactions: {
+                likes: 0,
+                dislikes: 0,
+                laughs: 0
+            }
         }
 
         // submit the post to the database
         try {
             if (postMedia) {
-                console.log("post/"+postMediaName);
-                const picRef = ref(storage, "post/"+postMediaName);
+                console.log("post/" + postMediaName);
+                const picRef = ref(storage, "post/" + postMediaName);
                 uploadBytes(picRef, postMedia).then(() => {
                     console.log("Successfully uploaded image");
                 });
@@ -80,7 +83,7 @@ const AddPost = () => {
                         <input
                             type="file"
                             placeholder="Media"
-                            onChange={(e) => {setPostMedia(e.target.files[0]); setPostMediaName(e.target.files[0].name)}}
+                            onChange={(e) => { setPostMedia(e.target.files[0]); setPostMediaName(e.target.files[0].name) }}
                             className="w-full h-10 mb-3 border-2 border-black"
                         />
                         <input

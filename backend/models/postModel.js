@@ -4,10 +4,6 @@ const postSchema = mongoose.Schema(
 
     // MAKE SURE TO ADD TOGGLE FOR NORMAL POSTS AND PROJECT POSTS
     {
-        uid: {
-            type: String,
-            required: true,
-        },
         title: {
             type: String,
             required: true,
@@ -38,6 +34,16 @@ const postSchema = mongoose.Schema(
         owner: {
             type: String,
             required: true
+        },
+        comments: [{
+            text: String,
+            owner: String,
+            postedAt: { type: Date, default: Date.now() }
+        }],
+        reactions: {
+            likes: { type: Number, default: 0 },
+            dislikes: { type: Number, default: 0 },
+            laughs: { type: Number, default: 0 }
         }
     }
 );

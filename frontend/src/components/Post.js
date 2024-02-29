@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
+import axios from 'axios';
+import { storage, ref, getDownloadURL, auth } from './firebase';
 
-import {storage, ref, getDownloadURL} from './firebase';
-
-const Post = ({postParam}) => {
+const Post = ({ postParam }) => {
   const [post] = useState(postParam);
 
   const [likeStatus, setLikeStatus] = useState(false);
@@ -57,20 +57,34 @@ const Post = ({postParam}) => {
 
   const handleCommentSubmit = (event) => {
     event.preventDefault();
+    const owner = auth.currentUser.uid;
     if (commentInput.trim()) {
       setComments([...comments, commentInput.trim()]);
+
+      // Send comment to the backend
+      try {
+        axios.post(`http://localhost:5001/post/${post._id}/comment`, {
+          text: commentInput.trim(),
+          owner: owner,
+        });
+      } catch (err) {
+        console.log(err.message);
+      }
+
       setCommentInput("");
     }
   };
 
   useEffect(() => {
     console.log(post.media);
-    const picRef = ref(storage, "post/"+post.media);
+    const picRef = ref(storage, "post/" + post.media);
     getDownloadURL(picRef).then((url) => {
       setMedia(url);
     }).catch(err => {
       console.log(err);
     });
+    const comments = post.comments.map((comment) => comment.text);
+    setComments(comments);
   }, []);
 
   return (
