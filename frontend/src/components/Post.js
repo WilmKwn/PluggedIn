@@ -28,7 +28,7 @@ const Post = ({ postParam }) => {
     if (post.media) {
       const extension = post.media.split(".").pop().toLowerCase();
       setMediaExtension(extension);
-      if (["mp4", "webm", "ogg"].includes(extension)) {
+      if (["mp4", "webm", "ogg", "mp3", "wav"].includes(extension)) {
         setMediaType("video");
       } else {
         setMediaType("image");
@@ -145,6 +145,13 @@ const Post = ({ postParam }) => {
           <source src={media} type={`video/${mediaExtension}`} />
           Your browser does not support the video tag.
         </video>
+      )}
+
+      {mediaType === "audio" && post.media && (
+        <audio controls className="post-audio w-1/2">
+          <source src={media} type={`audio/${mediaExtension}`} />
+          Your browser does not support the audio tag.
+        </audio>
       )}
       <div className="post-tags">Tags: {post.tags}</div>
       <div className="post-interactions">
