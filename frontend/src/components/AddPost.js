@@ -108,7 +108,7 @@ const AddPost = () => {
             />
             {postMedia && isAudioOrVideo(postMediaName) && (
               <div className="flex items-center justify-center mb-3">
-                <span className="mr-2">Is this a song?</span>
+                <span className="mr-2">Song</span>
                 <Switch
                   checked={isSong}
                   onChange={setIsSong}
