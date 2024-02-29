@@ -117,6 +117,7 @@ const Messaging = ({ title }) => {
           console.error("Error sending message:", error);
         });
     }
+    setCurrFriendObj({ uid: currFriendObj.uid, realname: currFriendObj.realname });
     findConversation();
   };
   const modalStyles = {
