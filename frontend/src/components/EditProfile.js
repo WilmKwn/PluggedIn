@@ -8,10 +8,12 @@ import SecondaryBanner from "./SecondaryBanner";
 import "../App.css";
 import "../index.css";
 import SecondaryBottomBar from "./SecondaryBottomBar";
+import Switch from "react-ios-switch";
 
 const EditProfile = () => {
   const [skills, setSkills] = useState(["Mixing", "Connecting", "Producing"]); // Sample skills
   const [newSkill, setNewSkill] = useState("");
+  const [isNewsAccount, setNewsAccount] = useState(false);
 
   const addSkill = () => {
     if (newSkill && !skills.includes(newSkill)) {
@@ -25,6 +27,10 @@ const EditProfile = () => {
   };
 
   const handleSkillChange = (event) => {
+    setNewSkill(event.target.value);
+  };
+
+  const handleNewsAccountChange = (event) => {
     setNewSkill(event.target.value);
   };
   return (
@@ -55,6 +61,15 @@ const EditProfile = () => {
           <button className="cta-button" onClick={addSkill}>
             Add Skill
           </button>
+        </div>
+        <div className="flex items-center justify-center mb-3">
+          <span className="mr-2">News Account</span>
+          <Switch
+            checked={isNewsAccount}
+            onChange={setNewsAccount}
+            onColor="#007AFF"
+            offColor="#E5E5EA"
+          />
         </div>
       </div>
       <SecondaryBottomBar />
