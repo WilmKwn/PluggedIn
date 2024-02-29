@@ -23,18 +23,16 @@ const conversationSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        user1: {
-            type: [mongoose.Schema.Types.ObjectId],
-            ref: 'users',
+        user1id: { // first alphabetically
+            type: String,
             required: true,
         },
-        user2: {
-            type: [mongoose.Schema.Types.ObjectId],
-            ref: 'users',
+        user2id: {
+            type: String,
             required: true,
         },
         messages: {
-            type: messageSchema,
+            type: [messageSchema],
             required: false
         }
         
