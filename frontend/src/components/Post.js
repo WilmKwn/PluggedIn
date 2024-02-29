@@ -7,7 +7,7 @@ const Post = ({ postParam }) => {
   const [post] = useState(postParam);
 
   // Dummy user details
-  const [username, setUsername] = useState("TEST USER");
+  const [username, setUsername] = useState();
   const [userProfilePic, setUserProfilePic] = useState(
     "https://via.placeholder.com/150"
   );
@@ -92,14 +92,18 @@ const Post = ({ postParam }) => {
     event.preventDefault();
     const owner = auth.currentUser.uid;
     if (commentInput.trim()) {
-      setComments([...comments, commentInput.trim()]);
-
       // Send comment to the backend
       try {
-        axios.post(`http://localhost:5001/post/${post._id}/comment`, {
-          text: commentInput.trim(),
-          owner: owner,
-        });
+        axios.get(`http://localhost:5001/user/${owner}`)
+          .then((res) => {
+            const commentOwner = res.data.realname;
+            const newComment = {
+              text: commentInput.trim(),
+              owner: commentOwner,
+            }
+            axios.post(`http://localhost:5001/post/${post._id}/comment`, newComment);
+            setComments([...comments, newComment]);
+          })
       } catch (err) {
         console.log(err.message);
       }
@@ -118,8 +122,25 @@ const Post = ({ postParam }) => {
       .catch((err) => {
         console.log(err);
       });
-    const comments = post.comments.map((comment) => comment.text);
+    const comments = post.comments;
     setComments(comments);
+
+    axios.get(`http://localhost:5001/user/${post.owner}`)
+      .then((res) => {
+        console.log(res.data);
+        setUsername(res.data.realname);
+        if (res.data.profilePic !== "No file chosen") {
+          const profilePicRef = ref(storage, "user/" + res.data.profilePic);
+          console.log(profilePicRef);
+          getDownloadURL(profilePicRef)
+            .then((url) => {
+              setUserProfilePic(url);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      })
   }, []);
 
   return (
@@ -175,11 +196,13 @@ const Post = ({ postParam }) => {
         </button>
       </div>
       <div className="post-comments">
-        {comments.map((comment, index) => (
-          <div key={index} className="comment">
-            You: {comment}
-          </div>
-        ))}
+        {comments.map(({ text, owner }, index) => {
+          return (
+            <div key={index} className="comment">
+              {owner} : {text}
+            </div>
+          );
+        })}
         <form onSubmit={handleCommentSubmit} className="comment-form">
           <input
             type="text"
