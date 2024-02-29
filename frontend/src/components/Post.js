@@ -158,20 +158,18 @@ const Post = ({ postParam }) => {
         <h2 className="font-bold">{post.title}</h2>
         <p>{post.description}</p>
       </div>
-      {mediaType === "image" && post.media && (
+      {mediaType === "image" && media!=='' && (
         <img src={media} alt="Post media" className="post-image w-1/2" />
       )}
-      {mediaType === "video" && post.media && (
+      {mediaType === "video" && media!=='' && (
         <video controls className="post-video w-1/2">
-          <source src={media} type={`video/${mediaExtension}`} />
-          Your browser does not support the video tag.
+          <source src={media} />
         </video>
       )}
 
-      {mediaType === "audio" && post.media && (
+      {mediaType === "audio" && media!=='' && (
         <audio controls className="post-audio w-1/2">
           <source src={media} type={`audio/${mediaExtension}`} />
-          Your browser does not support the audio tag.
         </audio>
       )}
       <div className="post-tags">Tags: {post.tags}</div>
