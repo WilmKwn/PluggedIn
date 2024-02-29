@@ -6,6 +6,12 @@ import { storage, ref, getDownloadURL, auth } from "./firebase";
 const Post = ({ postParam }) => {
   const [post] = useState(postParam);
 
+  // Dummy user details
+  const [username, setUsername] = useState("TEST USER");
+  const [userProfilePic, setUserProfilePic] = useState(
+    "https://via.placeholder.com/150"
+  );
+
   const [likeStatus, setLikeStatus] = useState(false);
   const [dislikeStatus, setDislikeStatus] = useState(false);
   const [laughStatus, setLaughStatus] = useState(false);
@@ -118,6 +124,15 @@ const Post = ({ postParam }) => {
 
   return (
     <div className="post-card">
+      <div className="user-info-container">
+        <img
+          src={userProfilePic}
+          alt="User profile"
+          style={{ width: "50px", height: "50px" }}
+          className="user-profile-pic"
+        />
+        <span className="username">{username}</span>
+      </div>
       <div className="post-header">
         <h2 className="font-bold">{post.title}</h2>
         <p>{post.description}</p>
@@ -174,5 +189,4 @@ const Post = ({ postParam }) => {
     </div>
   );
 };
-
 export default Post;

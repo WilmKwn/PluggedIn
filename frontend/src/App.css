@@ -291,3 +291,14 @@ body, h1, h2, p {
   background-color: #c53030;
 }
 
+.user-info-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.user-profile-pic {
+  margin-right: 10px;
+}
+
+
