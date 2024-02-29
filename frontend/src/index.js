@@ -12,6 +12,7 @@ import Search from "./components/search";
 import Settings from "./components/settings";
 import AddPost from "./components/AddPost";
 import Post from "./components/Post";
+import EditProfile from "./components/EditProfile";
 
 const Root = () => {
   return (
@@ -27,6 +28,7 @@ const Root = () => {
         <Route path="/settings" element={<Settings />} />
         <Route path="/addpost" element={<AddPost />} />
         <Route path="/post" element={<Post />} />
+        <Route path="/editprofile" element={<EditProfile />} />
       </Routes>
     </Router>
   );

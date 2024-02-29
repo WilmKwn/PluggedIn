@@ -58,4 +58,22 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+// add comment to post with id
+router.post('/:id/comment', async (req, res) => {
+    const { id } = req.params;
+    const { text, owner } = req.body;
+
+    try {
+        // console.log(id, text, owner)
+        const post = await Post.findById(id);
+        // console.log(post)
+        post.comments.push({ text, owner });
+        await post.save();
+        return res.status(200).send('successfully added comment');
+    } catch (err) {
+        console.log(err.message);
+        return res.status(500).send(err.message);
+    }
+})
+
 export default router;

@@ -12,7 +12,7 @@ import MainBottomBar from "./MainBottomBar";
 import ProfileBottomBar from "./ProfileBottomBar";
 import ProfileBanner from "./ProfileBanner";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const Banner = () => {
   const navigate = useNavigate();
@@ -27,8 +27,6 @@ const Footer = () => {
   return <ProfileBottomBar />;
 };
 
-
-
 const Profile = () => {
   const [userData, setUserData] = useState({
     profilePic: "",
@@ -39,21 +37,20 @@ const Profile = () => {
     projects: [],
   });
   const userId = localStorage.getItem("userId");
-  
 
   useEffect(() => {
-    axios.get(`http://localhost:5001/user/${userId}`)
-        .then((res) => {
-            // Process the user data here if the response was successful (status 200)
-            console.log("got user data");
-            setUserData(res.data); // Update state with user data
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-            // Handle any errors that occur during the fetch request
-        });
-  }, []); 
-
+    axios
+      .get(`http://localhost:5001/user/${userId}`)
+      .then((res) => {
+        // Process the user data here if the response was successful (status 200)
+        console.log("got user data");
+        setUserData(res.data); // Update state with user data
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle any errors that occur during the fetch request
+      });
+  }, []);
 
   const Gallery = () => {
     return (
@@ -67,7 +64,7 @@ const Profile = () => {
       </div>
     );
   };
-  
+
   const Activity = () => {
     return (
       <div className="w-1/3 h-full text-center pt-28 border-2 border-black">
@@ -80,53 +77,65 @@ const Profile = () => {
       </div>
     );
   };
-  
-  const ProfileInfo = () => {  
-      // // check for profile pic
-      if (!userData.profilePic || userData.profilePic === null) {
-          userData.profilePic = "No Profile Picture";
-      }
-  
-      // check for null skills and description and projects
-      if (!userData.skills ||userData.skills.length === 0) {
-          userData.skills = "No Skills";
-      }
-  
-      if (userData.description === null) {
-          userData.description = "No Description";
-      }
-  
-      if (!userData.projects || userData.projects.length === 0) {
-          userData.projects = "No Projects";
-      }
 
-      // GET IMAGE FROM FIREBASE STORAGE
-      const [image, setImage] = useState('');
-      useEffect(() => {
-        const picRef = ref(storage, "user/"+userData.profilePic);
-        getDownloadURL(picRef).then((url) => {
+  const ProfileInfo = () => {
+    const [skills, setSkills] = useState(["Mixing", "Connecting", "Producing"]);
+    // // check for profile pic
+    if (!userData.profilePic || userData.profilePic === null) {
+      userData.profilePic = "No Profile Picture";
+    }
+
+    // check for null skills and description and projects
+    if (!userData.skills || userData.skills.length === 0) {
+      userData.skills = "No Skills";
+    }
+
+    if (userData.description === null) {
+      userData.description = "No Description";
+    }
+
+    if (!userData.projects || userData.projects.length === 0) {
+      userData.projects = "No Projects";
+    }
+
+    // GET IMAGE FROM FIREBASE STORAGE
+    const [image, setImage] = useState("");
+    useEffect(() => {
+      const picRef = ref(storage, "user/" + userData.profilePic);
+      getDownloadURL(picRef)
+        .then((url) => {
           setImage(url);
-        }).catch(err => {
+        })
+        .catch((err) => {
           console.log(err);
         });
-      }, []);
+    }, []);
 
-      return (
-          <div className="w-1/3 h-full pt-28 flex flex-col items-center">
-              {userData.profilePic==="No file chosen" ? 
-                <div className="w-40 h-40 bg-gray-300"></div>
-                :
-                <img className="w-40" src={image} />
-              }
-              <div>{userData.name}</div>
-              <div>{userData.genre}</div>
-              <div>{userData.description}</div>
-              <div>{userData.skills}</div>
-              <div>{userData.projects}</div>
+    return (
+      <div className="w-1/3 h-full pt-28 flex flex-col items-center">
+        {userData.profilePic === "No file chosen" ? (
+          <div className="w-40 h-40 bg-gray-300"></div>
+        ) : (
+          <img className="w-40" src={image} />
+        )}
+        <div>{userData.name}</div>
+        <div>{userData.genre}</div>
+        <div>{userData.description}</div>
+        <div>{userData.projects}</div>
+
+        <div className="edit-profile-container">
+          <div className="skills-container">
+            <h2>Skills</h2>
+            <ul>
+              {skills.map((skill, index) => (
+                <li key={index}>{skill}</li>
+              ))}
+            </ul>
           </div>
-      )
-      // return <p></p>
-  }
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div>
