@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
-import axios from 'axios';
-import { storage, ref, getDownloadURL, auth } from './firebase';
+import axios from "axios";
+import { storage, ref, getDownloadURL, auth } from "./firebase";
 
 const Post = ({ postParam }) => {
   const [post] = useState(postParam);
@@ -15,6 +15,33 @@ const Post = ({ postParam }) => {
   const [comments, setComments] = useState([]);
   const [commentInput, setCommentInput] = useState("");
   const [media, setMedia] = useState("");
+  const [mediaType, setMediaType] = useState("");
+  const [mediaExtension, setMediaExtension] = useState("");
+
+  useEffect(() => {
+    if (post.media) {
+      const extension = post.media.split(".").pop().toLowerCase();
+      setMediaExtension(extension);
+      if (["mp4", "webm", "ogg"].includes(extension)) {
+        setMediaType("video");
+      } else {
+        setMediaType("image");
+      }
+      const picRef = ref(storage, "post/" + post.media);
+      getDownloadURL(picRef)
+        .then((url) => {
+          setMedia(url);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    setComments(post.comments.map((comment) => comment.text));
+  }, [post]);
+
+  useEffect(() => {
+    setComments(post.comments);
+  }, [post.media, post.comments]);
 
   const handleLike = () => {
     setLikeStatus(!likeStatus);
@@ -76,13 +103,15 @@ const Post = ({ postParam }) => {
   };
 
   useEffect(() => {
-    console.log(post.media);
+    //console.log(post.media);
     const picRef = ref(storage, "post/" + post.media);
-    getDownloadURL(picRef).then((url) => {
-      setMedia(url);
-    }).catch(err => {
-      console.log(err);
-    });
+    getDownloadURL(picRef)
+      .then((url) => {
+        setMedia(url);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     const comments = post.comments.map((comment) => comment.text);
     setComments(comments);
   }, []);
@@ -93,10 +122,16 @@ const Post = ({ postParam }) => {
         <h2 className="font-bold">{post.title}</h2>
         <p>{post.description}</p>
       </div>
-      {post.media && (
+      {mediaType === "image" && post.media && (
         <img src={media} alt="Post media" className="post-image w-1/2" />
       )}
-      {post.tags && <p className="post-tags">Tags: {post.tags.join(", ")}</p>}
+      {mediaType === "video" && post.media && (
+        <video controls className="post-video w-1/2">
+          <source src={media} type={`video/${mediaExtension}`} />
+          Your browser does not support the video tag.
+        </video>
+      )}
+      <div className="post-tags">Tags: {post.tags}</div>
       <div className="post-interactions">
         <button
           className={`post-button ${likeStatus ? "active" : ""}`}
