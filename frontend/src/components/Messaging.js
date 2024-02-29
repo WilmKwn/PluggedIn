@@ -63,9 +63,6 @@ const Messaging = ({ title }) => {
   }, [userId]);
   //const currFriendId = friendObjArr[0] ? friendObjArr[0].uid : "None";
 
-  const profileImages = ["/PFP1.jpg", "/PFP2.jpg", "/PFP3.jpg", "/PFP4.jpg", "/PFP1.jpg", "/PFP2.jpg", "/PFP3.jpg", "/PFP4.jpg"];
-  const connectionNames = [];
-
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
