@@ -72,14 +72,14 @@ const Messaging = ({ title }) => {
   const findConversation = () => {
     const user1id = userId < currFriendObj.uid ? userId : currFriendObj.uid;
     const user2id = userId > currFriendObj.uid ? userId : currFriendObj.uid;
-    console.log(user1id)
-    console.log(user2id)
+    //console.log(user1id)
+    //console.log(user2id)
     const conversation = conversations.find((conv) => (
       (conv.user1id === user1id && conv.user2id === user2id) ||
       (conv.user2id === user1id && conv.user1id === user2id)
     ));
-    console.log("get convo");
-    console.log(conversation);
+    //console.log("get convo");
+    //console.log(conversation);
     return conversation;
   };
   useEffect(() => {
