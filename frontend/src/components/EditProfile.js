@@ -16,6 +16,8 @@ const EditProfile = () => {
   const [newSkill, setNewSkill] = useState("");
   const [isNewsAccount, setNewsAccount] = useState(false);
   const userId = localStorage.getItem("userId");
+ 
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -25,14 +27,7 @@ const EditProfile = () => {
           skills: skills,
           newsAccount: isNewsAccount,
         };
-        
-        const updateUrl = `http://localhost:5001/user/${auth.currentUser.uid}`;
 
-        // Use axios.patch to send a PATCH request with the data
-        axios.patch(updateUrl, data).then(() => {
-          console.log("Profile updated successfully");
-          navigate("/feed");
-        });*/
         navigate("/profile");
       } catch (error) {
         console.error("Error updating profile catch:", error);

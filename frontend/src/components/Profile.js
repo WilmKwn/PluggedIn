@@ -83,6 +83,7 @@ const Profile = () => {
     return (
       <div className="w-1/3 overflow-y-hidden">
 <div className="h-full text-center pt-28 border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg overflow-hidden">        
+        
         {/* <div>Activity</div>
         <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
           <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
