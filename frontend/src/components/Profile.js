@@ -124,7 +124,7 @@ const Profile = () => {
         <div>{userData.projects}</div>
 
         <div className="edit-profile-container">
-          <div className="skills-container">
+          <div className="skills-profile">
             <h2>Skills</h2>
             <ul>
               {skills.map((skill, index) => (
