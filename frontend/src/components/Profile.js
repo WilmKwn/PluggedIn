@@ -40,7 +40,7 @@ const Profile = () => {
   });
   const [userPosts, setUserPosts] = useState([]);
   const userId = localStorage.getItem("userId");
-
+  const [userSkills, setUserSkills] = useState([]);
   useEffect(() => {
     axios
       .get(`http://localhost:5001/user/${userId}`)
@@ -81,7 +81,9 @@ const Profile = () => {
 
   const Activity = () => {
     return (
-<div className="w-1/3 h-full text-center pt-28 border-2 border-black bg-gradient-to-br from-emerald-950 to-gray-300 rounded-md shadow-lg overflow-hidden">        {/* <div>Activity</div>
+      <div className="w-1/3 overflow-y-hidden">
+<div className="h-full text-center pt-28 border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg overflow-hidden">        
+        {/* <div>Activity</div>
         <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
           <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
             <p>HI</p>
@@ -92,11 +94,11 @@ const Profile = () => {
             <MicroPost key={index} postParam={post} />
           ))}
       </div>
+      </div>
     );
   };
 
   const ProfileInfo = () => {
-    const [skills, setSkills] = useState(["Mixing", "Connecting", "Producing"]);
     // // check for profile pic
     if (!userData.profilePic || userData.profilePic === null) {
       userData.profilePic = "No Profile Picture";
@@ -104,7 +106,11 @@ const Profile = () => {
 
     // check for null skills and description and projects
     if (!userData.skills || userData.skills.length === 0) {
-      userData.skills = "No Skills";
+      userData.skills = [];
+    }
+    else {
+      setUserSkills(userData.skills);
+      console.log(userData.skills)
     }
 
     if (userData.description === null) {
@@ -127,9 +133,9 @@ const Profile = () => {
           console.log(err);
         });
     }, []);
-
+    console.log(userData.skills)
     return (
-      <div className="w-1/3 h-full pt-28 flex flex-col items-center">
+      <div className="h-full pt-28 flex flex-col items-center">
         {userData.profilePic === "No file chosen" ? (
           <div className="w-40 h-40 bg-gray-300"></div>
         ) : (
@@ -144,9 +150,9 @@ const Profile = () => {
           <div className="skills-profile">
             <h2>Skills</h2>
             <ul>
-              {skills.map((skill, index) => (
+              {userData.skills.length > 0 ? userSkills.map((skill, index) => (
                 <li key={index}>{skill}</li>
-              ))}
+              )) : "No skills"}
             </ul>
           </div>
         </div>
@@ -157,7 +163,7 @@ const Profile = () => {
   return (
     <div>
       <Banner />
-      <div className="w-full h-full flex justify-between items-center">
+      <div className="w-full h-full flex justify-around items-center">
         <Gallery />
         <ProfileInfo />
         <Activity />

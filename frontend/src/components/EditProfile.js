@@ -12,14 +12,14 @@ import Switch from "react-ios-switch";
 
 const EditProfile = () => {
   const navigate = useNavigate();
-  const [skills, setSkills] = useState(["Mixing", "Connecting", "Producing"]); // Sample skills
+  const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState("");
   const [isNewsAccount, setNewsAccount] = useState(false);
-
+  const userId = localStorage.getItem("userId");
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (auth.currentUser) {
+    if (userId) {
       try {
         //edits account
 
@@ -38,22 +38,60 @@ const EditProfile = () => {
           console.log("Profile updated successfully");
           navigate("/feed");
         });*/
-        navigate("/feed");
+        navigate("/profile");
       } catch (error) {
         console.error("Error updating profile: ", error);
       }
     }
   };
+  useEffect(() => {
+    axios.get(`http://localhost:5001/user/${userId}`)
+      .then((res) => {
+        console.log('got user data');
+        console.log(res.data.skills)
+        setSkills(res.data.skills);
+      })
+      .catch(error => {
+        console.error('Error getting user data:', error);
+      });
+  }, []);
 
   const addSkill = () => {
+    console.log(newSkill)
     if (newSkill && !skills.includes(newSkill)) {
+      // Update the local state first
       setSkills([...skills, newSkill]);
-      setNewSkill("");
+
+      // Make API call to add skill to the user
+      axios.post(`http://localhost:5001/user/${userId}/skills`, { skill: newSkill })
+        .then(response => {
+          console.log('Skill added successfully:', response.data);
+          // Optionally, update the UI or handle success
+        })
+        .catch(error => {
+          console.error('Error adding skill:', error);
+          // Optionally, handle the error or revert local state changes
+        });
+        setNewSkill("");
+
     }
+
   };
 
   const deleteSkill = (skillToDelete) => {
+    // Update the local state first
     setSkills(skills.filter((skill) => skill !== skillToDelete));
+
+    // Make API call to delete skill from the user
+    axios.delete(`http://localhost:5001/user/${userId}/skills/${skillToDelete}`)
+      .then(response => {
+        console.log('Skill deleted successfully:', response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch(error => {
+        console.error('Error deleting skill:', error);
+        // Optionally, handle the error or revert local state changes
+      });
   };
 
   const handleSkillChange = (event) => {

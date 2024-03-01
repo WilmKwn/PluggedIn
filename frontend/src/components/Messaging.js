@@ -30,19 +30,15 @@ const Messaging = ({ title }) => {
     axios.get(`http://localhost:5001/user/${userId}`)
       .then((res) => {
         // Process the user data here if the response was successful (status 200)
-        console.log(`http://localhost:5001/user/${userId}`);
-        console.log(res.data);
+
         setUserData(res.data); // Update state with user data
         res.data.friends.forEach(friendId => {
           axios.get(`http://localhost:5001/user/${friendId}`)
             .then((friendRes) => {
-              console.log("inner");
-              console.log(friendRes.data);
               const { uid, profilePic, realname } = friendRes.data;
               const picRef = ref(storage, "user/" + profilePic);
               getDownloadURL(picRef).then((url) => {
                 setFriendObjArr(prevArr => [...prevArr, { uid, profilePic, realname, url }]);
-                console.log(url)
                 //setpfpArr(pArr => [...pArr, url]);                  
               }).catch(error => {
                 console.error("Error getting pfp url:", error);
@@ -82,8 +78,6 @@ const Messaging = ({ title }) => {
   useEffect(() => {
     axios.get("http://localhost:5001/conversation")
       .then((res) => {
-        console.log("set convos");
-        console.log(res)
         setConversations(res.data);
       })
       .catch((error) => {
@@ -93,7 +87,6 @@ const Messaging = ({ title }) => {
 
   const selectedConversation = findConversation();
   const handleSendMessage = () => {
-    console.log(messageText);
     if (messageText.trim() !== "" && currFriendObj.uid !== "") {
       // Check if the message is not empty
       const newMessage = {
@@ -106,7 +99,6 @@ const Messaging = ({ title }) => {
       // Make an API call to add the new message to the selected conversation
       axios.post(`http://localhost:5001/conversation/message`, newMessage)
         .then((response) => {
-          console.log("Message sent successfully:", response.data);
           // Optionally, update the UI or clear the input field after sending the message
           setMessageText("");
         })

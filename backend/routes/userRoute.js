@@ -52,10 +52,8 @@ router.get('/:id/info', async (req, res) => {
 
         // If user found, return user data
         if (user) {
-            console.log('User found:', user);
             return res.status(200).json(user);
         } else {
-            console.log('User not found');
             return res.status(500).send("null");
         }
     } catch (error) {
@@ -87,5 +85,44 @@ router.delete('/:id', async (req, res) => {
         return res.status(500).send(err.message);
     }
 });
+// add skill to user
+router.post('/:id/skills', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { skill } = req.body;
+       
+        // Find the user by id
+        const user = await User.findOne({ uid: id });
+        // If user found, add the skill
+        if (user) {
+            user.skills.push(skill);
+            await user.save();
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).send('User not found');
+        }
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+// delete skill from user
+router.delete('/:id/skills/:delSkill', async (req, res) => {
+    try {
+        const { id, delSkill } = req.params;
+        // Find the user by id
+        const user = await User.findOne({ uid: id });
+        // If user found, delete the skill
+        if (user) {
+            user.skills = user.skills.filter(skill => skill != delSkill);
+            await user.save();
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).send('User not found');
+        }
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
 
 export default router;
