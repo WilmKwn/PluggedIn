@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
 
-import {storage, ref, getDownloadURL} from './firebase';
+import { storage, ref, getDownloadURL } from "./firebase";
 
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
@@ -10,7 +10,7 @@ import MainBanner from "./MainBanner";
 import "../App.css";
 import "../index.css";
 import MainBottomBar from "./MainBottomBar";
-import Post from './Post';
+import Post from "./Post";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -19,9 +19,8 @@ const Feed = () => {
     axios
       .get("http://localhost:5001/post")
       .then((res) => {
-        // get all posts on page load
         const fetchedPosts = res.data;
-        setPosts(fetchedPosts);
+        setPosts(fetchedPosts.reverse()); // Reverse the order of posts here
       })
       .catch((err) => {
         console.log("Cant load posts: ", err);
@@ -29,8 +28,8 @@ const Feed = () => {
   }, []);
 
   const Card = ({ post }) => {
-    const [name, setName] = useState('');
-    const [image, setImage] = useState('');
+    const [name, setName] = useState("");
+    const [image, setImage] = useState("");
     const [media, setMedia] = useState(null);
 
     useEffect(() => {
@@ -38,31 +37,35 @@ const Feed = () => {
         const user = res.data;
         setName(user.realname);
 
-        const picRef = ref(storage, "user/"+user.profilePic);
-        getDownloadURL(picRef).then((url) => {
-          setImage(url);
-        }).catch(err => {
-          console.log(err);
-        });
+        const picRef = ref(storage, "user/" + user.profilePic);
+        getDownloadURL(picRef)
+          .then((url) => {
+            setImage(url);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 
-        const mediaRef = ref(storage, "post/"+post.media);
-        getDownloadURL(mediaRef).then((url) => {
-          setMedia(url);
-        }).catch(err => {
-          console.log(err);
-        });
+        const mediaRef = ref(storage, "post/" + post.media);
+        getDownloadURL(mediaRef)
+          .then((url) => {
+            setMedia(url);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       });
-    }, [])
+    }, []);
 
     return (
       <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            {image === 'No file chosen' ? 
+            {image === "No file chosen" ? (
               <div className="w-12 h-12 bg-white rounded-xl m-1"></div>
-              :
-              <img className='w-12 rounded-xl' src={image} />
-            }
+            ) : (
+              <img className="w-12 rounded-xl" src={image} />
+            )}
             <p className="text-md pl-2">{name}</p>
           </div>
           <p className="mr-2">{post.date.substring(0, 10)}</p>

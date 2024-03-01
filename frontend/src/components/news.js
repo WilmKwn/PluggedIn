@@ -19,9 +19,8 @@ const Feed = () => {
     axios
       .get("http://localhost:5001/post")
       .then((res) => {
-        // get all posts on page load
         const fetchedPosts = res.data;
-        setPosts(fetchedPosts);
+        setPosts(fetchedPosts.reverse()); // Reverse the order of posts here
       })
       .catch((err) => {
         console.log("Cant load posts: ", err);
