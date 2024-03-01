@@ -94,16 +94,18 @@ const Post = ({ postParam }) => {
     if (commentInput.trim()) {
       // Send comment to the backend
       try {
-        axios.get(`http://localhost:5001/user/${owner}`)
-          .then((res) => {
-            const commentOwner = res.data.realname;
-            const newComment = {
-              text: commentInput.trim(),
-              owner: commentOwner,
-            }
-            axios.post(`http://localhost:5001/post/${post._id}/comment`, newComment);
-            setComments([...comments, newComment]);
-          })
+        axios.get(`http://localhost:5001/user/${owner}`).then((res) => {
+          const commentOwner = res.data.realname;
+          const newComment = {
+            text: commentInput.trim(),
+            owner: commentOwner,
+          };
+          axios.post(
+            `http://localhost:5001/post/${post._id}/comment`,
+            newComment
+          );
+          setComments([...comments, newComment]);
+        });
       } catch (err) {
         console.log(err.message);
       }
@@ -125,22 +127,21 @@ const Post = ({ postParam }) => {
     const comments = post.comments;
     setComments(comments);
 
-    axios.get(`http://localhost:5001/user/${post.owner}`)
-      .then((res) => {
-        console.log(res.data);
-        setUsername(res.data.realname);
-        if (res.data.profilePic !== "No file chosen") {
-          const profilePicRef = ref(storage, "user/" + res.data.profilePic);
-          console.log(profilePicRef);
-          getDownloadURL(profilePicRef)
-            .then((url) => {
-              setUserProfilePic(url);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      })
+    axios.get(`http://localhost:5001/user/${post.owner}`).then((res) => {
+      console.log(res.data);
+      setUsername(res.data.realname);
+      if (res.data.profilePic !== "No file chosen") {
+        const profilePicRef = ref(storage, "user/" + res.data.profilePic);
+        console.log(profilePicRef);
+        getDownloadURL(profilePicRef)
+          .then((url) => {
+            setUserProfilePic(url);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
   }, []);
 
   return (
@@ -158,16 +159,16 @@ const Post = ({ postParam }) => {
         <h2 className="font-bold">{post.title}</h2>
         <p>{post.description}</p>
       </div>
-      {mediaType === "image" && media!=='' && (
+      {mediaType === "image" && media !== "" && (
         <img src={media} alt="Post media" className="post-image w-1/2" />
       )}
-      {mediaType === "video" && media!=='' && (
+      {mediaType === "video" && media !== "" && (
         <video controls className="post-video w-1/2">
           <source src={media} />
         </video>
       )}
 
-      {mediaType === "audio" && media!=='' && (
+      {mediaType === "audio" && media !== "" && (
         <audio controls className="post-audio w-1/2">
           <source src={media} type={`audio/${mediaExtension}`} />
         </audio>
@@ -209,7 +210,7 @@ const Post = ({ postParam }) => {
             onChange={(e) => setCommentInput(e.target.value)}
             placeholder="Add a comment..."
           />
-          <button type="submit" className="cta-button">
+          <button type="submit" className="submit-button">
             Comment
           </button>
         </form>
