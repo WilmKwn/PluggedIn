@@ -36,6 +36,18 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// get posts with id of owner
+router.get('/owner/:owner', async (req, res) => {
+    try {
+        const { owner } = req.params;
+        const posts = await Post.find({ owner });
+        return res.status(200).json(posts);
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
+
 // update post with id
 router.put('/:id', async (req, res) => {
     try {

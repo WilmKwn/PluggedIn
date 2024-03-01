@@ -11,6 +11,8 @@ import MainBanner from "./MainBottomBar";
 import MainBottomBar from "./MainBottomBar";
 import ProfileBottomBar from "./ProfileBottomBar";
 import ProfileBanner from "./ProfileBanner";
+import Post from "./Post";
+import MicroPost from "./MicroPost";
 
 import { useState, useEffect } from "react";
 
@@ -36,6 +38,7 @@ const Profile = () => {
     skills: [],
     projects: [],
   });
+  const [userPosts, setUserPosts] = useState([]);
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -50,6 +53,17 @@ const Profile = () => {
         console.error("Error:", error);
         // Handle any errors that occur during the fetch request
       });
+  }, []);
+  useEffect(() => {
+    axios.get(`http://localhost:5001/post/owner/${userId}`)
+    .then((res) => {
+      console.log("got posts");
+      console.log(res.data);
+      setUserPosts(res.data)
+    })
+    .catch((error) => {
+      console.error("Error getting posts:", error);
+    });
   }, []);
 
   const Gallery = () => {
@@ -67,13 +81,16 @@ const Profile = () => {
 
   const Activity = () => {
     return (
-      <div className="w-1/3 h-full text-center pt-28 border-2 border-black">
-        <div>Activity</div>
+<div className="w-1/3 h-full text-center pt-28 border-2 border-black bg-gradient-to-br from-emerald-950 to-gray-300 rounded-md shadow-lg overflow-hidden">        {/* <div>Activity</div>
         <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
           <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
             <p>HI</p>
           </div>
-        </div>
+        </div> */}
+        {userPosts.map((post, index) => (
+            // <Card key={index} post={post} />
+            <MicroPost key={index} postParam={post} />
+          ))}
       </div>
     );
   };
