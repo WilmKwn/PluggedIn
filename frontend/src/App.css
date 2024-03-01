@@ -110,6 +110,20 @@ body {
   background-color: #084392;
 }
 
+
+.submit-button {
+  background-color: #0a66c2;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.submit-button:hover {
+  background-color: #084392;
+}
+
 .app-footer {
   background-color: #283e4a;
   color: white;
