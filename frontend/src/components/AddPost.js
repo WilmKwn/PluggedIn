@@ -26,7 +26,7 @@ const AddPost = () => {
     const file = e.target.files[0];
     setPostMedia(file);
     setPostMediaName(file.name);
-    // Reset both toggles when a new media is selected
+
     setIsSong(false);
     setIsNews(false);
   };
@@ -34,14 +34,14 @@ const AddPost = () => {
   const handleSongSwitchChange = (newValue) => {
     setIsSong(newValue);
     if (newValue) {
-      setIsNews(false); // Turn off news if song is turned on
+      setIsNews(false);
     }
   };
 
   const handleNewsSwitchChange = (newValue) => {
     setIsNews(newValue);
     if (newValue) {
-      setIsSong(false); // Turn off song if news is turned on
+      setIsSong(false);
     }
   };
 
@@ -59,18 +59,17 @@ const AddPost = () => {
     // Only add additional tags if postTags is not empty
     if (postTags.trim()) {
       const additionalTags = postTags.split(",").map((tag) => `#${tag.trim()}`);
-      tagsArray = tagsArray.concat(additionalTags);
+      tagsArray = [...tagsArray, ...additionalTags];
     }
 
-    // Join the tags array into a string to prepare it for the post object
-    const formattedTags = tagsArray.join(", ");
+    // The tags array now contains all hashtags including the default and any user-provided tags
 
     // Create the post object with all necessary data
     const post = {
       title: postTitle,
       description: postDescription,
       media: postMediaName,
-      tags: formattedTags,
+      tags: tagsArray, // Use the array of hashtags directly
       archived: false,
       news: isNews,
       date: creationDate,
@@ -110,7 +109,7 @@ const AddPost = () => {
     setPostMedia(null);
     setPostTags("");
     setIsSong(false);
-    setIsNews(false); // Added this line to reset the news switch as well
+    setIsNews(false); // Reset the news switch as well
   };
 
   return (
