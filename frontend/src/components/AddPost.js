@@ -48,15 +48,15 @@ const AddPost = () => {
   const handleSubmit = async () => {
     const creationDate = new Date();
 
-    // Initialize the tags array with a default value
     let tagsArray = ["#foryou"];
 
-    // Conditionally add "#song" to the tags array if applicable
     if (isSong) {
       tagsArray.push("#song");
     }
+    if (isNews) {
+      tagsArray.push("#news");
+    }
 
-    // Only add additional tags if postTags is not empty
     if (postTags.trim()) {
       const additionalTags = postTags.split(",").map((tag) => `#${tag.trim()}`);
       tagsArray = [...tagsArray, ...additionalTags];

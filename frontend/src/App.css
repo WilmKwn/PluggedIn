@@ -251,6 +251,14 @@ body, h1, h2, p {
   width: 50%; /* Adjust width as needed */
 }
 
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
 
 
 
