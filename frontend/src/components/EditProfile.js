@@ -12,35 +12,51 @@ import Switch from "react-ios-switch";
 
 const EditProfile = () => {
   const navigate = useNavigate();
-  const [skills, setSkills] = useState(["Mixing", "Connecting", "Producing"]); // Sample skills
+  const [skills, setSkills] = useState([]); // Sample skills
   const [newSkill, setNewSkill] = useState("");
   const [isNewsAccount, setNewsAccount] = useState(false);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (auth.currentUser) {
+        try {
+          const response = await axios.get(
+            `http://localhost:5001/user/${auth.currentUser.uid}`
+          );
+          const userSkills = response.data.skills || [];
+          setSkills(userSkills);
+        } catch (error) {
+          console.error("Error fetching user data: ", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (auth.currentUser) {
       try {
-        //edits account
-
-        //DOES NOT MAKE ANY CHANGES, NEED TO CORRECT
-        //CURRENTLY EDITS SKILLS and NEWSACCOUNT
-        /*
-        const data = {
+        const updatedData = {
           skills: skills,
-          newsAccount: isNewsAccount,
         };
-        
-        const updateUrl = `http://localhost:5001/user/${auth.currentUser.uid}`;
 
-        // Use axios.patch to send a PATCH request with the data
-        axios.patch(updateUrl, data).then(() => {
-          console.log("Profile updated successfully");
-          navigate("/feed");
-        });*/
-        navigate("/feed");
+        /* //IMPORTANT FUNCTION, currently doesn't work
+        const response = await axios.put(
+          `http://localhost:5001/user/${auth.currentUser.uid}`,
+          updatedData
+        );*/
+
+        if (response.status === 200) {
+          console.log("Profile updated successfully!");
+          navigate("/profile");
+        } else {
+          console.error("Error updating profile:", response.data);
+        }
       } catch (error) {
-        console.error("Error updating profile: ", error);
+        console.error("Error updating profile catch:", error);
       }
     }
   };
