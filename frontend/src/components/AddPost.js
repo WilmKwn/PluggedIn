@@ -48,16 +48,24 @@ const AddPost = () => {
   const handleSubmit = async () => {
     const creationDate = new Date();
 
-    const tagsArray = postTags.split(",").map((tag) => `#${tag.trim()}`);
+    // Initialize the tags array with a default value
+    let tagsArray = ["#foryou"];
 
+    // Conditionally add "#song" to the tags array if applicable
     if (isSong) {
-      tagsArray.unshift("#song");
+      tagsArray.push("#song");
     }
 
-    tagsArray.unshift("#foryou");
+    // Only add additional tags if postTags is not empty
+    if (postTags.trim()) {
+      const additionalTags = postTags.split(",").map((tag) => `#${tag.trim()}`);
+      tagsArray = tagsArray.concat(additionalTags);
+    }
 
+    // Join the tags array into a string to prepare it for the post object
     const formattedTags = tagsArray.join(", ");
 
+    // Create the post object with all necessary data
     const post = {
       title: postTitle,
       description: postDescription,
@@ -76,26 +84,33 @@ const AddPost = () => {
       isSong: isSong,
     };
 
+    // Attempt to submit the post
     try {
+      // Upload the media if present
       if (postMedia) {
         console.log("post/" + postMediaName);
         const picRef = ref(storage, "post/" + postMediaName);
         await uploadBytes(picRef, postMedia);
         console.log("Successfully uploaded media");
       }
+      // Submit the post data
       await axios.post("http://localhost:5001/post", post);
       console.log("Post submitted successfully");
+      // Navigate the user to the feed page upon success
       navigate("/feed");
     } catch (err) {
+      // Log any errors that occur during the submission process
       console.log("Error submitting post", err.message);
     }
 
+    // Reset form fields to their default values after submission
     setPostTitle("");
     setPostDescription("");
     setPostMediaName("");
     setPostMedia(null);
     setPostTags("");
     setIsSong(false);
+    setIsNews(false); // Added this line to reset the news switch as well
   };
 
   return (
