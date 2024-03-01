@@ -87,10 +87,11 @@ const Feed = () => {
           {posts.length === 0 && (
             <div>Hello! This is your feed, a place to view humblebrags.</div>
           )}
-          {posts.map((post, index) => (
-            // <Card key={index} post={post} />
-            <Post key={index} postParam={post} />
-          ))}
+          <div className="posts-container">
+            {posts.map((post, index) => (
+              <Post key={index} postParam={post} />
+            ))}
+          </div>
         </div>
       </div>
       <MainBottomBar />

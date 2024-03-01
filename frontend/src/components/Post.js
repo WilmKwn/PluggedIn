@@ -160,20 +160,23 @@ const Post = ({ postParam }) => {
         <p>{post.description}</p>
       </div>
       {mediaType === "image" && media !== "" && (
-        <img src={media} alt="Post media" className="post-image w-1/2" />
+        <img src={media} alt="Post media" className="post-image center-media" />
       )}
       {mediaType === "video" && media !== "" && (
-        <video controls className="post-video w-1/2">
+        <video controls className="post-video center-media">
           <source src={media} />
         </video>
       )}
-
       {mediaType === "audio" && media !== "" && (
-        <audio controls className="post-audio w-1/2">
+        <audio controls className="post-audio center-media">
           <source src={media} type={`audio/${mediaExtension}`} />
         </audio>
       )}
-      <div className="post-tags">Tags: {post.tags}</div>
+
+      <div>&nbsp;</div>
+
+      <div className="post-tags">Tags: {post.tags.join(" ")}</div>
+
       <div className="post-interactions">
         <button
           className={`post-button ${likeStatus ? "active" : ""}`}

@@ -21,12 +21,7 @@ const EditProfile = () => {
 
     if (userId) {
       try {
-        //edits account
-
-        //DOES NOT MAKE ANY CHANGES, NEED TO CORRECT
-        //CURRENTLY EDITS SKILLS and NEWSACCOUNT
-        /*
-        const data = {
+        const updatedData = {
           skills: skills,
           newsAccount: isNewsAccount,
         };
@@ -40,7 +35,7 @@ const EditProfile = () => {
         });*/
         navigate("/profile");
       } catch (error) {
-        console.error("Error updating profile: ", error);
+        console.error("Error updating profile catch:", error);
       }
     }
   };

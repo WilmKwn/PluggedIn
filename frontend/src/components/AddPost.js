@@ -26,7 +26,7 @@ const AddPost = () => {
     const file = e.target.files[0];
     setPostMedia(file);
     setPostMediaName(file.name);
-    // Reset both toggles when a new media is selected
+
     setIsSong(false);
     setIsNews(false);
   };
@@ -34,35 +34,42 @@ const AddPost = () => {
   const handleSongSwitchChange = (newValue) => {
     setIsSong(newValue);
     if (newValue) {
-      setIsNews(false); // Turn off news if song is turned on
+      setIsNews(false);
     }
   };
 
   const handleNewsSwitchChange = (newValue) => {
     setIsNews(newValue);
     if (newValue) {
-      setIsSong(false); // Turn off song if news is turned on
+      setIsSong(false);
     }
   };
 
   const handleSubmit = async () => {
     const creationDate = new Date();
 
-    const tagsArray = postTags.split(",").map((tag) => `#${tag.trim()}`);
+    let tagsArray = ["#foryou"];
 
     if (isSong) {
-      tagsArray.unshift("#song");
+      tagsArray.push("#song");
+    }
+    if (isNews) {
+      tagsArray.push("#news");
     }
 
-    tagsArray.unshift("#foryou");
+    if (postTags.trim()) {
+      const additionalTags = postTags.split(",").map((tag) => `#${tag.trim()}`);
+      tagsArray = [...tagsArray, ...additionalTags];
+    }
 
-    const formattedTags = tagsArray.join(", ");
+    // The tags array now contains all hashtags including the default and any user-provided tags
 
+    // Create the post object with all necessary data
     const post = {
       title: postTitle,
       description: postDescription,
       media: postMediaName,
-      tags: formattedTags,
+      tags: tagsArray, // Use the array of hashtags directly
       archived: false,
       news: isNews,
       date: creationDate,
@@ -76,26 +83,33 @@ const AddPost = () => {
       isSong: isSong,
     };
 
+    // Attempt to submit the post
     try {
+      // Upload the media if present
       if (postMedia) {
         console.log("post/" + postMediaName);
         const picRef = ref(storage, "post/" + postMediaName);
         await uploadBytes(picRef, postMedia);
         console.log("Successfully uploaded media");
       }
+      // Submit the post data
       await axios.post("http://localhost:5001/post", post);
       console.log("Post submitted successfully");
+      // Navigate the user to the feed page upon success
       navigate("/feed");
     } catch (err) {
+      // Log any errors that occur during the submission process
       console.log("Error submitting post", err.message);
     }
 
+    // Reset form fields to their default values after submission
     setPostTitle("");
     setPostDescription("");
     setPostMediaName("");
     setPostMedia(null);
     setPostTags("");
     setIsSong(false);
+    setIsNews(false); // Reset the news switch as well
   };
 
   return (

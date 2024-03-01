@@ -20,7 +20,10 @@ const Feed = () => {
       .get("http://localhost:5001/post")
       .then((res) => {
         const fetchedPosts = res.data;
-        setPosts(fetchedPosts.reverse()); // Reverse the order of posts here
+        const filteredPosts = fetchedPosts.reverse().filter((post) => {
+          return post.tags.includes("#news");
+        });
+        setPosts(filteredPosts);
       })
       .catch((err) => {
         console.log("Cant load posts: ", err);
