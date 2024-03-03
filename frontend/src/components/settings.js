@@ -1,21 +1,50 @@
-import React, {useEffect, useState} from "react";
-import { signOut } from "firebase/auth";
-
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
-import axios from 'axios';
-import SecondaryBanner from './SecondaryBanner';
-import "../App.css";
-import '../index.css';
+import SecondaryBanner from "./SecondaryBanner";
 import SecondaryBottomBar from "./SecondaryBottomBar";
-
+import "../App.css";
+import "../index.css";
 
 const Settings = () => {
-    return (
-        <div>
-            <SecondaryBanner />
-            <SecondaryBottomBar />
-        </div>
-    );
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    // Implement your submission logic here
+    // For this example, let's just log the email and password
+    console.log("Email:", email);
+    console.log("Password:", password);
+  };
+
+  return (
+    <div>
+      <SecondaryBanner />
+      <h1 style={{ textAlign: "center", fontWeight: "bold" }}>
+        User's Full Name
+      </h1>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <input
+          type="text"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={{ marginRight: "10px" }}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <button onClick={handleSubmit}>Submit</button>
+      </div>
+      <SecondaryBottomBar />
+    </div>
+  );
 };
+
 export default Settings;
