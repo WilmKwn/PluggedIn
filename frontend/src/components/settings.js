@@ -21,26 +21,27 @@ const Settings = () => {
   return (
     <div>
       <SecondaryBanner />
-      <h1 style={{ textAlign: "center", fontWeight: "bold" }}>
-        User's Full Name
-      </h1>
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <h1 style={{ fontWeight: "bold" }}>User's Full Name</h1>
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
         <input
           type="text"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={{ marginRight: "10px" }}
+          style={{ marginRight: "10px", padding: "5px" }}
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          style={{ padding: "5px" }}
         />
       </div>
       <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <button onClick={handleSubmit}>Submit</button>
+        <button onClick={handleSubmit} style={{ padding: "10px 20px", fontSize: "16px" }}>Submit</button>
       </div>
       <SecondaryBottomBar />
     </div>
