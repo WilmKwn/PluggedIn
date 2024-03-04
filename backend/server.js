@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import WebSocket, {WebSocketServer} from 'ws';
 
 import userRoute from './routes/userRoute.js';
 import postRoute from './routes/postRoute.js';
@@ -19,8 +20,35 @@ app.use('/user', userRoute);
 app.use('/post', postRoute);
 app.use('/conversation', conversationRoute);
 // connect to db
-mongoose.connect(process.env.MONGODB_URL).then(() => {
+mongoose.connect(process.env.MONGODB_URL).then((client) => {
     console.log('Successfully connected to database');
+    
+    const postStream = mongoose.connection.collection('posts').watch();
+    const postWss = new WebSocketServer({ port: 8080 });
+    postWss.on('connection', (ws) => {
+        console.log("Client connected");
+
+        postStream.on('change', (change) => {
+            ws.send(JSON.stringify(change));
+        });
+        ws.on('close', () => {
+            console.log("Client disconnected");
+        });
+    });
+
+    const convoStream = mongoose.connection.collection('conversations').watch();
+    const convoWss = new WebSocketServer({ port: 8181 });
+    convoWss.on('connection', (ws) => {
+        console.log("Client connected");
+
+        convoStream.on('change', (change) => {
+            ws.send(JSON.stringify(change));
+        });
+        ws.on('close', () => {
+            console.log("Client disconnected");
+        });
+    });
+    
     app.listen(process.env.PORT, () => {
         console.log("Listening on port", process.env.PORT);
     });

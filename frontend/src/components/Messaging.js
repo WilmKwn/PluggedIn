@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import axios from "axios";
-import { auth } from "./firebase";
 import { storage, ref, getDownloadURL } from './firebase';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
 import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-
-//import {useState, useEffect} from 'react';
 
 const Messaging = ({ title }) => {
 
@@ -29,9 +26,6 @@ const Messaging = ({ title }) => {
   useEffect(() => {
     axios.get(`http://localhost:5001/user/${userId}`)
       .then((res) => {
-        // Process the user data here if the response was successful (status 200)
-
-        setUserData(res.data); // Update state with user data
         res.data.friends.forEach(friendId => {
           axios.get(`http://localhost:5001/user/${friendId}`)
             .then((friendRes) => {
@@ -39,7 +33,6 @@ const Messaging = ({ title }) => {
               const picRef = ref(storage, "user/" + profilePic);
               getDownloadURL(picRef).then((url) => {
                 setFriendObjArr(prevArr => [...prevArr, { uid, profilePic, realname, url }]);
-                //setpfpArr(pArr => [...pArr, url]);                  
               }).catch(error => {
                 console.error("Error getting pfp url:", error);
               });
@@ -52,12 +45,8 @@ const Messaging = ({ title }) => {
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
-        // Handle any errors that occur during the fetch request
       });
-
-
   }, [userId]);
-  //const currFriendId = friendObjArr[0] ? friendObjArr[0].uid : "None";
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -65,17 +54,14 @@ const Messaging = ({ title }) => {
   const findConversation = () => {
     const user1id = userId < currFriendObj.uid ? userId : currFriendObj.uid;
     const user2id = userId > currFriendObj.uid ? userId : currFriendObj.uid;
-    //console.log(user1id)
-    //console.log(user2id)
     const conversation = conversations.find((conv) => (
       (conv.user1id === user1id && conv.user2id === user2id) ||
       (conv.user2id === user1id && conv.user1id === user2id)
     ));
-    //console.log("get convo");
-    //console.log(conversation);
     return conversation;
   };
-  useEffect(() => {
+
+  const fetchConversation = () => {
     axios.get("http://localhost:5001/conversation")
       .then((res) => {
         setConversations(res.data);
@@ -83,7 +69,16 @@ const Messaging = ({ title }) => {
       .catch((error) => {
         console.error("Error fetching conversations:", error);
       });
-  }, [currFriendObj]);
+  }
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8181');
+    ws.onmessage = (event) => {
+      console.log("HERE")
+      fetchConversation();
+    };
+    fetchConversation();
+  }, []);
 
   const selectedConversation = findConversation();
   const handleSendMessage = () => {
@@ -96,10 +91,8 @@ const Messaging = ({ title }) => {
         //timestamp: new Date().toISOString(),
       };
 
-      // Make an API call to add the new message to the selected conversation
       axios.post(`http://localhost:5001/conversation/message`, newMessage)
         .then((response) => {
-          // Optionally, update the UI or clear the input field after sending the message
           setMessageText("");
         })
         .catch((error) => {

@@ -15,7 +15,7 @@ import Post from "./Post";
 const Feed = () => {
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
+  const fetchPosts = () => {
     axios
       .get("http://localhost:5001/post")
       .then((res) => {
@@ -25,7 +25,16 @@ const Feed = () => {
       .catch((err) => {
         console.log("Cant load posts: ", err);
       });
+  }
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8080');
+    ws.onmessage = (event) => {
+      fetchPosts();
+    };
+    fetchPosts();
   }, []);
+
 
   const Card = ({ post }) => {
     const [name, setName] = useState("");
@@ -88,8 +97,8 @@ const Feed = () => {
             <div>Hello! This is your feed, a place to view humblebrags.</div>
           )}
           <div className="posts-container">
-            {posts.map((post, index) => (
-              <Post key={index} postParam={post} />
+            {posts.map((post) => (
+              <Post key={post._id} postParam={post} />
             ))}
           </div>
         </div>
