@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { signOut } from "firebase/auth";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { auth } from "./firebase";
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,6 +17,7 @@ import "../index.css";
 
 const MainBottomBar = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleSettings = () => {
         navigate("/settings");
@@ -39,7 +40,7 @@ const MainBottomBar = () => {
             </div>
             <div>
                 <button onClick={handleAddPost}
-                    className="button">
+                    className={`button ${location.pathname !== '/feed' && 'hidden'}`}>
                     Add Post <FontAwesomeIcon icon={faAdd} />
                 </button>
             </div>

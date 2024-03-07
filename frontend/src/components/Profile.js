@@ -1,28 +1,22 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from "./firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useNavigate, useLocation } from "react-router-dom";
 import { storage, ref, getDownloadURL } from "./firebase";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import MainBanner from "./MainBottomBar";
 import MainBottomBar from "./MainBottomBar";
 import ProfileBottomBar from "./ProfileBottomBar";
 import ProfileBanner from "./ProfileBanner";
-import Post from "./Post";
 import MicroPost from "./MicroPost";
 
 import { useState, useEffect } from "react";
 
-const Banner = () => {
+const Banner = (id) => {
   const navigate = useNavigate();
 
   const handleFeed = () => {
     navigate("/feed");
   };
-  return <ProfileBanner />;
+  return <ProfileBanner id={id} />;
 };
 
 const Footer = () => {
@@ -30,6 +24,9 @@ const Footer = () => {
 };
 
 const Profile = () => {
+  const location = useLocation();
+  const userId = location.state.userId;
+
   const [userData, setUserData] = useState({
     profilePic: "",
     name: "",
@@ -39,7 +36,8 @@ const Profile = () => {
     projects: [],
   });
   const [userPosts, setUserPosts] = useState([]);
-  const userId = localStorage.getItem("userId");
+
+  
   const [userSkills, setUserSkills] = useState([]);
   useEffect(() => {
     axios
@@ -82,7 +80,7 @@ const Profile = () => {
   const Activity = () => {
     return (
       <div className="w-1/3 overflow-y-hidden">
-<div className="h-full text-center pt-28 border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg overflow-hidden">        
+        <div className="h-full text-center pt-28 border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg overflow-hidden">        
         
         {/* <div>Activity</div>
         <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
@@ -94,7 +92,7 @@ const Profile = () => {
             // <Card key={index} post={post} />
             <MicroPost key={index} postParam={post} />
           ))}
-      </div>
+        </div>
       </div>
     );
   };
@@ -142,7 +140,7 @@ const Profile = () => {
         ) : (
           <img className="w-40" src={image} />
         )}
-        <div>{userData.name}</div>
+        <div>{userData.realname}</div>
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
@@ -163,7 +161,7 @@ const Profile = () => {
 
   return (
     <div>
-      <Banner />
+      <Banner id={userId} />
       <div className="w-full h-full flex justify-around items-center">
         <Gallery />
         <ProfileInfo />

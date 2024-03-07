@@ -13,7 +13,7 @@ import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import "../App.css";
 import "../index.css";
 // Settings, Add Post, Other User Profiles
-const ProfileBanner = () => {
+const ProfileBanner = ({id}) => {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
@@ -56,10 +56,12 @@ const ProfileBanner = () => {
             ></img>
             </a>
         </div>
+
+        {console.log(id)}
         
         <nav>
           <button onClick={handleSignOut}
-            className="button">
+            className={`button ${id.id !== localStorage.getItem("userId") && 'hidden'}`}>
                 Sign Out <FontAwesomeIcon icon={faUserSlash} /></button>
         </nav>
       </div>

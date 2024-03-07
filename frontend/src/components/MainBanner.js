@@ -32,7 +32,8 @@ const MainBanner = () => {
     navigate("/gallery");
   }
   const handleProfile = () => {
-    navigate("/profile");
+    const userId = localStorage.getItem("userId");
+    navigate("/profile", { state: { userId } });
   }
   const handleFeed = () => {
     navigate("/feed");

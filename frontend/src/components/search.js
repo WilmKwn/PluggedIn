@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import MainBanner from "./MainBanner";
@@ -7,6 +8,8 @@ import "../index.css";
 import MainBottomBar from "./MainBottomBar";
 
 const Search = () => {
+  const navigate = useNavigate();
+
   const [searchText, setSearchText] = useState("");
   const [filters, setFilters] = useState([
     { by: "Artists", checked: true },
@@ -83,28 +86,33 @@ const Search = () => {
     setShowPosts(temp);
   };
 
+  const artistClicked = (id) => {
+    const userId = id;
+    navigate("/profile", {state: {userId}});
+  }
+
   const ArtistCard = ({ artist }) => {
     return (
-      <div className="w-auto m-2 p-2 h-32 bg-gray-400">
+      <div onClick={()=>{artistClicked(artist.uid)}} className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer">
         {artist.realname}
       </div>
     );
   };
   const SongCard = ({ song }) => {
     return (
-      <div className="w-auto m-2 p-2 h-32 bg-gray-400">
+      <div className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer">
         Song
       </div>
     );  };
   const PostCard = ({ post }) => {
     return (
-      <div className="w-auto m-2 p-2 h-32 bg-gray-400">
+      <div className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer">
         {post.title}
       </div>
     );  };
 
   return (
-    <div>
+    <div className="mb-72">
       <MainBanner />
       <div className="w-full h-screen flex flex-col items-center pt-32">
         <input
@@ -140,8 +148,8 @@ const Search = () => {
               <p className="text-2xl text-center pt-1 border-2 border-black">
                 Artists
               </p>
-              {showArtists.map((artist, index) => (
-                <ArtistCard key={index} artist={artist} />
+              {showArtists.map((artist) => (
+                <ArtistCard key={artist.uid} artist={artist} />
               ))}
             </div>
           )}

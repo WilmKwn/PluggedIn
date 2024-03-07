@@ -1,20 +1,16 @@
-import React, { useEffect } from "react";
-import { signOut } from "firebase/auth";
-
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase";
-import axios from "axios";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear, faPencil, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faAdd } from "@fortawesome/free-solid-svg-icons";
-import { faMessage } from "@fortawesome/free-solid-svg-icons";
+
 import Messaging from "./Messaging";
 
 import "../App.css";
 import "../index.css";
 // Search,
 
-const ProfileBottomBar = () => {
+const ProfileBottomBar = ({currentPlace}) => {
   const navigate = useNavigate();
   const handleSettings = () => {
     navigate("/settings");
