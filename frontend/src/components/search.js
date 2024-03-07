@@ -88,6 +88,7 @@ const Search = () => {
 
   const artistClicked = (id) => {
     const userId = id;
+    console.log("navigate to " + userId);
     navigate("/profile", {state: {userId}});
   }
 

@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import "../App.css";
 import axios from "axios";
 import { storage, ref, getDownloadURL, auth } from "./firebase";
 
 const Post = ({ postParam }) => {
   const [post] = useState(postParam);
-
+  const navigate = useNavigate();
   // Dummy user details
   const [username, setUsername] = useState();
+  const [userId, setUserId] = useState();
+
   const [userProfilePic, setUserProfilePic] = useState(
     "https://via.placeholder.com/150"
   );
+
 
   const [likeStatus, setLikeStatus] = useState(false);
   const [dislikeStatus, setDislikeStatus] = useState(false);
@@ -61,7 +66,11 @@ const Post = ({ postParam }) => {
       setLaughStatus(false);
     }
   };
-
+  const profileClicked = (id) => {
+    const userId = id;
+    console.log("navigate to " + userId);
+    navigate("/profile", {state: {userId}});
+  };
   const handleDislike = () => {
     setDislikeStatus(!dislikeStatus);
     setDislikes(dislikeStatus ? dislikes - 1 : dislikes + 1);
@@ -90,7 +99,7 @@ const Post = ({ postParam }) => {
 
   const handleCommentSubmit = (event) => {
     event.preventDefault();
-    const owner = auth.currentUser.uid;
+    const owner = localStorage.getItem("userId");
     if (commentInput.trim()) {
       // Send comment to the backend
       try {
@@ -130,6 +139,7 @@ const Post = ({ postParam }) => {
     axios.get(`http://localhost:5001/user/${post.owner}`).then((res) => {
       console.log(res.data);
       setUsername(res.data.realname);
+      setUserId(res.data.uid);
       if (res.data.profilePic !== "No file chosen") {
         const profilePicRef = ref(storage, "user/" + res.data.profilePic);
         console.log(profilePicRef);
@@ -148,6 +158,7 @@ const Post = ({ postParam }) => {
     <div className="post-card">
       <div className="user-info-container">
         <img
+          onClick={()=>{profileClicked(userId)}}
           src={userProfilePic}
           alt="User profile"
           style={{ width: "50px", height: "50px" }}
