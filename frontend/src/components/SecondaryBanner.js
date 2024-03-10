@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { signOut } from "firebase/auth";
 
 import { useNavigate } from "react-router-dom";
@@ -35,31 +35,31 @@ const SecondaryBanner = () => {
   const handleFeed = () => {
     navigate("/feed");
   }
-  
+
   return (
     <div className="">
-      <div className="fixed w-full flex justify-between items-center p-3 pl-10 pr-10 bg-emerald-950">
+      <div className="w-full flex justify-between items-center p-3 pl-10 pr-10 bg-emerald-950">
         <div>
           <button onClick={handleBack}
             className="button">
-                <FontAwesomeIcon icon={faArrowLeftLong} /> Back
+            <FontAwesomeIcon icon={faArrowLeftLong} /> Back
           </button>
         </div>
 
-        
+
         <div className="flex items-center pl-14">
-            <a onClick={handleFeed}>
+          <a onClick={handleFeed}>
             <img src="/PI.png"
-            alt="PluggedIn Logo"
-            className="w-20 cursor-pointer"
+              alt="PluggedIn Logo"
+              className="w-20 cursor-pointer"
             ></img>
-            </a>
+          </a>
         </div>
-        
+
         <nav>
           <button onClick={handleProfile}
             className="button">
-                Your Profile <FontAwesomeIcon icon={faUser} /></button>
+            Your Profile <FontAwesomeIcon icon={faUser} /></button>
         </nav>
       </div>
     </div>

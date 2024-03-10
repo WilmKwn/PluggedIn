@@ -43,6 +43,9 @@ const Settings = () => {
       <div style={{ textAlign: "center", marginTop: "20px" }}>
         <button onClick={handleSubmit} style={{ padding: "10px 20px", fontSize: "16px" }}>Submit</button>
       </div>
+      <div>
+        <button>Delete Account</button>
+      </div>
       <SecondaryBottomBar />
     </div>
   );
