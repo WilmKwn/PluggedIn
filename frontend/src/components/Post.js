@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Modal from 'react-modal';
 
 import "../App.css";
 import axios from "axios";
 import { storage, ref, getDownloadURL, auth } from "./firebase";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 
 const Post = ({ postParam }) => {
   const [post] = useState(postParam);
@@ -15,8 +18,40 @@ const Post = ({ postParam }) => {
   const [userProfilePic, setUserProfilePic] = useState(
     "https://via.placeholder.com/150"
   );
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const openModal = () => {
+    const oButt = document.getElementById("optionsButt");
+    const oButtRect = oButt.getBoundingClientRect();
 
-
+    const modalTop = oButtRect.bottom + window.scrollY;
+    const modalLeft = oButtRect.left + window.scrollX;
+    setModalPosition({ top: modalTop, left: modalLeft });
+    setModalOpen(true)
+  };
+  const closeModal = () => setModalOpen(false);
+  const modalStyles = {
+    content: {
+      position: 'relative',
+      bottom: 0,
+      top: `${modalPosition.top}px`,
+      left: `${modalPosition.left}px`,
+      marginRight: '10px',
+      marginBottom: '10px',
+      border: 'none',
+      background: 'white',
+      overflow: 'hidden',
+      WebkitOverflowScrolling: 'touch',
+      borderRadius: '5px',
+      outline: 'none',
+      padding: '0px',
+      width: '300px',
+      height: '200px'
+    },
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    },
+  };
   const [likeStatus, setLikeStatus] = useState(false);
   const [dislikeStatus, setDislikeStatus] = useState(false);
   const [laughStatus, setLaughStatus] = useState(false);
@@ -69,7 +104,7 @@ const Post = ({ postParam }) => {
   const profileClicked = (id) => {
     const userId = id;
     console.log("navigate to " + userId);
-    navigate("/profile", {state: {userId}});
+    navigate("/profile", { state: { userId } });
   };
   const handleDislike = () => {
     setDislikeStatus(!dislikeStatus);
@@ -158,13 +193,48 @@ const Post = ({ postParam }) => {
     <div className="post-card">
       <div className="user-info-container">
         <img
-          onClick={()=>{profileClicked(userId)}}
+          onClick={() => { profileClicked(userId) }}
           src={userProfilePic}
           alt="User profile"
           style={{ width: "50px", height: "50px" }}
           className="user-profile-pic"
         />
         <span className="username">{username}</span>
+        <button className="options-button ml-auto" id="optionsButt" onClick={() => openModal()}>
+          <FontAwesomeIcon icon={faEllipsisV} />
+        </button>
+        <Modal
+          isOpen={isModalOpen}
+          onRequestClose={closeModal}
+          style={modalStyles}
+        >
+          <div className="modal-container">
+            <div className="w-full bg-gray-100 overflow-y-scroll" style={{height: '200px', borderRadius: '5px' }}>
+            <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
+                    {/*  actions for each profile card */}
+                    <div className="ml-4">
+                      <p className="text-gray-800 font-semibold">Button 1</p>
+                      {/* Add more information or actions here */}
+                    </div>
+                  </div>
+                  <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
+                    {/*  actions for each profile card */}
+                    <div className="ml-4">
+                      <p className="text-gray-800 font-semibold">Button 2</p>
+                      {/* Add more information or actions here */}
+                    </div>
+                  </div>
+                  <div className="flex items-center h-1/3 border-gray-300 p-2">
+                    {/*  actions for each profile card */}
+                    <div className="ml-4">
+                      <p className="text-gray-800 font-semibold">Button 3</p>
+                      {/* Add more information or actions here */}
+                    </div>
+                  </div>
+              </div>
+            
+          </div>
+        </Modal>
       </div>
       <div className="post-header">
         <h2 className="font-bold">{post.title}</h2>
