@@ -20,11 +20,16 @@ const Post = ({ postParam }) => {
   );
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-  const openModal = () => {
-    const oButt = document.getElementById("optionsButt");
+  const openModal = (event) => {
+    // const oButt = document.getElementById("optionsButt");
+    // const oButtRect = oButt.getBoundingClientRect();
+    const oButt = event.currentTarget;
     const oButtRect = oButt.getBoundingClientRect();
-
-    const modalTop = oButtRect.bottom + window.scrollY;
+    // console.log(oButtRect.bottom)
+    // console.log(window.scrollY)
+    //const modalTop = oButtRect.bottom + Math.floor(window.scrollY / window.innerHeight) * window.innerHeight;
+    const modalTop = oButtRect.bottom;
+    // console.log(modalTop);
     const modalLeft = oButtRect.left + window.scrollX;
     setModalPosition({ top: modalTop, left: modalLeft });
     setModalOpen(true)
@@ -200,7 +205,7 @@ const Post = ({ postParam }) => {
           className="user-profile-pic"
         />
         <span className="username">{username}</span>
-        <button className="options-button ml-auto" id="optionsButt" onClick={() => openModal()}>
+        <button className="options-button ml-auto" id="optionsButt" onClick={(event) => openModal(event)}>
           <FontAwesomeIcon icon={faEllipsisV} />
         </button>
         <Modal
