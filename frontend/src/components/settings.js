@@ -26,11 +26,11 @@ const Settings = () => {
     if (window.confirm("Are you sure you want to delete your Account?")) {
       // User clicked OK, perform the delete operation
       console.log("Deleting user with ID:", userId);
-      // axios.delete(`http://localhost:5001/user/${userId}`)
-      //   .then(navigate("/"))
-      //   .catch((error) => {
-      //     console.error("Error:", error);
-      //   });
+      axios.delete(`http://localhost:5001/user/${userId}`)
+        .then(navigate("/"))
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     }
   }
 
