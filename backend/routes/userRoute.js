@@ -78,9 +78,15 @@ router.put('/:id', async (req, res) => {
 // delete user with id
 router.delete('/:id', async (req, res) => {
     try {
-        console.log("Deleting user with ID:", req.params.id);
         const { id } = req.params;
-        await User.findByIdAndDelete(id);
+        const query = {
+            uid: id,
+        }
+        const user = await User.findOne({ uid: id });
+        if (user === null) {
+            return res.status(500).send("null");
+        }
+        await User.findOneAndDelete(query);
         return res.status(200).send('successfully deleted');
     } catch (err) {
         return res.status(500).send(err.message);
