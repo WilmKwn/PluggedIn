@@ -86,12 +86,9 @@ router.delete('/:id', async (req, res) => {
         if (user === null) {
             return res.status(500).send("null");
         }
-
-        console.log("query is ", query)
         // await User.findOneAndDelete(query);
         await deleteUserActivity(query);
 
-        console.log("finished deleting")
 
         return res.status(200).send('successfully deleted');
     } catch (err) {

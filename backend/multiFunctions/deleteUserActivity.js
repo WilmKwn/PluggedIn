@@ -16,14 +16,14 @@ export const deleteUserActivity = async (data) => {
         const query = {
             uid: data.uid,
         };
-
+        
         //const user = await User.findOneAndDelete( query );
 
-        if (user === null) {
-            console.log("not found")
-        } else {
-            console.log("found")
-        }
+        // if (user === null) {
+        //     console.log("not found")
+        // } else {
+        //     console.log("found")
+        // }
 
         // Find and delete posts where owner matches the provided uid
         const result = await Post.deleteMany({ owner: query.uid });
