@@ -13,8 +13,10 @@ import Settings from "./components/settings";
 import AddPost from "./components/AddPost";
 import Post from "./components/Post";
 import MicroPost from "./components/MicroPost";
-
 import EditProfile from "./components/EditProfile";
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Root = () => {
   return (
@@ -33,6 +35,7 @@ const Root = () => {
         <Route path="/micropost" element = {<MicroPost />} />
         <Route path="/editprofile" element={<EditProfile />} />
       </Routes>
+      <ToastContainer />
     </Router>
   );
 };
