@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 
 const Banner = (id) => {
   const navigate = useNavigate();
-
+  
   const handleFeed = () => {
     navigate("/feed");
   };
@@ -26,7 +26,7 @@ const Footer = () => {
 const Profile = () => {
   const location = useLocation();
   const userId = location.state.userId;
-
+  const loggedInId = localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")
   const [userData, setUserData] = useState({
     profilePic: "",
     name: "",
@@ -37,7 +37,7 @@ const Profile = () => {
   });
   const [userPosts, setUserPosts] = useState([]);
 
-  
+
   const [userSkills, setUserSkills] = useState([]);
   useEffect(() => {
     axios
@@ -52,16 +52,46 @@ const Profile = () => {
         // Handle any errors that occur during the fetch request
       });
   }, []);
+  const handleConnect = () => {
+    //console.log(id);
+    console.log(userId);
+    console.log(localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying"));
+    axios.post(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/friends`, {friend: userId})
+    .then(response => {
+      console.log('Friend added successfully:', response.data);
+      // Optionally, update the UI or handle success
+    })
+    .catch(error => {
+      console.error('Error adding friend:', error);
+      // Optionally, handle the error or revert local state changes
+    });
+  };
+
+  
+  const handleRemoveConnect = () => {
+
+    // Make API call to delete friend from the user
+    axios.delete(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/friends/${userId}`)
+      .then(response => {
+        console.log('Friend deleted successfully:', response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch(error => {
+        console.error('Error deleting friend:', error);
+        // Optionally, handle the error or revert local state changes
+      });
+  };
+
   useEffect(() => {
     axios.get(`http://localhost:5001/post/owner/${userId}`)
-    .then((res) => {
-      console.log("got posts");
-      console.log(res.data);
-      setUserPosts(res.data)
-    })
-    .catch((error) => {
-      console.error("Error getting posts:", error);
-    });
+      .then((res) => {
+        console.log("got posts");
+        console.log(res.data);
+        setUserPosts(res.data)
+      })
+      .catch((error) => {
+        console.error("Error getting posts:", error);
+      });
   }, []);
 
   const Gallery = () => {
@@ -79,16 +109,16 @@ const Profile = () => {
 
   const Activity = () => {
     return (
-      <div className="w-1/3 overflow-y-hidden">
-        <div className="h-full text-center pt-28 border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg overflow-hidden">        
-        
-        {/* <div>Activity</div>
+      <div className="w-1/3 flex-row h-auto overflow-y-hidden">
+        <div className="h-full text-center pt-28 border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg overflow-y-scroll">
+
+          {/* <div>Activity</div>
         <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
           <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
             <p>HI</p>
           </div>
         </div> */}
-        {userPosts.map((post, index) => (
+          {userPosts.map((post, index) => (
             // <Card key={index} post={post} />
             <MicroPost key={index} postParam={post} />
           ))}
@@ -144,7 +174,24 @@ const Profile = () => {
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
-
+        
+        <div className="flex justify-between items-center">
+          <div>
+          <button onClick={() => handleConnect()}
+            className="button">
+            Connect </button>
+          </div>
+          <div>
+          <button onClick={() => handleRemoveConnect()}
+            className="button">
+            Remove Connection </button>
+          </div>
+          <div>
+          <button onClick={""}
+            className="button">
+            Block </button>
+          </div>
+        </div>
         <div className="edit-profile-container">
           <div className="skills-profile">
             <h2>Skills</h2>

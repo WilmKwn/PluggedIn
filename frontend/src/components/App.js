@@ -16,7 +16,9 @@ const App = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const userId = auth.currentUser.uid;
+        const actualUserIdBecauseWilliamYongUkKwonIsAnnoying = auth.currentUser.uid;
         localStorage.setItem("userId", userId);
+        localStorage.setItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying", userId);
 
         axios.get(`http://localhost:5001/user/${userId}`).then((res) => {
           navigate("/feed");

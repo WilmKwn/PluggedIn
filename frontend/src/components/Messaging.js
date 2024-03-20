@@ -179,15 +179,15 @@ const Messaging = ({ title }) => {
                   <p>
                     {selectedConversation
                       ? (
-                        <>  
+                        <>
                           <p>You have a conversation with {currFriendObj.realname}.</p>
                           {/* Display all messages in the selected conversation */}
                           {selectedConversation.messages.map((message, index) => (
                             <div key={index} className={`mb-2 ${message.senderUid === userId ? ' text-sm ml-auto bg-gray-300' : ' text-sm bg-blue-500 text-white'} p-2 rounded-md`} style={{ maxWidth: '75%' }}>
-            <p className="font-semibold">{message.senderUid === userId ? 'You' : currFriendObj.realname}:</p>
-            <p>{message.content}</p>
-            <p className="text-gray-500 text-xs mt-1">{new Date(message.sent).toLocaleString()}</p>
-          </div>
+                              <p className="font-semibold">{message.senderUid === userId ? 'You' : currFriendObj.realname}:</p>
+                              <p>{message.content}</p>
+                              <p className="text-gray-500 text-xs mt-1">{new Date(message.sent).toLocaleString()}</p>
+                            </div>
                           ))}
                         </>
                       )
