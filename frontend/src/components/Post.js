@@ -60,9 +60,11 @@ const Post = ({ postParam }) => {
   const [likeStatus, setLikeStatus] = useState(false);
   const [dislikeStatus, setDislikeStatus] = useState(false);
   const [laughStatus, setLaughStatus] = useState(false);
+  const [repostStatus, setRepostStatus] = useState(false);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [laughs, setLaughs] = useState(0);
+  const [reposts, setReposts] = useState(0);
   const [comments, setComments] = useState([]);
   const [commentInput, setCommentInput] = useState("");
   const [media, setMedia] = useState("");
@@ -92,11 +94,17 @@ const Post = ({ postParam }) => {
 
   useEffect(() => {
     setComments(post.comments);
+    setLikes(post.reactions.likes);
+    setLaughs(post.reactions.laughs);
+    setDislikes(post.reactions.dislikes);
+    setReposts(post.reactions.reposts);
   }, [post.media, post.comments]);
+
 
   const handleLike = () => {
     setLikeStatus(!likeStatus);
-    setLikes(likeStatus ? likes - 1 : likes + 1);
+    const newLikes = likeStatus ? likes - 1 : likes + 1;
+    setLikes(newLikes);
     if (dislikeStatus) {
       setDislikes(dislikes - 1);
       setDislikeStatus(false);
@@ -105,15 +113,31 @@ const Post = ({ postParam }) => {
       setLaughs(laughs - 1);
       setLaughStatus(false);
     }
+
+    const reactions = {
+      likes: newLikes,
+      dislikes: dislikes,
+      laughs: laughs,
+      reposts: reposts,
+    }
+    console.log(reactions)
+    try {
+      axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
+    } catch (err) {
+      console.log(err.message);
+    }
   };
+
   const profileClicked = (id) => {
     const userId = id;
     console.log("navigate to " + userId);
     navigate("/profile", { state: { userId } });
   };
+
   const handleDislike = () => {
     setDislikeStatus(!dislikeStatus);
-    setDislikes(dislikeStatus ? dislikes - 1 : dislikes + 1);
+    const newDislikes = dislikeStatus ? dislikes - 1 : dislikes + 1;
+    setDislikes(newDislikes);
     if (likeStatus) {
       setLikes(likes - 1);
       setLikeStatus(false);
@@ -122,11 +146,24 @@ const Post = ({ postParam }) => {
       setLaughs(laughs - 1);
       setLaughStatus(false);
     }
+    const reactions = {
+      likes: likes,
+      dislikes: newDislikes,
+      laughs: laughs,
+      reposts: reposts,
+    }
+    console.log(reactions)
+    try {
+      axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   const handleLaugh = () => {
     setLaughStatus(!laughStatus);
-    setLaughs(laughStatus ? laughs - 1 : laughs + 1);
+    const newLaughs = laughStatus ? laughs - 1 : laughs + 1;
+    setLaughs(newLaughs);
     if (likeStatus) {
       setLikes(likes - 1);
       setLikeStatus(false);
@@ -134,6 +171,37 @@ const Post = ({ postParam }) => {
     if (dislikeStatus) {
       setDislikes(dislikes - 1);
       setDislikeStatus(false);
+    }
+    const reactions = {
+      likes: likes,
+      dislikes: dislikes,
+      laughs: newLaughs,
+      reposts: reposts,
+    }
+    console.log(reactions)
+    try {
+      axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const handleRepost = () => {
+    setRepostStatus(!repostStatus);
+    const newReposts = repostStatus ? reposts - 1 : reposts + 1;
+    setReposts(newReposts);
+
+    const reactions = {
+      likes: likes,
+      dislikes: dislikes,
+      laughs: laughs,
+      reposts: newReposts,
+    }
+    console.log(reactions)
+    try {
+      axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
+    } catch (err) {
+      console.log(err.message);
     }
   };
 
@@ -162,6 +230,7 @@ const Post = ({ postParam }) => {
       setCommentInput("");
     }
   };
+
 
   useEffect(() => {
     //console.log(post.media);
@@ -214,30 +283,30 @@ const Post = ({ postParam }) => {
           style={modalStyles}
         >
           <div className="modal-container">
-            <div className="w-full bg-gray-100 overflow-y-scroll" style={{height: '200px', borderRadius: '5px' }}>
-            <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
-                    {/*  actions for each profile card */}
-                    <div className="ml-4">
-                      <p className="text-gray-800 font-semibold">Button 1</p>
-                      {/* Add more information or actions here */}
-                    </div>
-                  </div>
-                  <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
-                    {/*  actions for each profile card */}
-                    <div className="ml-4">
-                      <p className="text-gray-800 font-semibold">Button 2</p>
-                      {/* Add more information or actions here */}
-                    </div>
-                  </div>
-                  <div className="flex items-center h-1/3 border-gray-300 p-2">
-                    {/*  actions for each profile card */}
-                    <div className="ml-4">
-                      <p className="text-gray-800 font-semibold">Button 3</p>
-                      {/* Add more information or actions here */}
-                    </div>
-                  </div>
+            <div className="w-full bg-gray-100 overflow-y-scroll" style={{ height: '200px', borderRadius: '5px' }}>
+              <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
+                {/*  actions for each profile card */}
+                <div className="ml-4">
+                  <p className="text-gray-800 font-semibold">Button 1</p>
+                  {/* Add more information or actions here */}
+                </div>
               </div>
-            
+              <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
+                {/*  actions for each profile card */}
+                <div className="ml-4">
+                  <p className="text-gray-800 font-semibold">Button 2</p>
+                  {/* Add more information or actions here */}
+                </div>
+              </div>
+              <div className="flex items-center h-1/3 border-gray-300 p-2">
+                {/*  actions for each profile card */}
+                <div className="ml-4">
+                  <p className="text-gray-800 font-semibold">Button 3</p>
+                  {/* Add more information or actions here */}
+                </div>
+              </div>
+            </div>
+
           </div>
         </Modal>
       </div>
@@ -281,6 +350,12 @@ const Post = ({ postParam }) => {
           onClick={handleLaugh}
         >
           Laugh ({laughs})
+        </button>
+        <button
+          className={`post-button ${repostStatus ? "active" : ""}`}
+          onClick={handleRepost}
+        >
+          Repost ({reposts})
         </button>
       </div>
       <div className="post-comments">

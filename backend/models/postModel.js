@@ -43,7 +43,8 @@ const postSchema = mongoose.Schema(
         reactions: {
             likes: { type: Number, default: 0 },
             dislikes: { type: Number, default: 0 },
-            laughs: { type: Number, default: 0 }
+            laughs: { type: Number, default: 0 },
+            reposts: { type: Number, default: 0 }
         }
     }
 );
