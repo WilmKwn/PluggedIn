@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import axios from "axios";
 import { storage, ref, getDownloadURL } from './firebase';
+import { toast } from 'react-toastify';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
@@ -74,8 +75,16 @@ const Messaging = ({ title }) => {
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8181');
     ws.onmessage = (event) => {
-      console.log("HERE")
       fetchConversation();
+      const obj = JSON.parse(event.data).updateDescription.updatedFields;
+      const num = obj.__v;
+      const sender = obj[`messages.${num-1}`].senderUid;
+      if (sender !== userId) {
+        axios.get(`http://localhost:5001/user/${sender}`).then((res) => {
+          const d = res.data;
+          toast.info(`New message from ${d.realname}`);
+        });
+      }
     };
     fetchConversation();
   }, []);

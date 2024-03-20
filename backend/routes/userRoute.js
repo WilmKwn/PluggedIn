@@ -2,7 +2,7 @@ import express from 'express';
 
 import { User } from '../models/userModel.js';
 
-import { ObjectId } from 'mongodb';
+import { deleteUserActivity } from '../multiFunctions/deleteUserActivity.js';
 
 const router = express.Router()
 
@@ -79,12 +79,24 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await User.findByIdAndDelete(id);
+        const query = {
+            uid: id,
+        }
+        const user = await User.findOne({ uid: id });
+        if (user === null) {
+            return res.status(500).send("null");
+        }
+        // await User.findOneAndDelete(query);
+        await deleteUserActivity(query);
+
+
         return res.status(200).send('successfully deleted');
     } catch (err) {
         return res.status(500).send(err.message);
     }
 });
+
+
 // add skill to user
 router.post('/:id/skills', async (req, res) => {
     try {
