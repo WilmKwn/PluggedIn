@@ -105,19 +105,23 @@ const Post = ({ postParam }) => {
     setLikeStatus(!likeStatus);
     const newLikes = likeStatus ? likes - 1 : likes + 1;
     setLikes(newLikes);
+    let newDislikes = dislikes;
+    let newLaughs = laughs;
     if (dislikeStatus) {
-      setDislikes(dislikes - 1);
+      newDislikes = dislikes - 1;
+      setDislikes(newDislikes);
       setDislikeStatus(false);
     }
     if (laughStatus) {
-      setLaughs(laughs - 1);
+      newLaughs = laughs - 1;
+      setLaughs(newLaughs);
       setLaughStatus(false);
     }
 
     const reactions = {
       likes: newLikes,
-      dislikes: dislikes,
-      laughs: laughs,
+      dislikes: newDislikes,
+      laughs: newLaughs,
       reposts: reposts,
     }
     console.log(reactions)
@@ -138,18 +142,22 @@ const Post = ({ postParam }) => {
     setDislikeStatus(!dislikeStatus);
     const newDislikes = dislikeStatus ? dislikes - 1 : dislikes + 1;
     setDislikes(newDislikes);
+    let newLikes = likes;
+    let newLaughs = laughs;
     if (likeStatus) {
-      setLikes(likes - 1);
+      newLikes = likes - 1;
+      setLikes(newLikes);
       setLikeStatus(false);
     }
     if (laughStatus) {
-      setLaughs(laughs - 1);
+      newLaughs = laughs - 1;
+      setLaughs(newLaughs);
       setLaughStatus(false);
     }
     const reactions = {
-      likes: likes,
+      likes: newLikes,
       dislikes: newDislikes,
-      laughs: laughs,
+      laughs: newLaughs,
       reposts: reposts,
     }
     console.log(reactions)
@@ -164,17 +172,21 @@ const Post = ({ postParam }) => {
     setLaughStatus(!laughStatus);
     const newLaughs = laughStatus ? laughs - 1 : laughs + 1;
     setLaughs(newLaughs);
+    let newLikes = likes;
+    let newDislikes = dislikes;
     if (likeStatus) {
-      setLikes(likes - 1);
+      newLikes = likes - 1;
+      setLikes(newLikes);
       setLikeStatus(false);
     }
     if (dislikeStatus) {
-      setDislikes(dislikes - 1);
+      newDislikes = dislikes - 1;
+      setDislikes(newDislikes);
       setDislikeStatus(false);
     }
     const reactions = {
-      likes: likes,
-      dislikes: dislikes,
+      likes: newLikes,
+      dislikes: newDislikes,
       laughs: newLaughs,
       reposts: reposts,
     }
