@@ -235,6 +235,16 @@ const Post = ({ postParam }) => {
           );
           setComments([...comments, newComment]);
         });
+        axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
+          const data = res.data;
+          const notis = data.notifications;
+          notis.push(`New Comment by ${data.realname} on post: ${post.title}`);
+          const newData = {
+            ...data,
+            notis
+          }
+          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+        });
       } catch (err) {
         console.log(err.message);
       }

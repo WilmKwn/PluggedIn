@@ -55,6 +55,7 @@ const Onboarding = () => {
           endorsed: [],
           outgoingRequests: [],
           recentActivity: [],
+          notifications: [],
         };
         axios.post("http://localhost:5001/user", data).then(() => {
           console.log("successfully onboarded");

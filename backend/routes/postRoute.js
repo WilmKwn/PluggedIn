@@ -76,9 +76,7 @@ router.post('/:id/comment', async (req, res) => {
     const { text, owner } = req.body;
 
     try {
-        // console.log(id, text, owner)
         const post = await Post.findById(id);
-        // console.log(post)
         post.comments.push({ text, owner });
         await post.save();
         return res.status(200).send('successfully added comment');

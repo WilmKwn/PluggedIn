@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { signOut } from "firebase/auth";
 
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,10 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
+
+import Notification from "./Notification";
+
+import { toast } from 'react-toastify';
 
 import "../App.css";
 import "../index.css";
@@ -41,6 +45,36 @@ const MainBanner = () => {
   const handleNews = () => {
     navigate("/news");
   }
+
+  const [openNoti, setOpenNoti] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
+  const getNotifications = () => {
+    axios.get(`http://localhost:5001/user/${localStorage.getItem("userId")}`).then((res) => {
+      const data = res.data;
+      console.log(data)
+      setNotifications(data.notifications);
+    }).catch(err => {
+      console.log(err);
+    });
+  }
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8282');
+    ws.onmessage = (event) => {
+      axios.get(`http://localhost:5001/user/${localStorage.getItem("userId")}`).then((res) => {
+        const data = res.data;
+        console.log(data.notifications);
+        console.log(notifications);
+        if (data.notifications.length !== notifications.length) {
+          toast.info(data.notifications[data.notifications.length-1]);
+          getNotifications();
+        }
+      });
+    };
+    getNotifications();
+  }, []);
+
   return (
     <div className="">
       <div className="fixed w-full flex justify-between items-center p-3 pl-10 pr-10 bg-emerald-950">
@@ -70,6 +104,14 @@ const MainBanner = () => {
             className="button">
                 News <FontAwesomeIcon icon={faNewspaper} /></button>
         </nav>
+        <button onClick={() => setOpenNoti(!openNoti)} className="absolute text-2xl bg-gray-500 p-1 right-12 top-32 hover:bg-gray-400">🔔</button>
+        {openNoti && (
+          <div className="absolute w-1/4 h-80 bg-gray-300 p-1 right-12 top-44 px-2 py-2 overflow-y-scroll border-2 border-black">
+            {notifications.map((noti, index) => (
+              <Notification key={index} message={noti} />
+            ))}
+          </div>
+        )}
         <nav>
           <button onClick={handleProfile}
             className="button">
