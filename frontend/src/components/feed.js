@@ -7,6 +7,10 @@ import "../App.css";
 import "../index.css";
 
 const Feed = () => {
+
+  let fetchedPosts = [];
+  let sortedPosts = [];
+
   const [posts, setPosts] = useState([]);
   const [sortBy, setSortBy] = useState("Recent");
 
@@ -16,16 +20,22 @@ const Feed = () => {
     axios
       .get(apiUrl)
       .then((res) => {
-        const fetchedPosts = res.data;
+        fetchedPosts = res.data;
         fetchedPosts.reverse()
 
-        const sortedPosts = [...fetchedPosts].sort((a, b) => {
+        sortedPosts = [...fetchedPosts].sort((a, b) => {
           const likesA = a.reactions.likes || 0; // Access the likes value from reactions, default to 0 if it doesn't exist
           const likesB = b.reactions.likes || 0;
           return likesB - likesA; // Sort in descending order based on the number of likes
         });
 
-        setPosts(fetchedPosts); // No need to reverse when sorting by popularity
+        if (sortBy === "Recent") {
+          setPosts(fetchedPosts);
+        } else {
+          setPosts(sortedPosts);
+        }
+
+        // setPosts(fetchedPosts); // No need to reverse when sorting by popularity
       })
       .catch((err) => {
         console.log("Can't load posts: ", err);
@@ -41,14 +51,16 @@ const Feed = () => {
   }, [sortBy]); // Trigger fetchPosts when sortBy changes
 
   const toggleSortBy = () => {
-    setSortBy(sortBy === "Recent" ? "Popular" : "Recent");
+    const newSortBy = sortBy === "Recent" ? "Popular" : "Recent";
+  setSortBy(newSortBy);
   };
+  
 
   return (
     <div className="container">
       <MainBanner />
       {/* Sort By text */}
-      <div className="sort-by-text">Sort By - {sortBy}:</div>
+      <div className="sort-by-text">Sort By Button</div>
       {/* Toggle button */}
       <div className="toggle-button-container">
         <button className="toggle-button" onClick={toggleSortBy}>
