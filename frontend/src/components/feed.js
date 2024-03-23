@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { storage, ref, getDownloadURL } from "./firebase";
-import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase";
 import axios from "axios";
 import MainBanner from "./MainBanner";
 import MainBottomBar from "./MainBottomBar";
@@ -11,16 +8,21 @@ import "../index.css";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
-  const [sortBy, setSortBy] = useState("recent");
+  const [sortBy, setSortBy] = useState("Recent");
 
   const fetchPosts = () => {
+    let apiUrl = "http://localhost:5001/post";
+
+    // If sorting by popularity, adjust API URL to fetch posts sorted by likes
+    if (sortBy === "Popular") {
+      apiUrl += "?sortBy=popular";
+    }
+
     axios
-      .get("http://localhost:5001/post", {
-        params: { sortBy: sortBy } // Pass sortBy parameter to backend
-      })
+      .get(apiUrl)
       .then((res) => {
         const fetchedPosts = res.data;
-        setPosts(fetchedPosts.reverse()); // Reverse the order of posts here
+        setPosts(fetchedPosts); // No need to reverse when sorting by popularity
       })
       .catch((err) => {
         console.log("Can't load posts: ", err);
@@ -36,18 +38,18 @@ const Feed = () => {
   }, [sortBy]); // Trigger fetchPosts when sortBy changes
 
   const toggleSortBy = () => {
-    setSortBy(sortBy === "recent" ? "popular" : "recent");
+    setSortBy(sortBy === "Recent" ? "Popular" : "Recent");
   };
 
   return (
     <div className="container">
       <MainBanner />
       {/* Sort By text */}
-      <div className="sort-by-text">Sort By:</div>
+      <div className="sort-by-text">Sort By - {sortBy}:</div>
       {/* Toggle button */}
       <div className="toggle-button-container">
         <button className="toggle-button" onClick={toggleSortBy}>
-          {sortBy === "recent" ? "Recent" : "Popular"}
+          {sortBy}
         </button>
       </div>
       <div className="w-full h-full text-center pt-28">
