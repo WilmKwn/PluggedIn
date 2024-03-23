@@ -13,15 +13,18 @@ const Feed = () => {
   const fetchPosts = () => {
     let apiUrl = "http://localhost:5001/post";
 
-    // If sorting by popularity, adjust API URL to fetch posts sorted by likes
-    if (sortBy === "Popular") {
-      apiUrl += "?sortBy=popular";
-    }
-
     axios
       .get(apiUrl)
       .then((res) => {
         const fetchedPosts = res.data;
+        fetchedPosts.reverse()
+
+        const sortedPosts = [...fetchedPosts].sort((a, b) => {
+          const likesA = a.reactions.likes || 0; // Access the likes value from reactions, default to 0 if it doesn't exist
+          const likesB = b.reactions.likes || 0;
+          return likesB - likesA; // Sort in descending order based on the number of likes
+        });
+
         setPosts(fetchedPosts); // No need to reverse when sorting by popularity
       })
       .catch((err) => {
