@@ -26,7 +26,6 @@ const Profile = () => {
   const location = useLocation();
   const userId = location.state.userId;
   const loggedInId = localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")
-  const [isHovered, setIsHovered] = useState(false);
 
   const [userData, setUserData] = useState({
     profilePic: "",
@@ -47,35 +46,68 @@ const Profile = () => {
     projects: [],
   });
   const [userPosts, setUserPosts] = useState([]);
-
+  
 
   const [userSkills, setUserSkills] = useState([]);
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5001/user/${userId}`)
-      .then((res) => {
-        // Process the user data here if the response was successful (status 200)
-        console.log("got user data");
-        setUserData(res.data); // Update state with user data
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        // Handle any errors that occur during the fetch request
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5001/user/${userId}`)
+  //     .then((res) => {
+  //       // Process the user data here if the response was successful (status 200)
+  //       console.log("got user data");
+  //       setUserData(res.data); // Update state with user data
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       // Handle any errors that occur during the fetch request
+  //     });
+  // }, []);
 
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:5001/user/${loggedInId}`)
+  //     .then((res) => {
+  //       // Process the user data here if the response was successful (status 200)
+  //       console.log("got loggedIn data");
+  //       setLoggedInData(res.data); // Update state with user data
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       // Handle any errors that occur during the fetch request
+  //     });
+  // }, []);
+  const fetchUserAndLoggedData = () => {
+      axios
+        .get(`http://localhost:5001/user/${userId}`)
+        .then((res) => {
+          // Process the user data here if the response was successful (status 200)
+          console.log("got user data");
+          setUserData(res.data); // Update state with user data
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          // Handle any errors that occur during the fetch request
+        });
+  
+      axios
+        .get(`http://localhost:5001/user/${loggedInId}`)
+        .then((res) => {
+          // Process the user data here if the response was successful (status 200)
+          console.log("got loggedIn data");
+          setLoggedInData(res.data); // Update state with user data
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          // Handle any errors that occur during the fetch request
+        });
+  }
   useEffect(() => {
-    axios
-      .get(`http://localhost:5001/user/${loggedInId}`)
-      .then((res) => {
-        // Process the user data here if the response was successful (status 200)
-        console.log("got loggedIn data");
-        setLoggedInData(res.data); // Update state with user data
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        // Handle any errors that occur during the fetch request
-      });
+    const ws = new WebSocket('ws://localhost:8080');
+    ws.onmessage = (event) => {
+      fetchUserAndLoggedData();
+      console.log("fetched");
+    };
+    fetchUserAndLoggedData();
   }, []);
   const handleConnect = () => {
     //console.log(id);
@@ -153,6 +185,8 @@ const Profile = () => {
   };
 
   const ProfileInfo = () => {
+    const [isHovered, setIsHovered] = useState(false);
+    
     // // check for profile pic
     if (!userData.profilePic || userData.profilePic === null) {
       userData.profilePic = "No Profile Picture";
@@ -221,7 +255,7 @@ const Profile = () => {
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}>
 
-                      {userData.friends ? "Rescind Connection" : (isHovered ? "Rescind" : "Pending")}
+                      {isHovered ? "Rescind?" : "Pending"}
                     </button>
                   </div><div>
                     <button onClick={""}
