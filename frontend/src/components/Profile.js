@@ -46,69 +46,37 @@ const Profile = () => {
     projects: [],
   });
   const [userPosts, setUserPosts] = useState([]);
-  
+  const [isConnected, setIsConnected] = useState(false);
 
   const [userSkills, setUserSkills] = useState([]);
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:5001/user/${userId}`)
-  //     .then((res) => {
-  //       // Process the user data here if the response was successful (status 200)
-  //       console.log("got user data");
-  //       setUserData(res.data); // Update state with user data
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       // Handle any errors that occur during the fetch request
-  //     });
-  // }, []);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:5001/user/${loggedInId}`)
-  //     .then((res) => {
-  //       // Process the user data here if the response was successful (status 200)
-  //       console.log("got loggedIn data");
-  //       setLoggedInData(res.data); // Update state with user data
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       // Handle any errors that occur during the fetch request
-  //     });
-  // }, []);
-  const fetchUserAndLoggedData = () => {
-      axios
-        .get(`http://localhost:5001/user/${userId}`)
-        .then((res) => {
-          // Process the user data here if the response was successful (status 200)
-          console.log("got user data");
-          setUserData(res.data); // Update state with user data
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          // Handle any errors that occur during the fetch request
-        });
-  
-      axios
-        .get(`http://localhost:5001/user/${loggedInId}`)
-        .then((res) => {
-          // Process the user data here if the response was successful (status 200)
-          console.log("got loggedIn data");
-          setLoggedInData(res.data); // Update state with user data
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          // Handle any errors that occur during the fetch request
-        });
-  }
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8080');
-    ws.onmessage = (event) => {
-      fetchUserAndLoggedData();
-      console.log("fetched");
-    };
-    fetchUserAndLoggedData();
+    axios
+      .get(`http://localhost:5001/user/${userId}`)
+      .then((res) => {
+        // Process the user data here if the response was successful (status 200)
+        console.log("got user data");
+        setUserData(res.data); // Update state with user data
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle any errors that occur during the fetch request
+      });
   }, []);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5001/user/${loggedInId}`)
+      .then((res) => {
+        // Process the user data here if the response was successful (status 200)
+        console.log("got loggedIn data");
+        setLoggedInData(res.data); // Update state with user data
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle any errors that occur during the fetch request
+      });
+  }, []);
+  
   const handleConnect = () => {
     //console.log(id);
     console.log(userId);
@@ -186,7 +154,57 @@ const Profile = () => {
 
   const ProfileInfo = () => {
     const [isHovered, setIsHovered] = useState(false);
-    
+    const [userData, setUserData] = useState({
+      profilePic: "",
+      name: "",
+      genre: "",
+      description: "",
+      friends: [],
+      skills: [],
+      projects: [],
+    });
+    const [loggedInData, setLoggedInData] = useState({
+      profilePic: "",
+      name: "",
+      genre: "",
+      description: "",
+      friends: [],
+      skills: [],
+      projects: [],
+    });
+    const fetchUserAndLoggedData = () => {
+      axios
+        .get(`http://localhost:5001/user/${userId}`)
+        .then((res) => {
+          // Process the user data here if the response was successful (status 200)
+          console.log("got user data");
+          setUserData(res.data); // Update state with user data
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          // Handle any errors that occur during the fetch request
+        });
+  
+      axios
+        .get(`http://localhost:5001/user/${loggedInId}`)
+        .then((res) => {
+          // Process the user data here if the response was successful (status 200)
+          console.log("got loggedIn data");
+          setLoggedInData(res.data); // Update state with user data
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          // Handle any errors that occur during the fetch request
+        });
+  }
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8282');
+    ws.onmessage = (event) => {
+      fetchUserAndLoggedData();
+      console.log("fetched");
+    };
+    fetchUserAndLoggedData();
+  }, []);
     // // check for profile pic
     if (!userData.profilePic || userData.profilePic === null) {
       userData.profilePic = "No Profile Picture";
