@@ -14,6 +14,7 @@ const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [sortBy, setSortBy] = useState("Recent");
   const [searchText, setSearchText] = useState(""); // Define searchText state
+
   // Define handleSearchInputChange function
   const handleSearchInputChange = (event) => {
     setSearchText(event.target.value);
@@ -38,11 +39,15 @@ const Feed = () => {
           return likesB - likesA;
         });
 
+        let finalPosts;
+
         if (sortBy === "Recent") {
-          setPosts(fetchedPosts);
+          finalPosts = fetchedPosts;
         } else {
-          setPosts(sortedPosts);
+          finalPosts = sortedPosts;
         }
+
+        setPosts(finalPosts);
       })
       .catch((err) => {
         console.log("Can't load posts: ", err);
