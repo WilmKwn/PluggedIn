@@ -13,6 +13,7 @@ const AddPost = () => {
   const [postMediaName, setPostMediaName] = useState("");
   const [postTags, setPostTags] = useState("");
   const [isSong, setIsSong] = useState(false);
+  const [isProducerTag, setIsProducerTag] = useState(false);
   const [isNews, setIsNews] = useState(false);
 
   const navigate = useNavigate();
@@ -42,6 +43,14 @@ const AddPost = () => {
     setIsNews(newValue);
     if (newValue) {
       setIsSong(false);
+      setIsProducerTag(false);
+    }
+  };
+
+  const handleTagSwitchChange = (newValue) => {
+    setIsProducerTag(newValue);
+    if (newValue) {
+      setIsNews(false);
     }
   };
 
@@ -102,6 +111,17 @@ const AddPost = () => {
       console.log("Error submitting post", err.message);
     }
 
+    if (isSong || isProducerTag) {
+      const song = {
+        title: postTitle,
+        media: postMediaName,
+        tags: tagsArray,
+        owner: auth.currentUser.uid,
+        isTag: isProducerTag
+      };
+      axios.post("http://localhost:5001/song", song);
+    }
+
     // Reset form fields to their default values after submission
     setPostTitle("");
     setPostDescription("");
@@ -138,14 +158,25 @@ const AddPost = () => {
               className="w-full h-10 mb-3 border-2 border-black"
             />
             {postMedia && isAudioOrVideo(postMediaName) && (
-              <div className="flex items-center justify-center mb-3">
-                <span className="mr-2">Song</span>
-                <Switch
-                  checked={isSong}
-                  onChange={handleSongSwitchChange} // Updated to use the new handler
-                  onColor="#007AFF"
-                  offColor="#E5E5EA"
-                />
+              <div>
+                <div className="flex items-center justify-center mb-3">
+                  <span className="mr-2">Song</span>
+                  <Switch
+                    checked={isSong}
+                    onChange={handleSongSwitchChange} // Updated to use the new handler
+                    onColor="#007AFF"
+                    offColor="#E5E5EA"
+                  />
+                </div>
+                <div className="flex items-center justify-center mb-3">
+                  <span className="mr-2">Producer Tag</span>
+                  <Switch
+                    checked={isProducerTag}
+                    onChange={handleTagSwitchChange} // Updated to use the new handler
+                    onColor="#007AFF"
+                    offColor="#E5E5EA"
+                  />
+                </div>
               </div>
             )}
             <div className="flex items-center justify-center mb-3">

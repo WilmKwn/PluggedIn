@@ -24,11 +24,7 @@ const Feed = () => {
       .then((res) => {
         fetchedPosts = res.data;
         fetchedPosts.reverse();
-
-        // console.log(connections);
-        // for (let p of fetchedPosts) {
-        //   console.log(p, connections.includes(p.owner));
-        // }
+        
         fetchedPosts = fetchedPosts.filter(post => connections.includes(post.owner));
 
         sortedPosts = [...fetchedPosts].sort((a, b) => {
