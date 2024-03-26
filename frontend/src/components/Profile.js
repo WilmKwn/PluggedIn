@@ -262,7 +262,7 @@ const Profile = () => {
                   className="button">
                   Remove Connection </button>
               </div><div>
-                <button onClick={""}
+                <button
                   className="button">
                   Block </button>
               </div></>) : ((!userData.friends || !userData.friends.includes(loggedInId)) && (loggedInData.friends && loggedInData.friends.includes(userId)) ? (

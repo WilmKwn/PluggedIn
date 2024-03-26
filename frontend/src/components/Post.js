@@ -124,7 +124,7 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
-    console.log(reactions)
+    // console.log(reactions)
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -160,7 +160,7 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
-    console.log(reactions)
+    // console.log(reactions)
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -190,7 +190,7 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
-    console.log(reactions)
+    // console.log(reactions)
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -209,7 +209,7 @@ const Post = ({ postParam }) => {
       laughs: laughs,
       reposts: newReposts,
     }
-    console.log(reactions)
+    // console.log(reactions)
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -268,12 +268,12 @@ const Post = ({ postParam }) => {
     setComments(comments);
 
     axios.get(`http://localhost:5001/user/${post.owner}`).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       setUsername(res.data.realname);
       setUserId(res.data.uid);
       if (res.data.profilePic !== "No file chosen") {
         const profilePicRef = ref(storage, "user/" + res.data.profilePic);
-        console.log(profilePicRef);
+        // console.log(profilePicRef);
         getDownloadURL(profilePicRef)
           .then((url) => {
             setUserProfilePic(url);

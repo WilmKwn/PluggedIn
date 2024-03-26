@@ -52,8 +52,7 @@ const MainBanner = () => {
   const getNotifications = () => {
     axios.get(`http://localhost:5001/user/${localStorage.getItem("userId")}`).then((res) => {
       const data = res.data;
-      console.log(data)
-      setNotifications(data.notifications);
+      setNotifications(data.notifications.reverse());
     }).catch(err => {
       console.log(err);
     });
@@ -62,15 +61,16 @@ const MainBanner = () => {
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8282');
     ws.onmessage = (event) => {
-      axios.get(`http://localhost:5001/user/${localStorage.getItem("userId")}`).then((res) => {
-        const data = res.data;
-        console.log(data.notifications);
-        console.log(notifications);
-        if (data.notifications.length !== notifications.length) {
-          toast.info(data.notifications[data.notifications.length-1]);
-          getNotifications();
-        }
-      });
+      // axios.get(`http://localhost:5001/user/${localStorage.getItem("userId")}`).then((res) => {
+      //   const data = res.data;
+      //   console.log(data.notifications);
+      //   console.log(notifications);
+      //   if (data.notifications.length !== notifications.length) {
+      //     // toast.info(data.notifications[data.notifications.length-1]);
+      //     getNotifications();
+      //   }
+      // });
+      getNotifications();
     };
     getNotifications();
   }, []);

@@ -11,6 +11,8 @@ const Feed = () => {
   let fetchedPosts = [];
   let sortedPosts = [];
 
+  const [connections, setConnections] = useState([]);
+
   const [posts, setPosts] = useState([]);
   const [sortBy, setSortBy] = useState("Recent");
 
@@ -21,7 +23,13 @@ const Feed = () => {
       .get(apiUrl)
       .then((res) => {
         fetchedPosts = res.data;
-        fetchedPosts.reverse()
+        fetchedPosts.reverse();
+
+        // console.log(connections);
+        // for (let p of fetchedPosts) {
+        //   console.log(p, connections.includes(p.owner));
+        // }
+        fetchedPosts = fetchedPosts.filter(post => connections.includes(post.owner));
 
         sortedPosts = [...fetchedPosts].sort((a, b) => {
           const likesA = a.reactions.likes || 0; // Access the likes value from reactions, default to 0 if it doesn't exist
@@ -34,25 +42,39 @@ const Feed = () => {
         } else {
           setPosts(sortedPosts);
         }
-
-        // setPosts(fetchedPosts); // No need to reverse when sorting by popularity
       })
       .catch((err) => {
         console.log("Can't load posts: ", err);
       });
   };
 
+  const fetchConnections = () => {
+    axios.get(`http://localhost:5001/user/${localStorage.getItem("userId")}`).then((res) => {
+      const d = res.data;
+      setConnections(d.friends);
+    });
+  }
+
   useEffect(() => {
+    fetchPosts();
+  }, [connections]);
+
+  useEffect(() => {
+    fetchConnections();
+
     const ws = new WebSocket("ws://localhost:8080");
     ws.onmessage = (event) => {
       fetchPosts();
     };
+  }, []);
+
+  useEffect(() => {
     fetchPosts();
   }, [sortBy]); // Trigger fetchPosts when sortBy changes
 
   const toggleSortBy = () => {
     const newSortBy = sortBy === "Recent" ? "Popular" : "Recent";
-  setSortBy(newSortBy);
+    setSortBy(newSortBy);
   };
   
 
