@@ -269,6 +269,11 @@ p {
   justify-content: center;
 }
 
+.repost {
+  color: #6d777d;
+  margin-left: 10px;
+}
+
 
 
 
@@ -380,6 +385,7 @@ p {
 
 .user-profile-pic {
   margin-right: 10px;
+  cursor: pointer;
 }
 
 

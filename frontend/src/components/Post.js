@@ -70,6 +70,7 @@ const Post = ({ postParam }) => {
   const [media, setMedia] = useState("");
   const [mediaType, setMediaType] = useState("");
   const [mediaExtension, setMediaExtension] = useState("");
+  const [originalCreator, setOriginalCreator] = useState("");
 
   useEffect(() => {
     if (post.media) {
@@ -98,6 +99,7 @@ const Post = ({ postParam }) => {
     setLaughs(post.reactions.laughs);
     setDislikes(post.reactions.dislikes);
     setReposts(post.reactions.reposts);
+
   }, [post.media, post.comments]);
 
 
@@ -124,7 +126,6 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
-    // console.log(reactions)
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -160,7 +161,6 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
-    // console.log(reactions)
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -190,7 +190,6 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
-    // console.log(reactions)
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -209,11 +208,30 @@ const Post = ({ postParam }) => {
       laughs: laughs,
       reposts: newReposts,
     }
-    // console.log(reactions)
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
       console.log(err.message);
+    }
+    if (!repostStatus) {
+      const repost = {
+        owner: localStorage.getItem("userId"),
+        title: post.title,
+        description: post.description,
+        media: post.media,
+        tags: post.tags,
+        archived: post.archived,
+        news: post.news,
+        date: post.date,
+        repost: true,
+        originalCreator: post.owner,
+      };
+      console.log(repostStatus)
+      try {
+        axios.post(`http://localhost:5001/post`, repost);
+      } catch (err) {
+        console.log(err.message);
+      }
     }
   };
 
@@ -283,6 +301,11 @@ const Post = ({ postParam }) => {
           });
       }
     });
+    if (post.repost) {
+      axios.get(`http://localhost:5001/user/${post.originalCreator}`).then((res) => {
+        setOriginalCreator(res.data.realname);
+      });
+    }
   }, []);
 
   return (
@@ -295,7 +318,11 @@ const Post = ({ postParam }) => {
           style={{ width: "50px", height: "50px" }}
           className="user-profile-pic"
         />
-        <span className="username">{username}</span>
+        <span className="username">{username}
+          {post.repost && (
+            <span className="repost">Reposted from {originalCreator}</span>
+          )}
+        </span>
         <button className="options-button ml-auto" id="optionsButt" onClick={(event) => openModal(event)}>
           <FontAwesomeIcon icon={faEllipsisV} />
         </button>
