@@ -88,4 +88,16 @@ router.post('/:id/comment', async (req, res) => {
     }
 })
 
+router.post('/repost', async (req, res) => {
+    const { id } = req.body;
+    try {
+        const post = await Post.findById(id);
+        console.log(post)
+        // await post.save();
+        return res.status(200).send('successfully reposted');
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+})
+
 export default router;

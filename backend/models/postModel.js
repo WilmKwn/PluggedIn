@@ -35,6 +35,12 @@ const postSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        repost: {
+            type: Boolean
+        },
+        originalCreator: {
+            type: String
+        },
         comments: [{
             text: String,
             owner: String,
