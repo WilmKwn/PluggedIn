@@ -7,14 +7,17 @@ import "../App.css";
 import "../index.css";
 
 const Feed = () => {
-
   let fetchedPosts = [];
   let sortedPosts = [];
 
   const [connections, setConnections] = useState([]);
-
   const [posts, setPosts] = useState([]);
   const [sortBy, setSortBy] = useState("Recent");
+  const [searchText, setSearchText] = useState(""); // Define searchText state
+  // Define handleSearchInputChange function
+  const handleSearchInputChange = (event) => {
+    setSearchText(event.target.value);
+  };
 
   const fetchPosts = () => {
     let apiUrl = "http://localhost:5001/post";
@@ -24,13 +27,15 @@ const Feed = () => {
       .then((res) => {
         fetchedPosts = res.data;
         fetchedPosts.reverse();
-        
-        fetchedPosts = fetchedPosts.filter(post => connections.includes(post.owner));
+
+        fetchedPosts = fetchedPosts.filter((post) =>
+          connections.includes(post.owner)
+        );
 
         sortedPosts = [...fetchedPosts].sort((a, b) => {
-          const likesA = a.reactions.likes || 0; // Access the likes value from reactions, default to 0 if it doesn't exist
+          const likesA = a.reactions.likes || 0;
           const likesB = b.reactions.likes || 0;
-          return likesB - likesA; // Sort in descending order based on the number of likes
+          return likesB - likesA;
         });
 
         if (sortBy === "Recent") {
@@ -45,11 +50,13 @@ const Feed = () => {
   };
 
   const fetchConnections = () => {
-    axios.get(`http://localhost:5001/user/${localStorage.getItem("userId")}`).then((res) => {
-      const d = res.data;
-      setConnections(d.friends);
-    });
-  }
+    axios
+      .get(`http://localhost:5001/user/${localStorage.getItem("userId")}`)
+      .then((res) => {
+        const d = res.data;
+        setConnections(d.friends);
+      });
+  };
 
   useEffect(() => {
     fetchPosts();
@@ -66,24 +73,32 @@ const Feed = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [sortBy]); // Trigger fetchPosts when sortBy changes
+  }, [sortBy]);
 
   const toggleSortBy = () => {
     const newSortBy = sortBy === "Recent" ? "Popular" : "Recent";
     setSortBy(newSortBy);
   };
-  
 
   return (
     <div className="container">
       <MainBanner />
       {/* Sort By text */}
-      <div className="sort-by-text">Sort By Button</div>
+      <div className="sort-by-text">Sort By</div>
       {/* Toggle button */}
       <div className="toggle-button-container">
         <button className="toggle-button" onClick={toggleSortBy}>
           {sortBy}
         </button>
+      </div>
+      <div className="search-for-text">Search For</div>
+      <div className="search-textbox">
+        <input
+          type="text"
+          placeholder="Enter a hashtag"
+          value={searchText}
+          onChange={handleSearchInputChange}
+        />
       </div>
       <div className="w-full h-full text-center pt-28">
         <div className="w-full h-full flex flex-col items-center pt-5 pb-20">
