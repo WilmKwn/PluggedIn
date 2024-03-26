@@ -49,6 +49,10 @@ const userSchema = mongoose.Schema(
             type: [String],
             required: true,
         },
+        blockedUsers: {
+            type: [String],
+            required: true,
+        },
         endorsed: {
             type: [mongoose.Schema.Types.ObjectId],
             ref: 'users',

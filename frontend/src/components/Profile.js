@@ -36,6 +36,7 @@ const Profile = () => {
     genre: "",
     description: "",
     friends: [],
+    blockedUsers: [],
     skills: [],
     projects: [],
   });
@@ -46,6 +47,7 @@ const Profile = () => {
     genre: "",
     description: "",
     friends: [],
+    blockedUsers: [],
     skills: [],
     projects: [],
   });
@@ -131,6 +133,21 @@ const Profile = () => {
       });
   };
 
+  const handleBlock = () => {
+    //console.log(id);
+    console.log(userId);
+    console.log(localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying"));
+    axios.post(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/blockedUsers`, { blockee: userId })
+      .then(response => {
+        console.log('User blocked successfully:', response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch(error => {
+        console.error('Error blocking user:', error);
+        // Optionally, handle the error or revert local state changes
+      });
+  };
+
 
   const handleRemoveConnect = () => {
 
@@ -142,6 +159,20 @@ const Profile = () => {
       })
       .catch(error => {
         console.error('Error deleting friend:', error);
+        // Optionally, handle the error or revert local state changes
+      });
+  };
+
+  const handleUnblock = () => {
+
+    // Make API call to delete friend from the user
+    axios.delete(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/blockedUsers/${userId}`)
+      .then(response => {
+        console.log('User unblocked successfully:', response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch(error => {
+        console.error('Error unblocking user:', error);
         // Optionally, handle the error or revert local state changes
       });
   };
@@ -277,10 +308,18 @@ const Profile = () => {
                         className="button">
                         {console.log(userData.friends)}
                         Connect </button>
-                    </div><div>
-                      <button onClick={""}
+                    </div>
+                    <div>
+                      {!loggedInData.blockedUsers.includes(userId) ? (
+                        <button onClick={() => handleBlock()}
                         className="button">
                         Block </button>
+                      ) : (
+                        <button onClick={() => handleUnblock()}
+                        className="button bg-gray-300">
+                        Unblock </button>
+                      )} 
+                      
                     </div></>
                 ))
 

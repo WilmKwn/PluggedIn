@@ -138,6 +138,26 @@ router.post('/:id/friends', async (req, res) => {
         return res.status(500).send(err.message);
     }
 });
+// add to user's blockedUsers
+router.post('/:id/blockedUsers', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { blockee } = req.body;
+       
+        // Find the user by id
+        const user = await User.findOne({ uid: id });
+        // If user found, add the skill
+        if (user) {
+            user.blockedUsers.push(blockee);
+            await user.save();
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).send('User not found');
+        }
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
 // delete skill from user
 router.delete('/:id/skills/:delSkill', async (req, res) => {
     try {
@@ -174,6 +194,23 @@ router.delete('/:id/friends/:delFriend', async (req, res) => {
         return res.status(500).send(err.message);
     }
 });
-
+// delete user from user's blockedUsers array
+router.delete('/:id/blockedUsers/:unBlock', async (req, res) => {
+    try {
+        const { id, unBlockee } = req.params;
+        // Find the user by id
+        const user = await User.findOne({ uid: id });
+        // If user found, delete the skill
+        if (user) {
+            user.blockedUsers = user.blockedUsers.filter(blocks => blocks != unBlockee);
+            await user.save();
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).send('User not found');
+        }
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
 
 export default router;
