@@ -47,6 +47,12 @@ const Feed = () => {
           finalPosts = sortedPosts;
         }
 
+        if (searchText) {
+          finalPosts = finalPosts.filter(post =>
+            post.tags.some(tag => tag.includes(searchText))
+          );
+        }
+
         setPosts(finalPosts);
       })
       .catch((err) => {
@@ -78,7 +84,7 @@ const Feed = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [sortBy]);
+  }, [sortBy, searchText]);
 
   const toggleSortBy = () => {
     const newSortBy = sortBy === "Recent" ? "Popular" : "Recent";
