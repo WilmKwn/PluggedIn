@@ -26,9 +26,12 @@ const Profile = () => {
   const location = useLocation();
   const userId = location.state.userId;
   const loggedInId = localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")
-
+  const [userProfilePic, setUserProfilePic] = useState({
+    profilePic: "",});
+  const [loggedInProfilePic, setLoggedInProfilePic] = useState({
+    profilePic: "",});
   const [userData, setUserData] = useState({
-    profilePic: "",
+    // profilePic: "",
     name: "",
     genre: "",
     description: "",
@@ -36,8 +39,9 @@ const Profile = () => {
     skills: [],
     projects: [],
   });
+
   const [loggedInData, setLoggedInData] = useState({
-    profilePic: "",
+    // profilePic: "",
     name: "",
     genre: "",
     description: "",
@@ -49,33 +53,36 @@ const Profile = () => {
   
 
   const [userSkills, setUserSkills] = useState([]);
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:5001/user/${userId}`)
-  //     .then((res) => {
-  //       // Process the user data here if the response was successful (status 200)
-  //       console.log("got user data");
-  //       setUserData(res.data); // Update state with user data
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       // Handle any errors that occur during the fetch request
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5001/user/${userId}`)
+      .then((res) => {
+        // Process the user data here if the response was successful (status 200)
+        console.log("got user pfp");
+        console.log(res.data)
+        setUserProfilePic(res.data); // Update state with user data
+        console.log("PFP:")
+        console.log(userProfilePic.profilePic)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle any errors that occur during the fetch request
+      });
+  }, []);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:5001/user/${loggedInId}`)
-  //     .then((res) => {
-  //       // Process the user data here if the response was successful (status 200)
-  //       console.log("got loggedIn data");
-  //       setLoggedInData(res.data); // Update state with user data
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //       // Handle any errors that occur during the fetch request
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5001/user/${loggedInId}`)
+      .then((res) => {
+        // Process the user data here if the response was successful (status 200)
+        console.log("got loggedIn pfp");
+        setLoggedInProfilePic(res.data); // Update state with user data
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle any errors that occur during the fetch request
+      });
+  }, []);
   const fetchUserAndLoggedData = () => {
       axios
         .get(`http://localhost:5001/user/${userId}`)
@@ -102,7 +109,7 @@ const Profile = () => {
         });
   }
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8080');
+    const ws = new WebSocket('ws://localhost:8282');
     ws.onmessage = (event) => {
       fetchUserAndLoggedData();
       console.log("fetched");
@@ -138,7 +145,7 @@ const Profile = () => {
         // Optionally, handle the error or revert local state changes
       });
   };
-
+  
   useEffect(() => {
     axios.get(`http://localhost:5001/post/owner/${userId}`)
       .then((res) => {
@@ -188,8 +195,8 @@ const Profile = () => {
     const [isHovered, setIsHovered] = useState(false);
     
     // // check for profile pic
-    if (!userData.profilePic || userData.profilePic === null) {
-      userData.profilePic = "No Profile Picture";
+    if (!userProfilePic.profilePic || userProfilePic.profilePic === null) {
+      userProfilePic.profilePic = "No Profile Picture";
     }
 
     // check for null skills and description and projects
@@ -212,7 +219,7 @@ const Profile = () => {
     // GET IMAGE FROM FIREBASE STORAGE
     const [image, setImage] = useState("");
     useEffect(() => {
-      const picRef = ref(storage, "user/" + userData.profilePic);
+      const picRef = ref(storage, "user/" + userProfilePic.profilePic);
       getDownloadURL(picRef)
         .then((url) => {
           setImage(url);
@@ -224,7 +231,7 @@ const Profile = () => {
     console.log(userData.skills)
     return (
       <div className="h-full pt-28 flex flex-col items-center">
-        {userData.profilePic === "No file chosen" ? (
+        {userProfilePic.profilePic === "No file chosen" ? (
           <div className="w-40 h-40 bg-gray-300"></div>
         ) : (
           <img className="w-40" src={image} />
