@@ -1,101 +1,93 @@
-import React, { useEffect, useState } from "react";
-import { signOut } from "firebase/auth";
-
-import { storage, ref, getDownloadURL } from "./firebase";
-
-import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MainBanner from "./MainBanner";
-import "../App.css";
-import "../index.css";
 import MainBottomBar from "./MainBottomBar";
 import Post from "./Post";
+import "../App.css";
+import "../index.css";
 
 const Feed = () => {
+
+  let fetchedPosts = [];
+  let sortedPosts = [];
+
+  const [connections, setConnections] = useState([]);
+
   const [posts, setPosts] = useState([]);
+  const [sortBy, setSortBy] = useState("Recent");
 
   const fetchPosts = () => {
+    let apiUrl = "http://localhost:5001/post";
+
     axios
-      .get("http://localhost:5001/post")
+      .get(apiUrl)
       .then((res) => {
-        const fetchedPosts = res.data;
-        setPosts(fetchedPosts.reverse()); // Reverse the order of posts here
+        fetchedPosts = res.data;
+        fetchedPosts.reverse();
+        
+        fetchedPosts = fetchedPosts.filter(post => connections.includes(post.owner));
+
+        sortedPosts = [...fetchedPosts].sort((a, b) => {
+          const likesA = a.reactions.likes || 0; // Access the likes value from reactions, default to 0 if it doesn't exist
+          const likesB = b.reactions.likes || 0;
+          return likesB - likesA; // Sort in descending order based on the number of likes
+        });
+
+        if (sortBy === "Recent") {
+          setPosts(fetchedPosts);
+        } else {
+          setPosts(sortedPosts);
+        }
       })
       .catch((err) => {
-        console.log("Cant load posts: ", err);
+        console.log("Can't load posts: ", err);
       });
+  };
+
+  const fetchConnections = () => {
+    axios.get(`http://localhost:5001/user/${localStorage.getItem("userId")}`).then((res) => {
+      const d = res.data;
+      setConnections(d.friends);
+    });
   }
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8080');
+    fetchPosts();
+  }, [connections]);
+
+  useEffect(() => {
+    fetchConnections();
+
+    const ws = new WebSocket("ws://localhost:8080");
     ws.onmessage = (event) => {
       fetchPosts();
     };
-    fetchPosts();
   }, []);
 
+  useEffect(() => {
+    fetchPosts();
+  }, [sortBy]); // Trigger fetchPosts when sortBy changes
 
-  const Card = ({ post }) => {
-    const [name, setName] = useState("");
-    const [image, setImage] = useState("");
-    const [media, setMedia] = useState(null);
-
-    useEffect(() => {
-      axios.get(`http://localhost:5001/user/${post.owner}`).then((res) => {
-        const user = res.data;
-        setName(user.realname);
-
-        const picRef = ref(storage, "user/" + user.profilePic);
-        getDownloadURL(picRef)
-          .then((url) => {
-            setImage(url);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-
-        const mediaRef = ref(storage, "post/" + post.media);
-        getDownloadURL(mediaRef)
-          .then((url) => {
-            setMedia(url);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      });
-    }, []);
-
-    return (
-      <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            {image === "No file chosen" ? (
-              <div className="w-12 h-12 bg-white rounded-xl m-1"></div>
-            ) : (
-              <img className="w-12 rounded-xl" src={image} />
-            )}
-            <p className="text-md pl-2">{name}</p>
-          </div>
-          <p className="mr-2">{post.date.substring(0, 10)}</p>
-        </div>
-        <p className="pb-2 font-bold">{post.title}</p>
-        <div className="w-full bg-gray-200 h-auto flex flex-col">
-          <p>{post.description}</p>
-        </div>
-        <img className="w-full h-24" src={media} />
-      </div>
-    );
+  const toggleSortBy = () => {
+    const newSortBy = sortBy === "Recent" ? "Popular" : "Recent";
+    setSortBy(newSortBy);
   };
+  
 
   return (
     <div className="container">
       <MainBanner />
+      {/* Sort By text */}
+      <div className="sort-by-text">Sort By Button</div>
+      {/* Toggle button */}
+      <div className="toggle-button-container">
+        <button className="toggle-button" onClick={toggleSortBy}>
+          {sortBy}
+        </button>
+      </div>
       <div className="w-full h-full text-center pt-28">
         <div className="w-full h-full flex flex-col items-center pt-5 pb-20">
-          {posts.length === 0 && (
-            <div>Hello! This is your feed, a place to view humblebrags.</div>
-          )}
+          {/* Render posts */}
           <div className="posts-container">
             {posts.map((post) => (
               <Post key={post._id} postParam={post} />

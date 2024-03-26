@@ -396,3 +396,36 @@ p {
   flex-direction: column;
   align-items: center;
 }
+
+
+/* TESTING */
+
+.sort-by-text {
+  position: absolute;
+  left: 20px; /* Adjust as needed */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #555;
+}
+
+.toggle-button-container {
+  position: absolute;
+  left: 20px; /* Adjust as needed */
+  top: calc(50% + 20px); /* Position below the text */
+}
+
+.toggle-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+}
+
+.toggle-button:hover {
+  background-color: #0056b3;
+}

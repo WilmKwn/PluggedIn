@@ -126,6 +126,10 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
+<<<<<<< HEAD
+=======
+    // console.log(reactions)
+>>>>>>> df52ae6fb5fbc4c0b83561a40ec7bf486abfcbbc
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -161,6 +165,10 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
+<<<<<<< HEAD
+=======
+    // console.log(reactions)
+>>>>>>> df52ae6fb5fbc4c0b83561a40ec7bf486abfcbbc
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -190,6 +198,10 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
+<<<<<<< HEAD
+=======
+    // console.log(reactions)
+>>>>>>> df52ae6fb5fbc4c0b83561a40ec7bf486abfcbbc
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -208,6 +220,10 @@ const Post = ({ postParam }) => {
       laughs: laughs,
       reposts: newReposts,
     }
+<<<<<<< HEAD
+=======
+    // console.log(reactions)
+>>>>>>> df52ae6fb5fbc4c0b83561a40ec7bf486abfcbbc
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -253,6 +269,16 @@ const Post = ({ postParam }) => {
           );
           setComments([...comments, newComment]);
         });
+        axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
+          const data = res.data;
+          const notis = data.notifications;
+          notis.push(`New Comment by ${data.realname} on post: ${post.title}`);
+          const newData = {
+            ...data,
+            notis
+          }
+          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+        });
       } catch (err) {
         console.log(err.message);
       }
@@ -276,12 +302,12 @@ const Post = ({ postParam }) => {
     setComments(comments);
 
     axios.get(`http://localhost:5001/user/${post.owner}`).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       setUsername(res.data.realname);
       setUserId(res.data.uid);
       if (res.data.profilePic !== "No file chosen") {
         const profilePicRef = ref(storage, "user/" + res.data.profilePic);
-        console.log(profilePicRef);
+        // console.log(profilePicRef);
         getDownloadURL(profilePicRef)
           .then((url) => {
             setUserProfilePic(url);

@@ -68,7 +68,8 @@ router.get('/:id/info', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await User.findByIdAndUpdate(id, req.body);
+        const user = await User.findOne({ uid: id });
+        await User.findOneAndUpdate(user, req.body);
         return res.status(200).send('successfully updated');
     } catch (err) {
         return res.status(500).send(err.message);

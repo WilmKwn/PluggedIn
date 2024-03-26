@@ -6,6 +6,7 @@ import WebSocket, {WebSocketServer} from 'ws';
 import userRoute from './routes/userRoute.js';
 import postRoute from './routes/postRoute.js';
 import conversationRoute from './routes/conversationRoute.js';
+import songRoute from './routes/songRoute.js';
 
 // env setup
 import dotenv from 'dotenv';
@@ -19,6 +20,8 @@ app.use(cors());
 app.use('/user', userRoute);
 app.use('/post', postRoute);
 app.use('/conversation', conversationRoute);
+app.use('/song', songRoute);
+
 // connect to db
 mongoose.connect(process.env.MONGODB_URL).then((client) => {
     console.log('Successfully connected to database');
@@ -42,6 +45,19 @@ mongoose.connect(process.env.MONGODB_URL).then((client) => {
         console.log("Client connected");
 
         convoStream.on('change', (change) => {
+            ws.send(JSON.stringify(change));
+        });
+        ws.on('close', () => {
+            console.log("Client disconnected");
+        });
+    });
+
+    const userStrean = mongoose.connection.collection('users').watch();
+    const userWss = new WebSocketServer({ port: 8282 });
+    userWss.on('connection', (ws) => {
+        console.log("Client connected");
+
+        userStrean.on('change', (change) => {
             ws.send(JSON.stringify(change));
         });
         ws.on('close', () => {

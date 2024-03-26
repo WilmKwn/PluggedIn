@@ -12,7 +12,6 @@ import { useState, useEffect } from "react";
 
 const Banner = (id) => {
   const navigate = useNavigate();
-  
   const handleFeed = () => {
     navigate("/feed");
   };
@@ -27,16 +26,27 @@ const Profile = () => {
   const location = useLocation();
   const userId = location.state.userId;
   const loggedInId = localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")
+
   const [userData, setUserData] = useState({
     profilePic: "",
     name: "",
     genre: "",
     description: "",
+    friends: [],
+    skills: [],
+    projects: [],
+  });
+  const [loggedInData, setLoggedInData] = useState({
+    profilePic: "",
+    name: "",
+    genre: "",
+    description: "",
+    friends: [],
     skills: [],
     projects: [],
   });
   const [userPosts, setUserPosts] = useState([]);
-
+  const [isConnected, setIsConnected] = useState(false);
 
   const [userSkills, setUserSkills] = useState([]);
   useEffect(() => {
@@ -52,22 +62,37 @@ const Profile = () => {
         // Handle any errors that occur during the fetch request
       });
   }, []);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5001/user/${loggedInId}`)
+      .then((res) => {
+        // Process the user data here if the response was successful (status 200)
+        console.log("got loggedIn data");
+        setLoggedInData(res.data); // Update state with user data
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle any errors that occur during the fetch request
+      });
+  }, []);
+  
   const handleConnect = () => {
     //console.log(id);
     console.log(userId);
     console.log(localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying"));
-    axios.post(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/friends`, {friend: userId})
-    .then(response => {
-      console.log('Friend added successfully:', response.data);
-      // Optionally, update the UI or handle success
-    })
-    .catch(error => {
-      console.error('Error adding friend:', error);
-      // Optionally, handle the error or revert local state changes
-    });
+    axios.post(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/friends`, { friend: userId })
+      .then(response => {
+        console.log('Friend added successfully:', response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch(error => {
+        console.error('Error adding friend:', error);
+        // Optionally, handle the error or revert local state changes
+      });
   };
 
-  
+
   const handleRemoveConnect = () => {
 
     // Make API call to delete friend from the user
@@ -128,6 +153,58 @@ const Profile = () => {
   };
 
   const ProfileInfo = () => {
+    const [isHovered, setIsHovered] = useState(false);
+    const [userData, setUserData] = useState({
+      profilePic: "",
+      name: "",
+      genre: "",
+      description: "",
+      friends: [],
+      skills: [],
+      projects: [],
+    });
+    const [loggedInData, setLoggedInData] = useState({
+      profilePic: "",
+      name: "",
+      genre: "",
+      description: "",
+      friends: [],
+      skills: [],
+      projects: [],
+    });
+    const fetchUserAndLoggedData = () => {
+      axios
+        .get(`http://localhost:5001/user/${userId}`)
+        .then((res) => {
+          // Process the user data here if the response was successful (status 200)
+          console.log("got user data");
+          setUserData(res.data); // Update state with user data
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          // Handle any errors that occur during the fetch request
+        });
+  
+      axios
+        .get(`http://localhost:5001/user/${loggedInId}`)
+        .then((res) => {
+          // Process the user data here if the response was successful (status 200)
+          console.log("got loggedIn data");
+          setLoggedInData(res.data); // Update state with user data
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          // Handle any errors that occur during the fetch request
+        });
+  }
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8282');
+    ws.onmessage = (event) => {
+      fetchUserAndLoggedData();
+      console.log("fetched");
+    };
+    fetchUserAndLoggedData();
+  }, []);
     // // check for profile pic
     if (!userData.profilePic || userData.profilePic === null) {
       userData.profilePic = "No Profile Picture";
@@ -174,23 +251,53 @@ const Profile = () => {
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
-        
+
         <div className="flex justify-between items-center">
-          <div>
-          <button onClick={() => handleConnect()}
-            className="button">
-            Connect </button>
-          </div>
-          <div>
-          <button onClick={() => handleRemoveConnect()}
-            className="button">
-            Remove Connection </button>
-          </div>
-          <div>
-          <button onClick={""}
-            className="button">
-            Block </button>
-          </div>
+          {userId === loggedInId ? (
+            <div></div>
+          ) : (
+            ((userData.friends && userData.friends.includes(loggedInId)) && (loggedInData.friends && loggedInData.friends.includes(userId))) ? (<>
+              <div>
+                <button onClick={() => handleRemoveConnect()}
+                  className="button">
+                  Remove Connection </button>
+              </div><div>
+                <button
+                  className="button">
+                  Block </button>
+              </div></>) : ((!userData.friends || !userData.friends.includes(loggedInId)) && (loggedInData.friends && loggedInData.friends.includes(userId)) ? (
+                <>
+                  <div>
+                    <button onClick={() => handleRemoveConnect()}
+                      className="button bg-gray-300"
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}>
+
+                      {isHovered ? "Rescind?" : "Pending"}
+                    </button>
+                  </div><div>
+                    <button onClick={""}
+                      className="button">
+                      Block </button>
+                  </div></>
+              )
+                : (
+                  <>
+                    <div>
+                      <button onClick={() => handleConnect()}
+                        className="button">
+                        {console.log(userData.friends)}
+                        Connect </button>
+                    </div><div>
+                      <button onClick={""}
+                        className="button">
+                        Block </button>
+                    </div></>
+                ))
+
+
+          )}
+
         </div>
         <div className="edit-profile-container">
           <div className="skills-profile">

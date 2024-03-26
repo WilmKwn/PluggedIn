@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import axios from "axios";
 import { storage, ref, getDownloadURL } from './firebase';
-import { toast } from 'react-toastify';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +10,7 @@ import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 const Messaging = ({ title }) => {
 
   const [isModalOpen, setModalOpen] = useState(false);
+  const [myName, setMyName] = useState("");
   const [userData, setUserData] = useState({
     realname: "",
     friends: [],
@@ -27,6 +27,7 @@ const Messaging = ({ title }) => {
   useEffect(() => {
     axios.get(`http://localhost:5001/user/${userId}`)
       .then((res) => {
+        setMyName(res.data.realname);
         res.data.friends.forEach(friendId => {
           axios.get(`http://localhost:5001/user/${friendId}`)
             .then((friendRes) => {
@@ -76,15 +77,16 @@ const Messaging = ({ title }) => {
     const ws = new WebSocket('ws://localhost:8181');
     ws.onmessage = (event) => {
       fetchConversation();
-      const obj = JSON.parse(event.data).updateDescription.updatedFields;
-      const num = obj.__v;
-      const sender = obj[`messages.${num-1}`].senderUid;
-      if (sender !== userId) {
-        axios.get(`http://localhost:5001/user/${sender}`).then((res) => {
-          const d = res.data;
-          toast.info(`New message from ${d.realname}`);
-        });
-      }
+      // const obj = JSON.parse(event.data).updateDescription.updatedFields;
+      // const num = obj.__v;
+      // const sender = obj[`messages.${num-1}`].senderUid;
+      // if (sender !== userId) {
+      //   axios.get(`http://localhost:5001/user/${sender}`).then((res) => {
+      //     const d = res.data;
+
+      //     //toast.info(`New message from ${d.realname}`);
+      //   });
+      // }
     };
     fetchConversation();
   }, []);
@@ -101,12 +103,24 @@ const Messaging = ({ title }) => {
       };
 
       axios.post(`http://localhost:5001/conversation/message`, newMessage)
-        .then((response) => {
-          setMessageText("");
-        })
-        .catch((error) => {
-          console.error("Error sending message:", error);
+      .then((response) => {
+        setMessageText("");
+        
+        // update notifications of the recipient
+        axios.get(`http://localhost:5001/user/${currFriendObj.uid}`).then(res => {
+          const data = res.data;
+          const notis = data.notifications;
+          notis.push(`New Message from ${myName}`);
+          const newData = {
+            ...data,
+            notis
+          }
+          axios.put(`http://localhost:5001/user/${currFriendObj.uid}`, newData);
         });
+      })
+      .catch((error) => {
+        console.error("Error sending message:", error);
+      });
     }
     setCurrFriendObj({ uid: currFriendObj.uid, realname: currFriendObj.realname });
     findConversation();
