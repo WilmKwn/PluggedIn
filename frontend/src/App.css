@@ -389,21 +389,10 @@ p {
 }
 
 
-/*SETTINGS*/
-
-.settings-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-
-/* TESTING */
-
 .sort-by-text {
   position: absolute;
   left: 20px; /* Adjust as needed */
-  top: 50%;
+  top: 35%;
   transform: translateY(-50%);
   font-size: 16px;
   color: #555;
@@ -412,7 +401,7 @@ p {
 .toggle-button-container {
   position: absolute;
   left: 20px; /* Adjust as needed */
-  top: calc(50% + 20px); /* Position below the text */
+  top: calc(35% + 20px); /* Position below the text */
 }
 
 .toggle-button {
@@ -429,3 +418,44 @@ p {
 .toggle-button:hover {
   background-color: #0056b3;
 }
+
+.search-for-text {
+  position: absolute;
+  left: 20px; /* Adjust as needed */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #555;
+}
+
+.search-textbox {
+  position: absolute;
+  left: 20px; /* Adjust as needed */
+  top: calc(50% + 20px); /* Adjust as needed */
+}
+
+.search-textbox input[type="text"] {
+  width: 200px; /* Adjust as needed */
+  height: 30px; /* Adjust as needed */
+  font-size: 16px;
+  color: #333;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-textbox input[type="text"]::placeholder {
+  color: #999;
+}
+
+/*SETTINGS*/
+
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* TESTING */
+
+
