@@ -126,10 +126,6 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
-<<<<<<< HEAD
-=======
-    // console.log(reactions)
->>>>>>> df52ae6fb5fbc4c0b83561a40ec7bf486abfcbbc
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -165,10 +161,6 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
-<<<<<<< HEAD
-=======
-    // console.log(reactions)
->>>>>>> df52ae6fb5fbc4c0b83561a40ec7bf486abfcbbc
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -198,10 +190,6 @@ const Post = ({ postParam }) => {
       laughs: newLaughs,
       reposts: reposts,
     }
-<<<<<<< HEAD
-=======
-    // console.log(reactions)
->>>>>>> df52ae6fb5fbc4c0b83561a40ec7bf486abfcbbc
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -220,10 +208,6 @@ const Post = ({ postParam }) => {
       laughs: laughs,
       reposts: newReposts,
     }
-<<<<<<< HEAD
-=======
-    // console.log(reactions)
->>>>>>> df52ae6fb5fbc4c0b83561a40ec7bf486abfcbbc
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
