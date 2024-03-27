@@ -330,7 +330,10 @@ const Profile = () => {
                 )
             )
           )}
-          {(!loggedInData.blockedUsers.includes(userId)) ? (
+          {userId === loggedInId ? (
+            <div></div>
+          ) : (
+          (!loggedInData.blockedUsers.includes(userId)) ? (
                   <>
                     <div>
                       <button onClick={() => handleBlock()}
@@ -344,7 +347,8 @@ const Profile = () => {
                         className="button bg-gray-300">
                         Unblock </button>
                     </div></>
-                )}
+                )
+              )}
 
         </div>
         <div className="edit-profile-container">
