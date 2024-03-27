@@ -195,7 +195,7 @@ router.delete('/:id/friends/:delFriend', async (req, res) => {
     }
 });
 // delete user from user's blockedUsers array
-router.delete('/:id/blockedUsers/:unBlock', async (req, res) => {
+router.delete('/:id/blockedUsers/:unBlockee', async (req, res) => {
     try {
         const { id, unBlockee } = req.params;
         // Find the user by id

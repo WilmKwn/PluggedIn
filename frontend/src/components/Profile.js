@@ -27,9 +27,11 @@ const Profile = () => {
   const userId = location.state.userId;
   const loggedInId = localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")
   const [userProfilePic, setUserProfilePic] = useState({
-    profilePic: "",});
+    profilePic: "",
+  });
   const [loggedInProfilePic, setLoggedInProfilePic] = useState({
-    profilePic: "",});
+    profilePic: "",
+  });
   const [userData, setUserData] = useState({
     // profilePic: "",
     name: "",
@@ -52,7 +54,7 @@ const Profile = () => {
     projects: [],
   });
   const [userPosts, setUserPosts] = useState([]);
-  
+
 
   const [userSkills, setUserSkills] = useState([]);
   useEffect(() => {
@@ -86,29 +88,29 @@ const Profile = () => {
       });
   }, []);
   const fetchUserAndLoggedData = () => {
-      axios
-        .get(`http://localhost:5001/user/${userId}`)
-        .then((res) => {
-          // Process the user data here if the response was successful (status 200)
-          console.log("got user data");
-          setUserData(res.data); // Update state with user data
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          // Handle any errors that occur during the fetch request
-        });
-  
-      axios
-        .get(`http://localhost:5001/user/${loggedInId}`)
-        .then((res) => {
-          // Process the user data here if the response was successful (status 200)
-          console.log("got loggedIn data");
-          setLoggedInData(res.data); // Update state with user data
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          // Handle any errors that occur during the fetch request
-        });
+    axios
+      .get(`http://localhost:5001/user/${userId}`)
+      .then((res) => {
+        // Process the user data here if the response was successful (status 200)
+        console.log("got user data");
+        setUserData(res.data); // Update state with user data
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle any errors that occur during the fetch request
+      });
+
+    axios
+      .get(`http://localhost:5001/user/${loggedInId}`)
+      .then((res) => {
+        // Process the user data here if the response was successful (status 200)
+        console.log("got loggedIn data");
+        setLoggedInData(res.data); // Update state with user data
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle any errors that occur during the fetch request
+      });
   }
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8282');
@@ -135,7 +137,7 @@ const Profile = () => {
 
   const handleBlock = () => {
     //console.log(id);
-    console.log(userId);
+    console.log("Handle Block");
     console.log(localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying"));
     axios.post(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/blockedUsers`, { blockee: userId })
       .then(response => {
@@ -146,6 +148,26 @@ const Profile = () => {
         console.error('Error blocking user:', error);
         // Optionally, handle the error or revert local state changes
       });
+    // also remove the user from the account they block's friends array
+    axios.delete(`http://localhost:5001/user/${userId}/friends/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}`)
+      .then(response => {
+        console.log('Removed from blockee\'s friends successfully:', response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch(error => {
+        console.error('Error removing from blockee\'s friends:', error);
+        // Optionally, handle the error or revert local state changes
+      });
+    // also also unfriend the user
+    axios.delete(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/friends/${userId}`)
+    .then(response => {
+      console.log('Friend deleted successfully:', response.data);
+      // Optionally, update the UI or handle success
+    })
+    .catch(error => {
+      console.error('Error deleting friend:', error);
+      // Optionally, handle the error or revert local state changes
+    });
   };
 
 
@@ -165,7 +187,7 @@ const Profile = () => {
 
   const handleUnblock = () => {
 
-    // Make API call to delete friend from the user
+    // Make API call to delete block from the user
     axios.delete(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/blockedUsers/${userId}`)
       .then(response => {
         console.log('User unblocked successfully:', response.data);
@@ -175,8 +197,9 @@ const Profile = () => {
         console.error('Error unblocking user:', error);
         // Optionally, handle the error or revert local state changes
       });
+
   };
-  
+
   useEffect(() => {
     axios.get(`http://localhost:5001/post/owner/${userId}`)
       .then((res) => {
@@ -224,7 +247,7 @@ const Profile = () => {
 
   const ProfileInfo = () => {
     const [isHovered, setIsHovered] = useState(false);
-    
+
     // // check for profile pic
     if (!userProfilePic.profilePic || userProfilePic.profilePic === null) {
       userProfilePic.profilePic = "No Profile Picture";
@@ -281,11 +304,9 @@ const Profile = () => {
                 <button onClick={() => handleRemoveConnect()}
                   className="button">
                   Remove Connection </button>
-              </div><div>
-                <button
-                  className="button">
-                  Block </button>
-              </div></>) : ((!userData.friends || !userData.friends.includes(loggedInId)) && (loggedInData.friends && loggedInData.friends.includes(userId)) ? (
+              </div></>) : (
+              ((!userData.friends || !userData.friends.includes(loggedInId)) && (loggedInData.friends && loggedInData.friends.includes(userId))) ? 
+              (
                 <>
                   <div>
                     <button onClick={() => handleRemoveConnect()}
@@ -295,11 +316,8 @@ const Profile = () => {
 
                       {isHovered ? "Rescind?" : "Pending"}
                     </button>
-                  </div><div>
-                    <button onClick={""}
-                      className="button">
-                      Block </button>
                   </div></>
+                  
               )
                 : (
                   <>
@@ -308,23 +326,25 @@ const Profile = () => {
                         className="button">
                         {console.log(userData.friends)}
                         Connect </button>
-                    </div>
+                    </div></>
+                )
+            )
+          )}
+          {(!loggedInData.blockedUsers.includes(userId)) ? (
+                  <>
                     <div>
-                      {!loggedInData.blockedUsers.includes(userId) ? (
-                        <button onClick={() => handleBlock()}
+                      <button onClick={() => handleBlock()}
                         className="button">
                         Block </button>
-                      ) : (
-                        <button onClick={() => handleUnblock()}
+                    </div></>) : (
+                  <>
+                    <div>
+
+                      <button onClick={() => handleUnblock()}
                         className="button bg-gray-300">
                         Unblock </button>
-                      )} 
-                      
                     </div></>
-                ))
-
-
-          )}
+                )}
 
         </div>
         <div className="edit-profile-container">
