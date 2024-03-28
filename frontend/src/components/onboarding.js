@@ -11,6 +11,7 @@ const Onboarding = () => {
   const navigate = useNavigate();
   const [realname, setRealName] = useState("");
   const [username, setUsername] = useState("");
+  const [accType, setAccType] = useState(0);
   const [genre, setGenre] = useState("");
   const [description, setDescription] = useState("");
   const [profilePic, setProfilePic] = useState(null);
@@ -41,14 +42,21 @@ const Onboarding = () => {
           console.log(err.message);
         });
     }
+    console.log("check");
 
-    if (auth.currentUser) {
+    if (isRecordLabelAccount) {
+      setAccType(1)
+    } else {
+      setAccType(0)
+    }
       try {
         const data = {
-          uid: auth.currentUser.uid,
+          uid: localStorage.getItem(
+            "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+          ),
           realname: realname,
           username: username,
-          accountType: 0, // This might need to be updated according to your account type logic
+          accountType: accType, // This might need to be updated according to your account type logic
           profilePic: fileLabel,
           genre: genre,
           description: description,
@@ -62,7 +70,7 @@ const Onboarding = () => {
       } catch (error) {
         console.error("Error updating profile: ", error);
       }
-    }
+    
   };
 
   const handleProfilePicChange = (e) => {
