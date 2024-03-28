@@ -7,6 +7,7 @@ import axios from "axios";
 import { storage, ref, getDownloadURL, auth } from "./firebase";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { library } from "@fortawesome/fontawesome-svg-core";
 
 const Post = ({ postParam }) => {
   const [post] = useState(postParam);
@@ -14,10 +15,43 @@ const Post = ({ postParam }) => {
   // Dummy user details
   const [username, setUsername] = useState();
   const [userId, setUserId] = useState();
-
+  const loggedInId = localStorage.getItem(
+    "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+  );
+  const [userData, setUserData] = useState({
+    blockedUsers: [],
+  });
+  const [loggedInData, setLoggedInData] = useState({
+    blockedUsers: [],
+  })
   const [userProfilePic, setUserProfilePic] = useState(
     "https://via.placeholder.com/150"
   );
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5001/user/${userId}`)
+      .then((res) => {
+        // Process the user data here if the response was successful (status 200)
+        console.log("got user data");
+        setUserData(res.data); // Update state with user data
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle any errors that occur during the fetch request
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5001/user/${loggedInId}`)
+      .then((res) => {
+        // Process the user data here if the response was successful (status 200)
+        console.log("got loggedIn data");
+        setLoggedInData(res.data); // Update state with user data
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      })
+  }, []);
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
   const openModal = (event) => {
@@ -309,126 +343,132 @@ const Post = ({ postParam }) => {
   }, []);
 
   return (
-    <div className="post-card">
-      <div className="user-info-container">
-        <img
-          onClick={() => { profileClicked(userId) }}
-          src={userProfilePic}
-          alt="User profile"
-          style={{ width: "50px", height: "50px" }}
-          className="user-profile-pic"
-        />
-        <span className="username">{username}
-          {post.repost && (
-            <span className="repost">Reposted from {originalCreator}</span>
-          )}
-        </span>
-        <button className="options-button ml-auto" id="optionsButt" onClick={(event) => openModal(event)}>
-          <FontAwesomeIcon icon={faEllipsisV} />
-        </button>
-        <Modal
-          isOpen={isModalOpen}
-          onRequestClose={closeModal}
-          style={modalStyles}
-        >
-          <div className="modal-container">
-            <div className="w-full bg-gray-100 overflow-y-scroll" style={{ height: '200px', borderRadius: '5px' }}>
-              <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
-                {/*  actions for each profile card */}
-                <div className="ml-4">
-                  <p className="text-gray-800 font-semibold">Button 1</p>
-                  {/* Add more information or actions here */}
+    <div>
+      {(userData.blockedUsers.includes(loggedInId) || loggedInData.blockedUsers.includes(userId)) ? (
+        <><div></div></>
+      ) : (<>
+        <div className="post-card">
+          <div className="user-info-container">
+            <img
+              onClick={() => { profileClicked(userId) }}
+              src={userProfilePic}
+              alt="User profile"
+              style={{ width: "50px", height: "50px" }}
+              className="user-profile-pic"
+            />
+            <span className="username">{username}
+              {post.repost && (
+                <span className="repost">Reposted from {originalCreator}</span>
+              )}
+            </span>
+            <button className="options-button ml-auto" id="optionsButt" onClick={(event) => openModal(event)}>
+              <FontAwesomeIcon icon={faEllipsisV} />
+            </button>
+            <Modal
+              isOpen={isModalOpen}
+              onRequestClose={closeModal}
+              style={modalStyles}
+            >
+              <div className="modal-container">
+                <div className="w-full bg-gray-100 overflow-y-scroll" style={{ height: '200px', borderRadius: '5px' }}>
+                  <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
+                    {/*  actions for each profile card */}
+                    <div className="ml-4">
+                      <p className="text-gray-800 font-semibold">Button 1</p>
+                      {/* Add more information or actions here */}
+                    </div>
+                  </div>
+                  <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
+                    {/*  actions for each profile card */}
+                    <div className="ml-4">
+                      <p className="text-gray-800 font-semibold">Button 2</p>
+                      {/* Add more information or actions here */}
+                    </div>
+                  </div>
+                  <div className="flex items-center h-1/3 border-gray-300 p-2">
+                    {/*  actions for each profile card */}
+                    <div className="ml-4">
+                      <p className="text-gray-800 font-semibold">Button 3</p>
+                      {/* Add more information or actions here */}
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
-                {/*  actions for each profile card */}
-                <div className="ml-4">
-                  <p className="text-gray-800 font-semibold">Button 2</p>
-                  {/* Add more information or actions here */}
-                </div>
-              </div>
-              <div className="flex items-center h-1/3 border-gray-300 p-2">
-                {/*  actions for each profile card */}
-                <div className="ml-4">
-                  <p className="text-gray-800 font-semibold">Button 3</p>
-                  {/* Add more information or actions here */}
-                </div>
-              </div>
-            </div>
 
+              </div>
+            </Modal>
           </div>
-        </Modal>
-      </div>
-      <div className="post-header">
-        <h2 className="font-bold">{post.title}</h2>
-        <p>{post.description}</p>
-      </div>
-      {mediaType === "image" && media !== "" && (
-        <img src={media} alt="Post media" className="post-image center-media" />
-      )}
-      {mediaType === "video" && media !== "" && (
-        <video controls className="post-video center-media">
-          <source src={media} />
-        </video>
-      )}
-      {mediaType === "audio" && media !== "" && (
-        <audio controls className="post-audio center-media">
-          <source src={media} type={`audio/${mediaExtension}`} />
-        </audio>
-      )}
+          <div className="post-header">
+            <h2 className="font-bold">{post.title}</h2>
+            <p>{post.description}</p>
+          </div>
+          {mediaType === "image" && media !== "" && (
+            <img src={media} alt="Post media" className="post-image center-media" />
+          )}
+          {mediaType === "video" && media !== "" && (
+            <video controls className="post-video center-media">
+              <source src={media} />
+            </video>
+          )}
+          {mediaType === "audio" && media !== "" && (
+            <audio controls className="post-audio center-media">
+              <source src={media} type={`audio/${mediaExtension}`} />
+            </audio>
+          )}
 
-      <div>&nbsp;</div>
+          <div>&nbsp;</div>
 
-      <div className="post-tags">Tags: {post.tags.join(" ")}</div>
+          <div className="post-tags">Tags: {post.tags.join(" ")}</div>
 
-      <div className="post-interactions">
-        <button
-          className={`post-button ${likeStatus ? "active" : ""}`}
-          onClick={handleLike}
-        >
-          Like ({likes})
-        </button>
-        <button
-          className={`post-button ${dislikeStatus ? "active" : ""}`}
-          onClick={handleDislike}
-        >
-          Dislike ({dislikes})
-        </button>
-        <button
-          className={`post-button ${laughStatus ? "active" : ""}`}
-          onClick={handleLaugh}
-        >
-          Laugh ({laughs})
-        </button>
-        <button
-          className={`post-button ${repostStatus ? "active" : ""}`}
-          onClick={handleRepost}
-        >
-          Repost ({reposts})
-        </button>
-      </div>
-      <div className="post-comments">
-        {comments.map(({ text, owner }, index) => {
-          return (
-            <div key={index} className="comment">
-              {owner} : {text}
-            </div>
-          );
-        })}
-        <form onSubmit={handleCommentSubmit} className="comment-form">
-          <input
-            type="text"
-            className="comment-input"
-            value={commentInput}
-            onChange={(e) => setCommentInput(e.target.value)}
-            placeholder="Add a comment..."
-          />
-          <button type="submit" className="submit-button">
-            Comment
-          </button>
-        </form>
-      </div>
-    </div>
+          <div className="post-interactions">
+            <button
+              className={`post-button ${likeStatus ? "active" : ""}`}
+              onClick={handleLike}
+            >
+              Like ({likes})
+            </button>
+            <button
+              className={`post-button ${dislikeStatus ? "active" : ""}`}
+              onClick={handleDislike}
+            >
+              Dislike ({dislikes})
+            </button>
+            <button
+              className={`post-button ${laughStatus ? "active" : ""}`}
+              onClick={handleLaugh}
+            >
+              Laugh ({laughs})
+            </button>
+            <button
+              className={`post-button ${repostStatus ? "active" : ""}`}
+              onClick={handleRepost}
+            >
+              Repost ({reposts})
+            </button>
+          </div>
+          <div className="post-comments">
+            {comments.map(({ text, owner }, index) => {
+              return (
+                <div key={index} className="comment">
+                  {owner} : {text}
+                </div>
+              );
+            })}
+            <form onSubmit={handleCommentSubmit} className="comment-form">
+              <input
+                type="text"
+                className="comment-input"
+                value={commentInput}
+                onChange={(e) => setCommentInput(e.target.value)}
+                placeholder="Add a comment..."
+              />
+              <button type="submit" className="submit-button">
+                Comment
+              </button>
+            </form>
+          </div>
+        </div>
+      </>)
+      }</div>
   );
 };
 export default Post;
