@@ -296,10 +296,7 @@ router.delete('/:id/endorse/:skill/:endorser', async (req, res) => {
     try {
         const { id, skill, endorser } = req.params;
         // Find the user by id
-        console.log("endorser", endorser)
-        console.log("skill", skill)
         const user = await User.findOne({ uid: id });
-        console.log("ASD", user.endorsed)
         user.endorsed = user.endorsed.filter(endorsement => {
             return endorsement.endorser != endorser || endorsement.skill != skill;
         });
