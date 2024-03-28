@@ -459,3 +459,39 @@ p {
 /* TESTING */
 
 
+/*Endorse*/
+
+.skill-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.skill-name {
+  /* Additional class for skill name */
+  margin-right: 10px; /* Adjust this value to create more or less space */
+}
+
+.endorse-button {
+  padding: 5px 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.endorse-button:hover {
+  background-color: #45a049;
+}
+
+.endorsed-by {
+  font-size: 0.85em;
+  color: #555;
+  margin-left: 10px;
+}

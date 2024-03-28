@@ -25,13 +25,16 @@ const Footer = () => {
 const Profile = () => {
   const location = useLocation();
   const userId = location.state.userId;
-  const loggedInId = localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")
+  const loggedInId = localStorage.getItem(
+    "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+  );
   const [userProfilePic, setUserProfilePic] = useState({
     profilePic: "",
   });
   const [loggedInProfilePic, setLoggedInProfilePic] = useState({
     profilePic: "",
   });
+  const [endorsements, setEndorsements] = useState({});
   const [userData, setUserData] = useState({
     // profilePic: "",
     name: "",
@@ -55,7 +58,6 @@ const Profile = () => {
   });
   const [userPosts, setUserPosts] = useState([]);
 
-
   const [userSkills, setUserSkills] = useState([]);
   useEffect(() => {
     axios
@@ -63,16 +65,42 @@ const Profile = () => {
       .then((res) => {
         // Process the user data here if the response was successful (status 200)
         console.log("got user pfp");
-        console.log(res.data)
+        console.log(res.data);
         setUserProfilePic(res.data); // Update state with user data
-        console.log("PFP:")
-        console.log(userProfilePic.profilePic)
+        console.log("PFP:");
+        console.log(userProfilePic.profilePic);
       })
       .catch((error) => {
         console.error("Error:", error);
         // Handle any errors that occur during the fetch request
       });
   }, []);
+
+  const endorseSkill = (skill) => {
+    axios
+      //EDIT CALL PATH
+      .post(
+        /*`http://localhost:5001/endorsements/${userId}/endorse`,*/ {
+          skill,
+          endorser: loggedInId,
+        }
+      )
+      .then((response) => {
+        console.log("Skill endorsed successfully:", response.data);
+        setEndorsements((prevEndorsements) => {
+          const newEndorsements = { ...prevEndorsements };
+          if (newEndorsements[skill]) {
+            newEndorsements[skill].push(loggedInData.name);
+          } else {
+            newEndorsements[skill] = [loggedInData.name];
+          }
+          return newEndorsements;
+        });
+      })
+      .catch((error) => {
+        console.error("Error endorsing skill:", error);
+      });
+  };
 
   useEffect(() => {
     axios
@@ -111,9 +139,9 @@ const Profile = () => {
         console.error("Error:", error);
         // Handle any errors that occur during the fetch request
       });
-  }
+  };
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8282');
+    const ws = new WebSocket("ws://localhost:8282");
     ws.onmessage = (event) => {
       fetchUserAndLoggedData();
       console.log("fetched");
@@ -123,14 +151,22 @@ const Profile = () => {
   const handleConnect = () => {
     //console.log(id);
     console.log(userId);
-    console.log(localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying"));
-    axios.post(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/friends`, { friend: userId })
-      .then(response => {
-        console.log('Friend added successfully:', response.data);
+    console.log(
+      localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")
+    );
+    axios
+      .post(
+        `http://localhost:5001/user/${localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+        )}/friends`,
+        { friend: userId }
+      )
+      .then((response) => {
+        console.log("Friend added successfully:", response.data);
         // Optionally, update the UI or handle success
       })
-      .catch(error => {
-        console.error('Error adding friend:', error);
+      .catch((error) => {
+        console.error("Error adding friend:", error);
         // Optionally, handle the error or revert local state changes
       });
   };
@@ -138,74 +174,102 @@ const Profile = () => {
   const handleBlock = () => {
     //console.log(id);
     console.log("Handle Block");
-    console.log(localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying"));
-    axios.post(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/blockedUsers`, { blockee: userId })
-      .then(response => {
-        console.log('User blocked successfully:', response.data);
+    console.log(
+      localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")
+    );
+    axios
+      .post(
+        `http://localhost:5001/user/${localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+        )}/blockedUsers`,
+        { blockee: userId }
+      )
+      .then((response) => {
+        console.log("User blocked successfully:", response.data);
         // Optionally, update the UI or handle success
       })
-      .catch(error => {
-        console.error('Error blocking user:', error);
+      .catch((error) => {
+        console.error("Error blocking user:", error);
         // Optionally, handle the error or revert local state changes
       });
     // also remove the user from the account they block's friends array
-    axios.delete(`http://localhost:5001/user/${userId}/friends/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}`)
-      .then(response => {
-        console.log('Removed from blockee\'s friends successfully:', response.data);
+    axios
+      .delete(
+        `http://localhost:5001/user/${userId}/friends/${localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+        )}`
+      )
+      .then((response) => {
+        console.log(
+          "Removed from blockee's friends successfully:",
+          response.data
+        );
         // Optionally, update the UI or handle success
       })
-      .catch(error => {
-        console.error('Error removing from blockee\'s friends:', error);
+      .catch((error) => {
+        console.error("Error removing from blockee's friends:", error);
         // Optionally, handle the error or revert local state changes
       });
     // also also unfriend the user
-    axios.delete(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/friends/${userId}`)
-    .then(response => {
-      console.log('Friend deleted successfully:', response.data);
-      // Optionally, update the UI or handle success
-    })
-    .catch(error => {
-      console.error('Error deleting friend:', error);
-      // Optionally, handle the error or revert local state changes
-    });
-  };
-
-
-  const handleRemoveConnect = () => {
-
-    // Make API call to delete friend from the user
-    axios.delete(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/friends/${userId}`)
-      .then(response => {
-        console.log('Friend deleted successfully:', response.data);
+    axios
+      .delete(
+        `http://localhost:5001/user/${localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+        )}/friends/${userId}`
+      )
+      .then((response) => {
+        console.log("Friend deleted successfully:", response.data);
         // Optionally, update the UI or handle success
       })
-      .catch(error => {
-        console.error('Error deleting friend:', error);
+      .catch((error) => {
+        console.error("Error deleting friend:", error);
+        // Optionally, handle the error or revert local state changes
+      });
+  };
+
+  const handleRemoveConnect = () => {
+    // Make API call to delete friend from the user
+    axios
+      .delete(
+        `http://localhost:5001/user/${localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+        )}/friends/${userId}`
+      )
+      .then((response) => {
+        console.log("Friend deleted successfully:", response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch((error) => {
+        console.error("Error deleting friend:", error);
         // Optionally, handle the error or revert local state changes
       });
   };
 
   const handleUnblock = () => {
-
     // Make API call to delete block from the user
-    axios.delete(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/blockedUsers/${userId}`)
-      .then(response => {
-        console.log('User unblocked successfully:', response.data);
+    axios
+      .delete(
+        `http://localhost:5001/user/${localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+        )}/blockedUsers/${userId}`
+      )
+      .then((response) => {
+        console.log("User unblocked successfully:", response.data);
         // Optionally, update the UI or handle success
       })
-      .catch(error => {
-        console.error('Error unblocking user:', error);
+      .catch((error) => {
+        console.error("Error unblocking user:", error);
         // Optionally, handle the error or revert local state changes
       });
-
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:5001/post/owner/${userId}`)
+    axios
+      .get(`http://localhost:5001/post/owner/${userId}`)
       .then((res) => {
         console.log("got posts");
         console.log(res.data);
-        setUserPosts(res.data)
+        setUserPosts(res.data);
       })
       .catch((error) => {
         console.error("Error getting posts:", error);
@@ -229,7 +293,6 @@ const Profile = () => {
     return (
       <div className="w-1/3 flex-row h-auto overflow-y-hidden">
         <div className="h-full text-center pt-28 border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg overflow-y-scroll">
-
           {/* <div>Activity</div>
         <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
           <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
@@ -256,10 +319,9 @@ const Profile = () => {
     // check for null skills and description and projects
     if (!userData.skills || userData.skills.length === 0) {
       userData.skills = [];
-    }
-    else {
+    } else {
       setUserSkills(userData.skills);
-      console.log(userData.skills)
+      console.log(userData.skills);
     }
 
     if (userData.description === null) {
@@ -282,7 +344,7 @@ const Profile = () => {
           console.log(err);
         });
     }, []);
-    console.log(userData.skills)
+    console.log(userData.skills);
     return (
       <div className="h-full pt-28 flex flex-col items-center">
         {userProfilePic.profilePic === "No file chosen" ? (
@@ -298,66 +360,93 @@ const Profile = () => {
         <div className="flex justify-between items-center">
           {userId === loggedInId ? (
             <div></div>
-          ) : (
-            ((userData.friends && userData.friends.includes(loggedInId)) && (loggedInData.friends && loggedInData.friends.includes(userId))) ? (<>
+          ) : userData.friends &&
+            userData.friends.includes(loggedInId) &&
+            loggedInData.friends &&
+            loggedInData.friends.includes(userId) ? (
+            <>
               <div>
-                <button onClick={() => handleRemoveConnect()}
-                  className="button">
-                  Remove Connection </button>
-              </div></>) : (
-              ((!userData.friends || !userData.friends.includes(loggedInId)) && (loggedInData.friends && loggedInData.friends.includes(userId))) ? 
-              (
-                <>
-                  <div>
-                    <button onClick={() => handleRemoveConnect()}
-                      className="button bg-gray-300"
-                      onMouseEnter={() => setIsHovered(true)}
-                      onMouseLeave={() => setIsHovered(false)}>
-
-                      {isHovered ? "Rescind?" : "Pending"}
-                    </button>
-                  </div></>
-                  
-              )
-                : (
-                  <>
-                    <div>
-                      <button onClick={() => handleConnect()}
-                        className="button">
-                        {console.log(userData.friends)}
-                        Connect </button>
-                    </div></>
-                )
-            )
+                <button
+                  onClick={() => handleRemoveConnect()}
+                  className="button"
+                >
+                  Remove Connection{" "}
+                </button>
+              </div>
+            </>
+          ) : (!userData.friends || !userData.friends.includes(loggedInId)) &&
+            loggedInData.friends &&
+            loggedInData.friends.includes(userId) ? (
+            <>
+              <div>
+                <button
+                  onClick={() => handleRemoveConnect()}
+                  className="button bg-gray-300"
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
+                  {isHovered ? "Rescind?" : "Pending"}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div>
+                <button onClick={() => handleConnect()} className="button">
+                  {console.log(userData.friends)}
+                  Connect{" "}
+                </button>
+              </div>
+            </>
           )}
           {userId === loggedInId ? (
             <div></div>
+          ) : !loggedInData.blockedUsers.includes(userId) ? (
+            <>
+              <div>
+                <button onClick={() => handleBlock()} className="button">
+                  Block{" "}
+                </button>
+              </div>
+            </>
           ) : (
-          (!loggedInData.blockedUsers.includes(userId)) ? (
-                  <>
-                    <div>
-                      <button onClick={() => handleBlock()}
-                        className="button">
-                        Block </button>
-                    </div></>) : (
-                  <>
-                    <div>
-
-                      <button onClick={() => handleUnblock()}
-                        className="button bg-gray-300">
-                        Unblock </button>
-                    </div></>
-                )
-              )}
-
+            <>
+              <div>
+                <button
+                  onClick={() => handleUnblock()}
+                  className="button bg-gray-300"
+                >
+                  Unblock{" "}
+                </button>
+              </div>
+            </>
+          )}
         </div>
         <div className="edit-profile-container">
           <div className="skills-profile">
             <h2>Skills</h2>
             <ul>
-              {userData.skills.length > 0 ? userSkills.map((skill, index) => (
-                <li key={index}>{skill}</li>
-              )) : "No skills"}
+              {userData.skills.length > 0
+                ? userData.skills.map((skill, index) => (
+                    <li
+                      key={index}
+                      className="flex justify-between items-center"
+                    >
+                      <span className="skill-name">{skill}</span>{" "}
+                      <button
+                        onClick={() => endorseSkill(skill)}
+                        className="endorse-button"
+                      >
+                        Endorse
+                      </button>
+                      {endorsements[skill] && (
+                        <span>
+                          Endorsed by {endorsements[skill].join(", ")}
+                        </span>
+                      )}
+                    </li>
+                  ))
+                : "No skills"}
             </ul>
           </div>
         </div>
