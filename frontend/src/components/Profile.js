@@ -139,10 +139,7 @@ const Profile = () => {
 
   const revokeEndorsement = (skill) => {
     axios
-      .delete(`http://localhost:5001/user/${userId}/endorse`, {
-        skill: skill,
-        endorser: loggedInId,
-      })
+      .delete(`http://localhost:5001/user/${userId}/endorse/${skill}/${loggedInId}`)
       .then((response) => {
         console.log("Skill endorsed successfully:", response.data);
         setEndorsements((prevEndorsements) => {

@@ -292,15 +292,18 @@ router.delete('/:id/joinedLabels/:leavingLabel', async (req, res) => {
     }
 });
 
-router.delete('/:id/endorse/', async (req, res) => {
+router.delete('/:id/endorse/:skill/:endorser', async (req, res) => {
     try {
-        const { id } = req.params;
-        const { endorser, skill } = req.body;
+        const { id, skill, endorser } = req.params;
         // Find the user by id
+        console.log("endorser", endorser)
+        console.log("skill", skill)
         const user = await User.findOne({ uid: id });
+        console.log("ASD", user.endorsed)
         user.endorsed = user.endorsed.filter(endorsement => {
-            endorsement.endorser != endorser && endorsement.skill != skill
+            return endorsement.endorser != endorser || endorsement.skill != skill;
         });
+        console.log(user.endorsed)
         await user.save();
         return res.status(200).json(user);
     } catch (err) {
