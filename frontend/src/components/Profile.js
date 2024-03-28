@@ -35,6 +35,7 @@ const Profile = () => {
     profilePic: "",
   });
   const [endorsements, setEndorsements] = useState({});
+  const [endorsedSkills, setEndorsedSkills] = useState({});
   const [userData, setUserData] = useState({
     // profilePic: "",
     name: "",
@@ -100,6 +101,11 @@ const Profile = () => {
       .catch((error) => {
         console.error("Error endorsing skill:", error);
       });
+
+    setEndorsedSkills((prevEndorsedSkills) => ({
+      ...prevEndorsedSkills,
+      [skill]: true, // Set the endorsed state to true for the skill
+    }));
   };
 
   useEffect(() => {
@@ -428,25 +434,21 @@ const Profile = () => {
             <ul>
               {userData.skills.length > 0
                 ? userData.skills.map((skill, index) => (
-                    <li
-                      key={index}
-                      className="flex justify-between items-center"
-                    >
-                      <span className="skill-name">{skill}</span>{" "}
-                      <button
-                        onClick={() => endorseSkill(skill)}
-                        className="endorse-button"
-                      >
-                        Endorse
-                      </button>
-                      {endorsements[skill] && (
-                        <span>
-                          Endorsed by {endorsements[skill].join(", ")}
-                        </span>
+                    <li key={index} className="skill-list-item">
+                      <span className="skill-label">{skill}</span>
+                      {endorsedSkills[skill] ? (
+                        <span className="endorsed">Endorsed</span>
+                      ) : (
+                        <button
+                          onClick={() => endorseSkill(skill)}
+                          className="endorse-button"
+                        >
+                          Endorse
+                        </button>
                       )}
                     </li>
                   ))
-                : "No skills"}
+                : "No skills listed"}
             </ul>
           </div>
         </div>
