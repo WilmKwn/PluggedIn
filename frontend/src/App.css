@@ -484,6 +484,17 @@ p {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.endorse-button.endorsed {
+  /* Styles for the endorsed button state */
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+.endorse-button.endorsed:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
 }
 
 .endorse-button:hover {

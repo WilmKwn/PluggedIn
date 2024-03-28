@@ -108,6 +108,24 @@ const Profile = () => {
     }));
   };
 
+  const toggleEndorseSkill = (skill) => {
+    // Check the current endorsement state for the skill
+    const hasEndorsed = endorsedSkills[skill];
+
+    // Update state to reflect the new endorsement status
+    setEndorsedSkills((prevEndorsedSkills) => ({
+      ...prevEndorsedSkills,
+      [skill]: !hasEndorsed,
+    }));
+
+    // Here you would normally send a request to your backend to add or remove the endorsement
+    // Add API call here to handle the backend update
+    console.log(
+      hasEndorsed ? "Retracting endorsement for" : "Endorsing",
+      skill
+    );
+  };
+
   useEffect(() => {
     axios
       .get(`http://localhost:5001/user/${loggedInId}`)
@@ -436,16 +454,14 @@ const Profile = () => {
                 ? userData.skills.map((skill, index) => (
                     <li key={index} className="skill-list-item">
                       <span className="skill-label">{skill}</span>
-                      {endorsedSkills[skill] ? (
-                        <span className="endorsed">Endorsed</span>
-                      ) : (
-                        <button
-                          onClick={() => endorseSkill(skill)}
-                          className="endorse-button"
-                        >
-                          Endorse
-                        </button>
-                      )}
+                      <button
+                        onClick={() => toggleEndorseSkill(skill)}
+                        className={`endorse-button ${
+                          endorsedSkills[skill] ? "endorsed" : ""
+                        }`}
+                      >
+                        {endorsedSkills[skill] ? "Endorsed" : "Endorse"}
+                      </button>
                     </li>
                   ))
                 : "No skills listed"}
