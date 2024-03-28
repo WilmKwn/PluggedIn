@@ -103,7 +103,7 @@ router.post('/:id/skills', async (req, res) => {
     try {
         const { id } = req.params;
         const { skill } = req.body;
-       
+
         // Find the user by id
         const user = await User.findOne({ uid: id });
         // If user found, add the skill
@@ -123,7 +123,7 @@ router.post('/:id/friends', async (req, res) => {
     try {
         const { id } = req.params;
         const { friend } = req.body;
-       
+
         // Find the user by id
         const user = await User.findOne({ uid: id });
         // If user found, add the skill
@@ -143,7 +143,7 @@ router.post('/:id/blockedUsers', async (req, res) => {
     try {
         const { id } = req.params;
         const { blockee } = req.body;
-       
+
         // Find the user by id
         const user = await User.findOne({ uid: id });
         // If user found, add the skill
@@ -208,6 +208,42 @@ router.delete('/:id/blockedUsers/:unBlockee', async (req, res) => {
         } else {
             return res.status(404).send('User not found');
         }
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
+router.post('/:id/endorse', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { endorser, skill } = req.body;
+        // Find the user by id
+        const endorserUser = await User.findOne({ uid: endorser });
+        const user = await User.findOne({ uid: id });
+        const endorserRealname = endorserUser.realname;
+        user.endorsed.push({
+            endorser_realname: endorserRealname,
+            endorser: endorser,
+            skill: skill
+        });
+        await user.save();
+        return res.status(200).json(user);
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
+router.delete('/:id/endorse/', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { endorser, skill } = req.body;
+        // Find the user by id
+        const user = await User.findOne({ uid: id });
+        user.endorsed = user.endorsed.filter(endorsement => {
+            endorsement.endorser != endorser && endorsement.skill != skill
+        });
+        await user.save();
+        return res.status(200).json(user);
     } catch (err) {
         return res.status(500).send(err.message);
     }

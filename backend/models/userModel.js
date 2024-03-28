@@ -37,7 +37,7 @@ const userSchema = mongoose.Schema(
             required: true,
         },
         skills: {
-            type: [String], 
+            type: [String],
             required: true,
         },
         tracks: {
@@ -54,7 +54,11 @@ const userSchema = mongoose.Schema(
             required: true,
         },
         endorsed: {
-            type: [mongoose.Schema.Types.ObjectId],
+            type: [{
+                endorser_realname: String,
+                endorser: String,
+                skill: String
+            }],
             ref: 'users',
             required: true,
         },
@@ -66,7 +70,7 @@ const userSchema = mongoose.Schema(
         recentActivity: {
             type: [mongoose.Schema.Types.ObjectId],
             validate: {
-                validator: function(arr) {
+                validator: function (arr) {
                     return arr.length <= 5;
                 },
                 message: props => `${props.value.length} exceeds the limit of 5 items for recent activity.`

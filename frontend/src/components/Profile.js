@@ -91,6 +91,15 @@ const Profile = () => {
         setUserProfilePic(res.data); // Update state with user data
         console.log("PFP:");
         console.log(userProfilePic.profilePic);
+        console.log(res.data.endorsed);
+        res.data.endorsed.forEach((endorsement) => {
+          setEndorsements((prevEndorsements) => {
+            return {
+              ...prevEndorsements,
+              [endorsement.skill]: [endorsement.endorser_realname]
+            };
+          });
+        });
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -102,21 +111,18 @@ const Profile = () => {
     axios
       //EDIT CALL PATH
       .post(
-        /*`http://localhost:5001/endorsements/${userId}/endorse`,*/ {
-          skill,
-          endorser: loggedInId,
-        }
+        `http://localhost:5001/user/${userId}/endorse`, {
+        skill: skill,
+        endorser: loggedInId,
+      }
       )
       .then((response) => {
         console.log("Skill endorsed successfully:", response.data);
         setEndorsements((prevEndorsements) => {
-          const newEndorsements = { ...prevEndorsements };
-          if (newEndorsements[skill]) {
-            newEndorsements[skill].push(loggedInData.name);
-          } else {
-            newEndorsements[skill] = [loggedInData.name];
-          }
-          return newEndorsements;
+          return {
+            ...prevEndorsements,
+            [skill]: prevEndorsements[skill] ? [...prevEndorsements[skill], loggedInData.realname] : [loggedInData.realname]
+          };
         });
       })
       .catch((error) => {
@@ -129,9 +135,32 @@ const Profile = () => {
     }));
   };
 
+
+
+  const revokeEndorsement = (skill) => {
+    axios
+      .delete(`http://localhost:5001/user/${userId}/endorse`, {
+        skill: skill,
+        endorser: loggedInId,
+      })
+      .then((response) => {
+        console.log("Skill endorsed successfully:", response.data);
+        setEndorsements((prevEndorsements) => {
+          return {
+            ...prevEndorsements,
+            [skill]: prevEndorsements[skill].filter((endorser) => endorser !== loggedInData.realname)
+          };
+        });
+      })
+      .catch((error) => {
+        console.error("Error revoking endorsement skill:", error);
+      });
+  };
+
+
   const toggleEndorseSkill = (skill) => {
     // Check the current endorsement state for the skill
-    const hasEndorsed = endorsedSkills[skill];
+    const hasEndorsed = endorsedSkill(skill);
 
     // Update state to reflect the new endorsement status
     setEndorsedSkills((prevEndorsedSkills) => ({
@@ -141,6 +170,13 @@ const Profile = () => {
 
     // Here you would normally send a request to your backend to add or remove the endorsement
     // Add API call here to handle the backend update
+    if (hasEndorsed) {
+      revokeEndorsement(skill);
+    }
+
+    if (!hasEndorsed) {
+      endorseSkill(skill);
+    }
     console.log(
       hasEndorsed ? "Retracting endorsement for" : "Endorsing",
       skill
@@ -362,6 +398,13 @@ const Profile = () => {
     );
   };
 
+  const endorsedSkill = (skill) => {
+    if (endorsements[skill]) {
+      return endorsements[skill].includes(loggedInData.realname);
+    }
+    return false;
+  }
+
   const ProfileInfo = () => {
     const [isHovered, setIsHovered] = useState(false);
 
@@ -423,6 +466,16 @@ const Profile = () => {
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
+        <div>Endorsements</div>
+        <div>{Object.entries(endorsements).map(([skill, endorsers]) => {
+          return (
+            <div key={skill}>
+              <div>Skill: {skill}</div>
+              <div>Endorses: {endorsers.length > 1 ? endorsers.map((endorser) => ` ${endorser} ,`) : endorsers[0]}
+              </div>
+            </div>
+          );
+        })}</div>
 
         <div className="flex justify-between items-center">
           {userId === loggedInId ? (
@@ -437,30 +490,30 @@ const Profile = () => {
                   className="button">
                   Remove Connection </button>
               </div></>) : (
-              ((!userData.friends || !userData.friends.includes(loggedInId)) && (loggedInData.friends && loggedInData.friends.includes(userId))) ?
-                (
-                  <>
-                    <div>
-                      <button onClick={() => handleRemoveConnect()}
-                        className="button bg-gray-300"
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}>
+            ((!userData.friends || !userData.friends.includes(loggedInId)) && (loggedInData.friends && loggedInData.friends.includes(userId))) ?
+              (
+                <>
+                  <div>
+                    <button onClick={() => handleRemoveConnect()}
+                      className="button bg-gray-300"
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}>
 
-                        {isHovered ? "Rescind?" : "Pending"}
-                      </button>
-                    </div></>
+                      {isHovered ? "Rescind?" : "Pending"}
+                    </button>
+                  </div></>
 
-                )
-                : (
-                  <>
-                    <div>
-                      <button onClick={() => handleConnect()}
-                        className="button">
-                        {console.log(userData.friends)}
-                        Connect </button>
-                    </div></>
-                )
-            )
+              )
+              : (
+                <>
+                  <div>
+                    <button onClick={() => handleConnect()}
+                      className="button">
+                      {console.log(userData.friends)}
+                      Connect </button>
+                  </div></>
+              )
+          )
           )}
           {userId === loggedInId ? (
             <div></div>
@@ -489,18 +542,19 @@ const Profile = () => {
             <ul>
               {userData.skills.length > 0
                 ? userData.skills.map((skill, index) => (
-                    <li key={index} className="skill-list-item">
-                      <span className="skill-label">{skill}</span>
-                      <button
-                        onClick={() => toggleEndorseSkill(skill)}
-                        className={`endorse-button ${
-                          endorsedSkills[skill] ? "endorsed" : ""
+                  <li key={index} className="skill-list-item">
+                    <span className="skill-label">{skill}</span>
+                    <button
+                      onClick={() => {
+                        toggleEndorseSkill(skill);
+                      }}
+                      className={`endorse-button ${endorsedSkills[skill] ? "endorsed" : ""
                         }`}
-                      >
-                        {endorsedSkills[skill] ? "Endorsed" : "Endorse"}
-                      </button>
-                    </li>
-                  ))
+                    >
+                      {endorsedSkill(skill) ? "Revoke Endorsement" : "Endorse"}
+                    </button>
+                  </li>
+                ))
                 : "No skills listed"}
             </ul>
           </div>
@@ -544,16 +598,16 @@ const Profile = () => {
   return (
     <div>
       <Banner id={userId} />
-      
+
       {!userData.blockedUsers.includes(loggedInId) ? (
-      <><div className="w-full h-full flex justify-around items-center">
-        <Gallery />
-        <ProfileInfo />
-        <Activity />
-      </div></>) : (
         <><div className="w-full h-full flex justify-around items-center">
-        <BlockedPage />
-        
+          <Gallery />
+          <ProfileInfo />
+          <Activity />
+        </div></>) : (
+        <><div className="w-full h-full flex justify-around items-center">
+          <BlockedPage />
+
         </div></>
       )
       }
