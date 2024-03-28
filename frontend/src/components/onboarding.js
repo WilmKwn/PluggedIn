@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { auth, storage, ref, uploadBytes } from "./firebase";
 import { signOut } from "firebase/auth";
 import axios from "axios";
+import Switch from "react-ios-switch";
+import "../App.css";
+import "../index.css";
 
 const Onboarding = () => {
   const navigate = useNavigate();
@@ -12,6 +15,8 @@ const Onboarding = () => {
   const [description, setDescription] = useState("");
   const [profilePic, setProfilePic] = useState(null);
   const [fileLabel, setFileLabel] = useState("No file chosen");
+  const [isRecordLabelAccount, setIsRecordLabelAccount] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   const handleSignOut = () => {
     signOut(auth)
@@ -43,19 +48,12 @@ const Onboarding = () => {
           uid: auth.currentUser.uid,
           realname: realname,
           username: username,
-          accountType: 0,
+          accountType: 0, // This might need to be updated according to your account type logic
           profilePic: fileLabel,
           genre: genre,
           description: description,
-          newsAccount: false,
-          projects: [],
-          skills: [],
-          tracks: [],
-          friends: [],
-          endorsed: [],
-          outgoingRequests: [],
-          recentActivity: [],
-          notifications: [],
+          recordLabelAccount: isRecordLabelAccount, // This is the new field for the record label account toggle
+          // ... you might have additional fields to include here
         };
         axios.post("http://localhost:5001/user", data).then(() => {
           console.log("successfully onboarded");
@@ -76,6 +74,11 @@ const Onboarding = () => {
       setProfilePic(null);
       setFileLabel("No file chosen");
     }
+  };
+
+  const handleRecordLabelSwitchChange = (newState) => {
+    setIsRecordLabelAccount(newState);
+    setShowWarning(newState); // Will show the warning if the toggle is switched on
   };
 
   return (
@@ -135,6 +138,20 @@ const Onboarding = () => {
               <span>{fileLabel}</span>
             </div>
           </label>
+          <div className="flex items-center justify-center mb-3">
+            <span className="mr-2">Record Label Account</span>
+            <Switch
+              checked={isRecordLabelAccount}
+              onChange={handleRecordLabelSwitchChange} // Use the custom handler here
+              onColor="#007AFF"
+              offColor="#E5E5EA"
+            />
+          </div>
+          {showWarning && (
+            <p className="warning-text">
+              Cannot revert back to a normal account
+            </p>
+          )}
           <button type="submit">Finish Setup</button>
         </form>
       </div>
