@@ -158,6 +158,46 @@ router.post('/:id/blockedUsers', async (req, res) => {
         return res.status(500).send(err.message);
     }
 });
+// add to user's joinedRecordLabels
+router.post('/:id/joinedLabels', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { labelId } = req.body;
+       
+        // Find the user by id
+        const user = await User.findOne({ uid: id });
+        // If user found, add the label
+        if (user) {
+            user.joinedRecordLabels.push(labelId);
+            await user.save();
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).send('User not found');
+        }
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+// add to label type user's recordLabelMembers. effectively record label accepting a member
+router.post('/:id/labelMembers', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { joiner } = req.body;
+       
+        // Find the user by id
+        const user = await User.findOne({ uid: id });
+        // If user found, add to recordLabelMembers
+        if (user) {
+            user.recordLabelMembers.push(joiner);
+            await user.save();
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).send('User not found');
+        }
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
 // delete skill from user
 router.delete('/:id/skills/:delSkill', async (req, res) => {
     try {
@@ -203,6 +243,44 @@ router.delete('/:id/blockedUsers/:unBlockee', async (req, res) => {
         // If user found, delete the skill
         if (user) {
             user.blockedUsers = user.blockedUsers.filter(blocks => blocks != unBlockee);
+            await user.save();
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).send('User not found');
+        }
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
+// delete label from user's joinedrecordLabels array
+router.delete('/:id/joinedLabels/:leavingLabel', async (req, res) => {
+    try {
+        const { id, leavingLabel } = req.params;
+        // Find the user by id
+        const user = await User.findOne({ uid: id });
+        // If user found, delete the label
+        if (user) {
+            user.joinedRecordLabels = user.joinedRecordLabels.filter(labels => labels != leavingLabel);
+            await user.save();
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).send('User not found');
+        }
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
+// delete user from label user's recordLabelMembers array
+router.delete('/:id/joinedLabels/:leavingUser', async (req, res) => {
+    try {
+        const { id, leavingUser } = req.params;
+        // Find the user by id
+        const user = await User.findOne({ uid: id });
+        // If user found, delete the label
+        if (user) {
+            user.recordLabelMembers = user.recordLabelMembers.filter(members => members != leavingUser);
             await user.save();
             return res.status(200).json(user);
         } else {

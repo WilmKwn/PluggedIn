@@ -53,6 +53,14 @@ const userSchema = mongoose.Schema(
             type: [String],
             required: true,
         },
+        joinedRecordLabels: {
+            type: [String],
+            required: false,
+        },
+        recordLabelMembers: {
+            type: [String],
+            required: false,
+        },
         endorsed: {
             type: [mongoose.Schema.Types.ObjectId],
             ref: 'users',
