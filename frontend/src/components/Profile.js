@@ -397,7 +397,7 @@ const Profile = () => {
         <div className="flex justify-between items-center">
           {userId === loggedInId ? (
             <div></div>
-          ) : userData.friends &&
+          ) : (userData.friends &&
             userData.friends.includes(loggedInId) &&
             loggedInData.friends &&
             loggedInData.friends.includes(userId) ? (
