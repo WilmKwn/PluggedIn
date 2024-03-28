@@ -23,7 +23,27 @@ const Footer = () => {
 };
 
 const Profile = () => {
-  const isRecordLabel = useState[false]; // if the user is a record label
+  const [isRecordLabel, setIsRecordLabel] = useState(false);
+  const [affiliationRequested, setAffiliationRequested] = useState(false);
+
+  /*Check if is RecordLabel BELOW*/
+
+  /*
+  useEffect(() => {
+    axios.get(`http://localhost:5001/user/${userId}`)
+      .then((response) => {
+        setUserProfile(response.data);
+        setIsRecordLabel(response.data.isRecordLabel); // Adjust according to your data structure
+      })
+      .catch((error) => console.error("Failed to fetch user profile:", error));
+  }, [userId]);*/
+
+  const requestAffiliation = () => {
+    console.log("Requesting affiliation for", userData.name);
+    setAffiliationRequested(true);
+    // Here you might also call an API to handle the request on the backend
+  };
+
   const location = useLocation();
   const userId = location.state.userId;
   const loggedInId = localStorage.getItem(
@@ -380,6 +400,16 @@ const Profile = () => {
         <div>{userData.realname}</div>
         {isRecordLabel && (
           <div className="registered-label">Registered Label</div>
+        )}
+        {isRecordLabel && !affiliationRequested && (
+          <button onClick={requestAffiliation} className="cta-button">
+            Request Affiliation
+          </button>
+        )}
+        {isRecordLabel && affiliationRequested && (
+          <button disabled className="cta-button">
+            Requested...
+          </button>
         )}
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
