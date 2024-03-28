@@ -160,14 +160,14 @@ const Profile = () => {
       });
     // also also unfriend the user
     axios.delete(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/friends/${userId}`)
-    .then(response => {
-      console.log('Friend deleted successfully:', response.data);
-      // Optionally, update the UI or handle success
-    })
-    .catch(error => {
-      console.error('Error deleting friend:', error);
-      // Optionally, handle the error or revert local state changes
-    });
+      .then(response => {
+        console.log('Friend deleted successfully:', response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch(error => {
+        console.error('Error deleting friend:', error);
+        // Optionally, handle the error or revert local state changes
+      });
   };
 
 
@@ -305,20 +305,20 @@ const Profile = () => {
                   className="button">
                   Remove Connection </button>
               </div></>) : (
-              ((!userData.friends || !userData.friends.includes(loggedInId)) && (loggedInData.friends && loggedInData.friends.includes(userId))) ? 
-              (
-                <>
-                  <div>
-                    <button onClick={() => handleRemoveConnect()}
-                      className="button bg-gray-300"
-                      onMouseEnter={() => setIsHovered(true)}
-                      onMouseLeave={() => setIsHovered(false)}>
+              ((!userData.friends || !userData.friends.includes(loggedInId)) && (loggedInData.friends && loggedInData.friends.includes(userId))) ?
+                (
+                  <>
+                    <div>
+                      <button onClick={() => handleRemoveConnect()}
+                        className="button bg-gray-300"
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}>
 
-                      {isHovered ? "Rescind?" : "Pending"}
-                    </button>
-                  </div></>
-                  
-              )
+                        {isHovered ? "Rescind?" : "Pending"}
+                      </button>
+                    </div></>
+
+                )
                 : (
                   <>
                     <div>
@@ -333,22 +333,22 @@ const Profile = () => {
           {userId === loggedInId ? (
             <div></div>
           ) : (
-          (!loggedInData.blockedUsers.includes(userId)) ? (
-                  <>
-                    <div>
-                      <button onClick={() => handleBlock()}
-                        className="button">
-                        Block </button>
-                    </div></>) : (
-                  <>
-                    <div>
+            (!loggedInData.blockedUsers.includes(userId)) ? (
+              <>
+                <div>
+                  <button onClick={() => handleBlock()}
+                    className="button">
+                    Block </button>
+                </div></>) : (
+              <>
+                <div>
 
-                      <button onClick={() => handleUnblock()}
-                        className="button bg-gray-300">
-                        Unblock </button>
-                    </div></>
-                )
-              )}
+                  <button onClick={() => handleUnblock()}
+                    className="button bg-gray-300">
+                    Unblock </button>
+                </div></>
+            )
+          )}
 
         </div>
         <div className="edit-profile-container">
@@ -364,15 +364,55 @@ const Profile = () => {
       </div>
     );
   };
+  const BlockedPage = () => {
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <div>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <h1 className="card">
+            You have been blocked by {userData.realname}
+          </h1>
+        </div>
+
+        <div className="mt-4">
+          {!loggedInData.blockedUsers.includes(userId) ? (
+            <button onClick={() => handleBlock()} className="button">
+              Block
+            </button>
+          ) : (
+            <button onClick={() => handleUnblock()} className="button bg-gray-300">
+              Unblock
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
       <Banner id={userId} />
-      <div className="w-full h-full flex justify-around items-center">
+      
+      {!userData.blockedUsers.includes(loggedInId) ? (
+      <><div className="w-full h-full flex justify-around items-center">
         <Gallery />
         <ProfileInfo />
         <Activity />
-      </div>
+      </div></>) : (
+        <><div className="w-full h-full flex justify-around items-center">
+        <BlockedPage />
+        
+        </div></>
+      )
+      }
       <Footer />
     </div>
   );
