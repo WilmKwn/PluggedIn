@@ -23,6 +23,7 @@ const Footer = () => {
 };
 
 const Profile = () => {
+  const isRecordLabel = useState[false]; // if the user is a record label
   const location = useLocation();
   const userId = location.state.userId;
   const loggedInId = localStorage.getItem(
@@ -377,6 +378,9 @@ const Profile = () => {
           <img className="w-40" src={image} />
         )}
         <div>{userData.realname}</div>
+        {isRecordLabel && (
+          <div className="registered-label">Registered Label</div>
+        )}
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>

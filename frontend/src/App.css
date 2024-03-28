@@ -284,6 +284,16 @@ p {
 
 /*EDIT PROFILE*/
 
+
+.registered-label {
+  font-size: 1rem;
+  color: #555;
+  margin-top: 0.5rem; /* Adjust as needed */
+  font-weight: bold;
+}
+
+
+
 .edit-profile-container {
   display: flex;
   flex-direction: column;
@@ -513,4 +523,12 @@ p {
   color: white;
   padding: 5px 10px;
   border-radius: 4px;
+}
+
+
+/*ONBOARDING*/
+.warning-text {
+  color: #d32f2f; /* Red */
+  margin-top: 8px; /* Spacing above the warning text */
+  font-size: 0.9rem; /* Smaller font size for the warning */
 }
