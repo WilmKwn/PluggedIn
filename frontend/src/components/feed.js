@@ -15,11 +15,7 @@ const Feed = () => {
   const [sortBy, setSortBy] = useState("Recent");
   const [searchText, setSearchText] = useState(""); // Define searchText state
 
-  // Define handleSearchInputChange function
-  const handleSearchInputChange = (event) => {
-    setSearchText(event.target.value);
-  };
-
+  
   const fetchPosts = () => {
     let apiUrl = "http://localhost:5001/post";
 
@@ -28,25 +24,25 @@ const Feed = () => {
       .then((res) => {
         fetchedPosts = res.data;
         fetchedPosts.reverse();
-
+        
         fetchedPosts = fetchedPosts.filter((post) =>
-          connections.includes(post.owner)
+        connections.includes(post.owner)
         );
-
+        
         sortedPosts = [...fetchedPosts].sort((a, b) => {
           const likesA = a.reactions.likes || 0;
           const likesB = b.reactions.likes || 0;
           return likesB - likesA;
         });
-
+        
         let finalPosts;
-
+        
         if (sortBy === "Recent") {
           finalPosts = fetchedPosts;
         } else {
           finalPosts = sortedPosts;
         }
-
+        
         if (searchText) {
           finalPosts = finalPosts.filter(post =>
             post.tags.some(tag => tag.includes(searchText))
@@ -62,33 +58,42 @@ const Feed = () => {
 
   const fetchConnections = () => {
     axios
-      .get(`http://localhost:5001/user/${localStorage.getItem("userId")}`)
-      .then((res) => {
-        const d = res.data;
+    .get(`http://localhost:5001/user/${localStorage.getItem("userId")}`)
+    .then((res) => {
+      const d = res.data;
         setConnections(d.friends);
       });
-  };
-
-  useEffect(() => {
-    fetchPosts();
-  }, [connections]);
-
-  useEffect(() => {
+    };
+    
+    useEffect(() => {
+      fetchPosts();
+    }, [connections]);
+    
+    useEffect(() => {
     fetchConnections();
 
     const ws = new WebSocket("ws://localhost:8080");
     ws.onmessage = (event) => {
-      fetchPosts();
+      // fetchPosts();
     };
   }, []);
+  
+  useEffect(() => {
+    fetchPosts();
+  }, [sortBy]);
 
   useEffect(() => {
     fetchPosts();
-  }, [sortBy, searchText]);
-
+  }, [searchText]);
+  
   const toggleSortBy = () => {
     const newSortBy = sortBy === "Recent" ? "Popular" : "Recent";
     setSortBy(newSortBy);
+  };
+  
+  // Define handleSearchInputChange function
+  const handleSearchInputChange = (event) => {
+    setSearchText(event.target.value);
   };
 
   return (
@@ -98,7 +103,7 @@ const Feed = () => {
       <div className="sort-by-text">Sort By</div>
       {/* Toggle button */}
       <div className="toggle-button-container">
-        <button className="toggle-button" onClick={toggleSortBy}>
+        <button className="toggle-button" onClick={() => toggleSortBy()}>
           {sortBy}
         </button>
       </div>
@@ -108,7 +113,7 @@ const Feed = () => {
           type="text"
           placeholder="Enter a hashtag"
           value={searchText}
-          onChange={handleSearchInputChange}
+          onChange={(e) => handleSearchInputChange(e)}
         />
       </div>
       <div className="w-full h-full text-center pt-28">
