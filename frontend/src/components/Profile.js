@@ -329,9 +329,8 @@ const Profile = () => {
   const handleJoinLabel = () => {
     axios
       .post(
-        `http://localhost:5001/user/${localStorage.getItem(
-          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/joinedLabels`,
-          {labelId: userId}
+        `http://localhost:5001/user/${userId}/joinedLabels`,
+          {labelId: loggedInId}
       )
       .then((response) => {
         console.log("Label added successfully:", response.data);
@@ -344,8 +343,7 @@ const Profile = () => {
   const handleLeaveLabel = () => {
     axios
       .delete(
-        `http://localhost:5001/user/${localStorage.getItem(
-          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/joinedLabels/${userId}`,
+        `http://localhost:5001/user/${userId}/joinedLabels/${loggedInId}`,
       )
       .then((response) => {
         console.log("Label removed successfully:", response.data);
@@ -358,8 +356,8 @@ const Profile = () => {
   const handleAddUserToLabel = () => {
     axios
       .post(
-        `http://localhost:5001/user/${userId}/labelMembers`,
-          {joiner: loggedInId}
+        `http://localhost:5001/user/${loggedInId}/labelMembers`,
+          {joiner: userId}
       )
       .then((response) => {
         console.log("User added to label successfully:", response.data);
@@ -368,11 +366,11 @@ const Profile = () => {
         console.error("Error adding user to label:", error);
       });
   }
-
+  
   const handleRemoveUserFromLabel = () => {
     axios
       .delete(
-        `http://localhost:5001/user/${userId}/labelMembers/${loggedInId}`,
+        `http://localhost:5001/user/${loggedInId}/labelMembers/${userId}`,
       )
       .then((response) => {
         console.log("User removed from label successfully:", response.data);
@@ -719,15 +717,21 @@ const Profile = () => {
                   </div></>
 
               )
-              : (
+              : ((userData.joinedRecordLabels && userData.joinedRecordLabels.includes(loggedInId)) && (!loggedInData.recordLabelMembers || !loggedInData.recordLabelMembers.includes(userId))) ? (
+  <div>
+<button onClick={() => handleLeaveLabel()}
+                      className="button">
+                      Deny Request to Join Label </button>
+  </div>
+              ) : (
                 <>
                   <div>
                     <button onClick={() => handleAddUserToLabel()}
                       className="button">
-                      {console.log(userData.joinedRecordLabels)}
                       Offer to Join Label </button>
                   </div></>
               )
+              
           )
           ) : (<div></div>)}
 
