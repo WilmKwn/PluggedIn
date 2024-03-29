@@ -33,6 +33,8 @@ const SignUp = () => {
       .then((userCredential) => {
         // Sign-up successful.
         // You can use userCredential.user to access the registered user's information
+        const user = userCredential.user;
+        localStorage.setItem("uid", user.uid);
         navigate("/onboarding"); // Redirect user after sign-up
       })
       .catch((error) => {
