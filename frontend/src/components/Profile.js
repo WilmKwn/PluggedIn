@@ -24,6 +24,7 @@ const Footer = () => {
 
 const Profile = () => {
   const [isRecordLabel, setIsRecordLabel] = useState(false);
+  const navigate = useNavigate();
 
   /*Check if is RecordLabel BELOW*/
 
