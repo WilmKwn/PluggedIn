@@ -55,11 +55,11 @@ const userSchema = mongoose.Schema(
         },
         joinedRecordLabels: {
             type: [String],
-            required: false,
+            required: true,
         },
         recordLabelMembers: {
             type: [String],
-            required: false,
+            required: true,
         },
         endorsed: {
             type: [{

@@ -70,6 +70,9 @@ const Onboarding = () => {
 
         axios.post("http://localhost:5001/user", data).then(() => {
           console.log("successfully onboarded");
+          localStorage.setItem("userId", auth.currentUser.uid);
+          localStorage.setItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying", auth.currentUser.uid);
           navigate("/feed");
         });
       } catch (error) {

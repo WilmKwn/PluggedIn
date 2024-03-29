@@ -22,10 +22,7 @@ const SignIn = () => {
         // Handle successful Google sign-in here
         localStorage.setItem("userId", result.user.uid);
         localStorage.setItem(
-          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
-          result.user.uid
-        );
-
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying", result.user.uid);
         navigate("/feed");
       })
       .catch((error) => {
