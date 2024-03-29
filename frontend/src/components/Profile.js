@@ -661,12 +661,14 @@ const Profile = () => {
 
   const ProfileInfo = () => {
     const [isHovered, setIsHovered] = useState(false);
-
+    const [showAffiliations, setShowAffiliations] = useState(false);
     // // check for profile pic
     if (!userProfilePic.profilePic || userProfilePic.profilePic === null) {
       userProfilePic.profilePic = "No Profile Picture";
     }
-
+    const handleViewAffiliations = () => {
+      setShowAffiliations(!showAffiliations);
+    };
     // check for null skills and description and projects
     if (!userData.skills || userData.skills.length === 0) {
       userData.skills = [];
@@ -714,31 +716,35 @@ const Profile = () => {
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
-        {affiliationArray.size > 0 && (
-  <div>
-    <div>Affiliations</div>
-    <div className="flex bg-gray-300">
-      {[...affiliationArray].map((affil, index) => (
-        <div key={index} className="flex items-center border-b border-gray-300 p-2">
           <div>
-            <img
-              onClick={() => {profileClicked(affil.uid)} }
-              src={affil.url}
-              alt={`${affil.realname}`}
-              className="w-12 h-12 rounded-full cursor-pointer"
-            />
-          </div>
-          <div className="ml-4">
-            <p className="text-gray-800 font-semibold">{affil.realname}</p>
-          </div>
+    <button onClick={handleViewAffiliations}>View Affiliations</button>
+    
+    {showAffiliations && (affiliationArray.size > 0 ? (
+      <div>
+        <div>Affiliations</div>
+        <div className="flex bg-gray-300">
+          {[...affiliationArray].map((affil, index) => (
+            <div key={index} className="flex items-center border-b border-gray-300 p-2">
+              <div>
+                <img
+                  onClick={() => {profileClicked(affil.uid)} }
+                  src={affil.url}
+                  alt={`${affil.realname}`}
+                  className="w-12 h-12 rounded-full cursor-pointer"
+                />
+              </div>
+              <div className="ml-4">
+                <p className="text-gray-800 font-semibold">{affil.realname}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      </div>
+    ) : (affiliationArray.size === 0 && (<div>User does not yet have any affilitations</div>))
+    )}
+    
   </div>
-)}
-{affiliationArray.size === 0 && (<div>User does not yet have any affilitations</div>)
 
-}
         <div>Endorsements</div>
 
         {(userData.accountType === 0) ? (
