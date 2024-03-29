@@ -15,8 +15,8 @@ const EditProfile = () => {
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState("");
   const [isNewsAccount, setNewsAccount] = useState(false);
+
   const userId = localStorage.getItem("userId");
- 
  
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,8 +27,7 @@ const EditProfile = () => {
           skills: skills,
           newsAccount: isNewsAccount,
         };
-
-        navigate("/profile");
+        navigate("/profile", { state: { userId } });
       } catch (error) {
         console.error("Error updating profile catch:", error);
       }
