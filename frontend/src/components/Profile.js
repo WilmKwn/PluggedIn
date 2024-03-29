@@ -710,6 +710,7 @@ const Profile = () => {
           <img className="w-40" src={image} />
         )}
         <div>{userData.realname}</div>
+        {userData.accountType === 1 && <div>Record Label</div>}
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
