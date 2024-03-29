@@ -15,6 +15,8 @@ const SignIn = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [invalidCredentialError, setInvalidCredentialError] = useState(false);
+
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
@@ -22,7 +24,9 @@ const SignIn = () => {
         // Handle successful Google sign-in here
         localStorage.setItem("userId", result.user.uid);
         localStorage.setItem(
-          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying", result.user.uid);
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
+          result.user.uid
+        );
         navigate("/feed");
       })
       .catch((error) => {
@@ -32,28 +36,25 @@ const SignIn = () => {
 
   const handleSignIn = (event) => {
     event.preventDefault();
-    // Handle sign-in with username and password here
     signInWithEmailAndPassword(auth, username, password)
       .then((userCredential) => {
-        // Sign-in successful.
-        // userCredential.user will have user details
-        localStorage.setItem("uid", userCredential.user.uid);
+        localStorage.setItem("userId", userCredential.user.uid);
         localStorage.setItem(
           "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
           userCredential.user.uid
         );
-        navigate("/feed"); // Redirect user after sign-in
+        navigate("/feed");
       })
       .catch((error) => {
-        // Handle Errors here.
         const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(
-          "Error signing in with email and password:",
-          errorCode,
-          errorMessage
-        );
-        // Optionally, implement error handling or display error messages to the user
+        // Check if the error code is auth/invalid-credential
+        if (errorCode === "auth/invalid-credential") {
+          // Set the state to true to display the error message
+          setInvalidCredentialError(true);
+        } else {
+          // Handle other errors or reset the state as needed
+          console.error("Error signing in:", errorCode, error.message);
+        }
       });
   };
 
@@ -81,6 +82,11 @@ const SignIn = () => {
           <button type="button" onClick={signInWithGoogle}>
             Sign in with Google
           </button>
+          {invalidCredentialError && (
+            <div className="error-message">
+              Valid email address, but sign in with Google.
+            </div>
+          )}
         </form>
       </main>
 

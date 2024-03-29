@@ -532,3 +532,7 @@ p {
   margin-top: 8px; /* Spacing above the warning text */
   font-size: 0.9rem; /* Smaller font size for the warning */
 }
+
+.error-message {
+  color: red; /* This sets the text color to red */
+}
