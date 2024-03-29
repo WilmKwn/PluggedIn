@@ -45,24 +45,29 @@ const Onboarding = () => {
     console.log("check");
 
     if (isRecordLabelAccount) {
-      setAccType(1)
+      setAccType(1);
     } else {
-      setAccType(0)
+      setAccType(0);
     }
+    if (auth.currentUser) {
       try {
         const data = {
-          uid: localStorage.getItem(
-            "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
-          ),
+          /*
+        uid: localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+          
+        ),*/
+          uid: auth.currentUser.uid,
           realname: realname,
           username: username,
-          accountType: accType, // This might need to be updated according to your account type logic
+          accountType: 0, // This might need to be updated according to your account type logic
           profilePic: fileLabel,
           genre: genre,
           description: description,
           recordLabelAccount: isRecordLabelAccount, // This is the new field for the record label account toggle
           // ... you might have additional fields to include here
         };
+
         axios.post("http://localhost:5001/user", data).then(() => {
           console.log("successfully onboarded");
           navigate("/feed");
@@ -70,7 +75,7 @@ const Onboarding = () => {
       } catch (error) {
         console.error("Error updating profile: ", error);
       }
-    
+    }
   };
 
   const handleProfilePicChange = (e) => {

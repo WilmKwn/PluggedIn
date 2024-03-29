@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import App from "./components/App";
 import SignUp from "./components/signUp";
+import SignIn from "./components/signIn";
 import Feed from "./components/feed";
 import Onboarding from "./components/onboarding";
 import Profile from "./components/Profile";
@@ -27,6 +28,7 @@ const Root = () => {
         <Route path="/feed" element={<Feed />} />
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/news" element={<News />} />
