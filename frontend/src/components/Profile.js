@@ -329,8 +329,8 @@ const Profile = () => {
   const handleJoinLabel = () => {
     axios
       .post(
-        `http://localhost:5001/user/${userId}/joinedLabels`,
-          {labelId: loggedInId}
+        `http://localhost:5001/user/${loggedInId}/joinedLabels`,
+          {labelId: userId}
       )
       .then((response) => {
         console.log("Label added successfully:", response.data);
@@ -341,6 +341,18 @@ const Profile = () => {
   }
 
   const handleLeaveLabel = () => {
+    axios
+      .delete(
+        `http://localhost:5001/user/${loggedInId}/joinedLabels/${userId}`,
+      )
+      .then((response) => {
+        console.log("Label removed successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error removing label:", error);
+      });
+  }
+  const handleDenyFromLabel = () => {
     axios
       .delete(
         `http://localhost:5001/user/${userId}/joinedLabels/${loggedInId}`,
@@ -699,7 +711,8 @@ const Profile = () => {
             loggedInData.recordLabelMembers.includes(userId) ? (
             <>
               <div>
-                <button onClick={() => handleRemoveUserFromLabel()}
+                <button onClick={() => {handleRemoveUserFromLabel();
+                                        handleDenyFromLabel();}}
                   className="button">
                   Deny Label Affiliation </button>
               </div></>) : (
@@ -719,9 +732,12 @@ const Profile = () => {
               )
               : ((userData.joinedRecordLabels && userData.joinedRecordLabels.includes(loggedInId)) && (!loggedInData.recordLabelMembers || !loggedInData.recordLabelMembers.includes(userId))) ? (
   <div>
-<button onClick={() => handleLeaveLabel()}
-                      className="button">
+<button onClick={() => handleDenyFromLabel()}
+                      className="button bg-red-500">
                       Deny Request to Join Label </button>
+                      <button onClick={() => handleAddUserToLabel()}
+                      className="button bg-green-500">
+                      Accept Request to Join Label </button>
   </div>
               ) : (
                 <>

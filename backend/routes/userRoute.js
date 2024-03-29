@@ -309,7 +309,7 @@ router.delete('/:id/endorse/:skill/:endorser', async (req, res) => {
 });
 
 // delete user from label user's recordLabelMembers array
-router.delete('/:id/joinedLabels/:leavingUser', async (req, res) => {
+router.delete('/:id/labelMembers/:leavingUser', async (req, res) => {
     try {
         const { id, leavingUser } = req.params;
         // Find the user by id
