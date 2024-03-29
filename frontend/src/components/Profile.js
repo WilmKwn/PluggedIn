@@ -135,7 +135,7 @@ const Profile = () => {
             notis
           }
           axios.put(`http://localhost:5001/user/${userId}`, newData);
-          alert("connection notification sent");
+          alert("endorsing notification sent");
         }).catch(err => console.log(err));
       })
       .catch((error) => {
@@ -328,6 +328,17 @@ const Profile = () => {
       .then((response) => {
         console.log("Friend added successfully:", response.data);
         // Optionally, update the UI or handle success
+        axios.get(`http://localhost:5001/user/${userId}`).then(res => {
+          const data = res.data;
+          const notis = data.notifications;
+          notis.push(`${loggedInData.realname} wants to be friends!`);
+          const newData = {
+            ...data,
+            notis
+          }
+          axios.put(`http://localhost:5001/user/${userId}`, newData);
+          alert("connection notification sent");
+        }).catch(err => console.log(err));
       })
       .catch((error) => {
         console.error("Error adding friend:", error);
