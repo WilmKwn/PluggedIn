@@ -115,7 +115,7 @@ const Onboarding = () => {
       setProfilePic(file);
       setFileLabel(file.name);
     } else {
-      setProfilePic(null);
+      setProfilePic("No file chosen.png");
       setFileLabel("No file chosen");
     }
   };
