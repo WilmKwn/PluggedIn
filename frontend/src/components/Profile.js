@@ -804,7 +804,7 @@ const Profile = () => {
                 ? userData.skills.map((skill, index) => (
                   <li key={index} className="skill-list-item">
                     <span className="skill-label">{skill}</span>
-                    <button
+                    {userId !== loggedInId ? (<><button
                       onClick={() => {
                         toggleEndorseSkill(skill);
                       }}
@@ -812,7 +812,7 @@ const Profile = () => {
                         }`}
                     >
                       {endorsedSkill(skill) ? "Revoke Endorsement" : "Endorse"}
-                    </button>
+                    </button></>) : (<></>)}
                   </li>
                 ))
                 : "No skills listed"}
