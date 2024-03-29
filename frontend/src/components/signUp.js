@@ -19,7 +19,12 @@ const SignUp = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         // Handle successful Google sign-in here
+
         localStorage.setItem("userId", result.user.uid);
+        localStorage.setItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
+          result.user.uid
+        );
 
         navigate("/onboarding");
       })
@@ -35,6 +40,8 @@ const SignUp = () => {
       .then((userCredential) => {
         // Sign-up successful.
         // You can use userCredential.user to access the registered user's information
+
+        console.log("USER CREDENTIAL ID: ", userCredential.user.uid);
         localStorage.setItem("uid", userCredential.user.uid);
         localStorage.setItem(
           "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",

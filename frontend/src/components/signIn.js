@@ -14,6 +14,8 @@ const SignIn = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [invalidCredentialError, setInvalidCredentialError] = useState(false);
+  const [nonexistentAccountError, setNonexistentAccountError] = useState(false);
 
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
@@ -25,7 +27,10 @@ const SignIn = () => {
           "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
           result.user.uid
         );
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         navigate("/feed");
       })
       .catch((error) => {
@@ -48,15 +53,15 @@ const SignIn = () => {
         navigate("/feed"); // Redirect user after sign-in
       })
       .catch((error) => {
-        // Handle Errors here.
         const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(
-          "Error signing in with email and password:",
-          errorCode,
-          errorMessage
-        );
-        // Optionally, implement error handling or display error messages to the user
+        // Check if the error code is auth/invalid-credential
+        if (errorCode === "auth/invalid-credential") {
+          // Set the state to true to display the error message
+          setInvalidCredentialError(true);
+        } else {
+          // Handle other errors or reset the state as needed
+          console.error("Error signing in:", errorCode, error.message);
+        }
       });
   };
 
@@ -84,6 +89,14 @@ const SignIn = () => {
           <button type="button" onClick={signInWithGoogle}>
             Sign in with Google
           </button>
+          {invalidCredentialError && (
+            <div className="error-message">
+              Valid email address, but sign in with Google.
+            </div>
+          )}
+          {nonexistentAccountError && (
+            <div className="error-message">Not a registered account.</div>
+          )}
         </form>
       </main>
 
