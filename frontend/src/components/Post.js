@@ -31,20 +31,17 @@ const Post = ({ postParam }) => {
     axios
       .get(`http://localhost:5001/user/${userId}`)
       .then((res) => {
-        // Process the user data here if the response was successful (status 200)
         console.log("got user data");
         setUserData(res.data); // Update state with user data
       })
       .catch((error) => {
         console.error("Error:", error);
-        // Handle any errors that occur during the fetch request
       });
   }, []);
   useEffect(() => {
     axios
       .get(`http://localhost:5001/user/${loggedInId}`)
       .then((res) => {
-        // Process the user data here if the response was successful (status 200)
         console.log("got loggedIn data");
         setLoggedInData(res.data); // Update state with user data
       })
@@ -162,6 +159,17 @@ const Post = ({ postParam }) => {
     }
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
+      axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
+          const data = res.data;
+          const notis = data.notifications;
+          notis.push(`${loggedInData.realname} liked your post: ${post.title}`);
+          const newData = {
+            ...data,
+            notis
+          }
+          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+          alert("liked notification sent");
+        }).catch(err => console.log(err));
     } catch (err) {
       console.log(err.message);
     }
@@ -197,6 +205,17 @@ const Post = ({ postParam }) => {
     }
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
+      axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
+          const data = res.data;
+          const notis = data.notifications;
+          notis.push(`${loggedInData.realname} disliked your post: ${post.title}`);
+          const newData = {
+            ...data,
+            notis
+          }
+          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+        }).catch(err => console.log(err));
+        alert("disliked notification sent");
     } catch (err) {
       console.log(err.message);
     }
@@ -226,6 +245,17 @@ const Post = ({ postParam }) => {
     }
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
+      axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
+          const data = res.data;
+          const notis = data.notifications;
+          notis.push(`${loggedInData.realname} laughed at post: ${post.title}`);
+          const newData = {
+            ...data,
+            notis
+          }
+          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+          alert("laughed notification sent");
+        }).catch(err => console.log(err));
     } catch (err) {
       console.log(err.message);
     }
@@ -263,6 +293,17 @@ const Post = ({ postParam }) => {
       console.log(repostStatus)
       try {
         axios.post(`http://localhost:5001/post`, repost);
+        axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
+          const data = res.data;
+          const notis = data.notifications;
+          notis.push(`${loggedInData.realname} reposted your post: ${post.title}`);
+          const newData = {
+            ...data,
+            notis
+          }
+          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+          alert("reposted notification sent");
+        }).catch(err => console.log(err));
       } catch (err) {
         console.log(err.message);
       }
@@ -290,13 +331,14 @@ const Post = ({ postParam }) => {
         axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
           const data = res.data;
           const notis = data.notifications;
-          notis.push(`New Comment by ${data.realname} on post: ${post.title}`);
+          notis.push(`New Comment by ${loggedInData.realname} on post: ${post.title}`);
           const newData = {
             ...data,
             notis
           }
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
-        });
+          alert("commented notification sent");
+        }).catch(err => console.log(err));
       } catch (err) {
         console.log(err.message);
       }

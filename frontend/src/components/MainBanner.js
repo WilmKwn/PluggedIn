@@ -13,6 +13,7 @@ import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import Notification from "./Notification";
 
 import { toast } from 'react-toastify';
+import ringingBell from '../ringing.gif';
 
 import "../App.css";
 import "../index.css";
@@ -62,10 +63,13 @@ const MainBanner = () => {
   //   toast.info(notifications[0]);
   // }, [notifications]);
 
+  const [isNewNotis, setIsNewNotis] = useState(false);
+
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8282');
     ws.onmessage = (event) => {
       getNotifications();
+      setIsNewNotis(true);
     };
     getNotifications();
   }, []);
@@ -99,7 +103,11 @@ const MainBanner = () => {
             className="button">
                 News <FontAwesomeIcon icon={faNewspaper} /></button>
         </nav>
-        <button onClick={() => setOpenNoti(!openNoti)} className="absolute text-2xl bg-gray-500 p-1 right-12 top-32 hover:bg-gray-400">🔔</button>
+        {!isNewNotis ? 
+          <button onClick={() => setOpenNoti(!openNoti)} className="absolute text-2xl bg-gray-500 p-1 right-12 top-32 hover:bg-gray-400">🔔</button>
+          :
+          <img onClick={() => {setOpenNoti(!openNoti); setIsNewNotis(false);}} alt='' src={ringingBell} className="absolute text-2xlp-1 right-12 top-32 w-10"/>
+        }
         {openNoti && (
           <div className="absolute w-1/4 h-80 bg-gray-300 p-1 right-12 top-44 px-2 py-2 overflow-y-scroll border-2 border-black">
             {notifications.map((noti, index) => (

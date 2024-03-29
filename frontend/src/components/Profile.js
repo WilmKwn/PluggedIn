@@ -113,13 +113,11 @@ const Profile = () => {
 
   const endorseSkill = (skill) => {
     axios
-      //EDIT CALL PATH
       .post(
         `http://localhost:5001/user/${userId}/endorse`, {
         skill: skill,
         endorser: loggedInId,
-      }
-      )
+      })
       .then((response) => {
         console.log("Skill endorsed successfully:", response.data);
         setEndorsements((prevEndorsements) => {
@@ -128,6 +126,17 @@ const Profile = () => {
             [skill]: prevEndorsements[skill] ? [...prevEndorsements[skill], loggedInData.realname] : [loggedInData.realname]
           };
         });
+        axios.get(`http://localhost:5001/user/${userId}`).then(res => {
+          const data = res.data;
+          const notis = data.notifications;
+          notis.push(`${loggedInData.realname} wants to be friends!`);
+          const newData = {
+            ...data,
+            notis
+          }
+          axios.put(`http://localhost:5001/user/${userId}`, newData);
+          alert("connection notification sent");
+        }).catch(err => console.log(err));
       })
       .catch((error) => {
         console.error("Error endorsing skill:", error);
