@@ -59,11 +59,25 @@ const MainBanner = () => {
     });
   }
 
+  const [openPopup, setOpenPopup] = useState(false);
+  const showPopup = () => {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center ">
+        <div className="bg-gray-400 w-1/2 h-1/2 flex items-center justify-center ">
+          <div className="bg-white p-8 rounded shadow-md">
+            <h2 className="text-lg font-semibold mb-4">{openPopup}</h2>
+            <button onClick={() => setOpenPopup(false)} className="mt-4 bg-gray-200">Close</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // useEffect(() => {
   //   toast.info(notifications[0]);
   // }, [notifications]);
 
-  const [isNewNotis, setIsNewNotis] = useState(false);
+  const [isNewNotis, setIsNewNotis] = useState("");
 
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8282');
@@ -111,10 +125,11 @@ const MainBanner = () => {
         {openNoti && (
           <div className="absolute w-1/4 h-80 bg-gray-300 p-1 right-12 top-44 px-2 py-2 overflow-y-scroll border-2 border-black">
             {notifications.map((noti, index) => (
-              <Notification key={index} message={noti} />
+              <Notification key={index} message={noti} func={setOpenPopup} />
             ))}
           </div>
         )}
+        {openPopup && showPopup(openPopup)}
         <nav>
           <button onClick={handleProfile}
             className="button">
