@@ -83,8 +83,12 @@ const SignIn = () => {
             Sign in with Google
           </button>
           {invalidCredentialError && (
+            <div className="error-message">Either wrong email or password</div>
+          )}
+          {invalidCredentialError && (
             <div className="error-message">
-              Valid email address, but sign in with Google.
+              otherwise, account already registered on google, sign in using
+              google
             </div>
           )}
         </form>

@@ -4,54 +4,47 @@ import { auth } from "./firebase";
 import {
   GoogleAuthProvider,
   signInWithPopup,
-  createUserWithEmailAndPassword, // Import this for email/password sign up
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
-import axios from "axios";
 import "../App.css"; // Make sure the path to your CSS file is correct
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // State to hold the error message
 
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
         // Handle successful Google sign-in here
-        localStorage.setItem("userId", result.user.uid);
-
-        navigate("/onboarding");
+        navigate("/feed");
       })
       .catch((error) => {
-        console.error(error);
+        // Set custom error message based on error code
+        if (error.code === "auth/email-already-in-use") {
+          setErrorMessage("Already Registered");
+        } else {
+          setErrorMessage(error.message);
+        }
       });
   };
 
   const handleSignUp = (event) => {
     event.preventDefault();
-    // Use createUserWithEmailAndPassword for signing up new users
     createUserWithEmailAndPassword(auth, username, password)
       .then((userCredential) => {
         // Sign-up successful.
-        // You can use userCredential.user to access the registered user's information
-        localStorage.setItem("uid", userCredential.user.uid);
-        localStorage.setItem(
-          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
-          userCredential.user.uid
-        );
         navigate("/onboarding"); // Redirect user after sign-up
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(
-          "Error signing up with email and password:",
-          errorCode,
-          errorMessage
-        );
-        // Optionally, implement error handling or display error messages to the user
+        // Set custom error message based on error code
+        if (error.code === "auth/email-already-in-use") {
+          setErrorMessage("Already Registered");
+        } else {
+          setErrorMessage(error.message);
+        }
       });
   };
 
@@ -64,13 +57,13 @@ const SignUp = () => {
       <main className="landing">
         <form onSubmit={handleSignUp}>
           <input
-            type="email" // Change this to email for semantic correctness
-            placeholder="Email" // Adjusted placeholder to reflect it's expecting an email
+            type="email"
+            placeholder="Email"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
-            type="password" // Change this to password to hide the password input
+            type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -79,6 +72,7 @@ const SignUp = () => {
           <button type="button" onClick={signInWithGoogle}>
             Sign up with Google
           </button>
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
         </form>
       </main>
 
