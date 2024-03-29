@@ -12,6 +12,10 @@ const App = () => {
 
   // Function to navigate to the sign-in page
   const redirectToSignInPage = () => {
+    navigate("/signin");
+  };
+
+  const redirectToSignUpPage = () => {
     navigate("/signup");
   };
 
@@ -21,6 +25,7 @@ const App = () => {
         <div>PluggedIn</div>
         <nav>
           <button onClick={redirectToSignInPage}>Sign In</button>
+          <button onClick={redirectToSignUpPage}>Sign Up</button>
         </nav>
       </header>
 
