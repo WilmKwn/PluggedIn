@@ -392,6 +392,19 @@ const Profile = () => {
       });
   }
 
+  const handleRejectRequestToJoinLabel = () => {
+    axios
+      .delete(
+        `http://localhost:5001/user/${userId}/labelMembers/${loggedInId}`,
+      )
+      .then((response) => {
+        console.log("User removed from label successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error removing user from label:", error);
+      });
+  }
+
   const handleBlock = () => {
     //console.log(id);
     console.log("Handle Block");
@@ -693,7 +706,17 @@ const Profile = () => {
                   </div></>
 
               )
+              : ((userData.recordLabelMembers && userData.recordLabelMembers.includes(loggedInId)) && (!loggedInData.joinedRecordLabels || !loggedInData.joinedRecordLabels.includes(userId)) ? 
+              (<div className="flex">
+              <button onClick={() => handleRejectRequestToJoinLabel()}
+                                    className="button bg-red-500">
+                                    Deny Invite to Join Label </button>
+                                    <button onClick={() => handleJoinLabel()}
+                                    className="button bg-green-500">
+                                    Accept Invite to Join Label </button>
+                </div>)
               : (
+
                 <>
                   <div>
                     <button onClick={() => handleJoinLabel()}
@@ -701,6 +724,7 @@ const Profile = () => {
                       {console.log(userData.friends)}
                       Request to Join Label </button>
                   </div></>
+              )
               )
           )
           ) : (<div></div>)}
@@ -731,7 +755,7 @@ const Profile = () => {
 
               )
               : ((userData.joinedRecordLabels && userData.joinedRecordLabels.includes(loggedInId)) && (!loggedInData.recordLabelMembers || !loggedInData.recordLabelMembers.includes(userId))) ? (
-  <div>
+  <div className="flex">
 <button onClick={() => handleDenyFromLabel()}
                       className="button bg-red-500">
                       Deny Request to Join Label </button>
