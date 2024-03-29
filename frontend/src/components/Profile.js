@@ -54,6 +54,9 @@ const Profile = () => {
   const [endorsements, setEndorsements] = useState({});
   const [endorsedSkills, setEndorsedSkills] = useState({});
   const [affiliationArray, setAffiliationArray] = useState(new Set());
+  const [friendArray, setFriendArray] = useState(new Set());
+
+
   const [userData, setUserData] = useState({
     // profilePic: "",
     name: "",
@@ -219,30 +222,30 @@ const Profile = () => {
                   }
                 }
                 if (friendRes.data.joinedRecordLabels.includes(userId)) {
-                getDownloadURL(picRef).then((url) => {
-                  //if (!affiliationArray.has({ uid, profilePic, realname, url })) {
+                  getDownloadURL(picRef).then((url) => {
+                    //if (!affiliationArray.has({ uid, profilePic, realname, url })) {
                     //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname, url }]);
                     setAffiliationArray(affiliationArray.add({ uid, profilePic, realname, url }))
-                  //}
-                  console.log("aff array")
-                  console.log(affiliationArray)
-                }).catch(error => {
-                  //if (!affiliationArray.has({ uid, profilePic, realname})) {
+                    //}
+                    console.log("aff array")
+                    console.log(affiliationArray)
+                  }).catch(error => {
+                    //if (!affiliationArray.has({ uid, profilePic, realname})) {
                     const defPic = ref(storage, "user/" + 'No file chosen.png')
                     getDownloadURL(defPic).then((url2) => {
-                      setAffiliationArray(affiliationArray.add({ uid, profilePic, realname, url2}))
+                      setAffiliationArray(affiliationArray.add({ uid, profilePic, realname, url2 }))
 
                     })
-                    .catch(error => {
-                      console.error("Error getting pfp url:", error);
+                      .catch(error => {
+                        console.error("Error getting pfp url:", error);
 
-                    })
+                      })
                     setAffiliationArray(affiliationArray.add({ uid, profilePic, realname, }))
 
-                  //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname}]);
-                  //}
-                  console.error("Error getting pfp url:", error);
-                });
+                    //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname}]);
+                    //}
+                    console.error("Error getting pfp url:", error);
+                  });
                 }
               })
               .catch((error) => {
@@ -263,30 +266,72 @@ const Profile = () => {
                   }
                 }
                 if (friendRes.data.recordLabelMembers.includes(userId)) {
-                getDownloadURL(picRef).then((url) => {
-                  //if (!affiliationArray.has({ uid, profilePic, realname, url })) {
+                  getDownloadURL(picRef).then((url) => {
+                    //if (!affiliationArray.has({ uid, profilePic, realname, url })) {
                     //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname, url }]);
                     setAffiliationArray(affiliationArray.add({ uid, profilePic, realname, url }))
-                  //}
-                  console.log("aff array")
-                  console.log(affiliationArray)
-                }).catch(error => {
-                  //if (!affiliationArray.has({ uid, profilePic, realname})) {
+                    //}
+                    console.log("aff array")
+                    console.log(affiliationArray)
+                  }).catch(error => {
+                    //if (!affiliationArray.has({ uid, profilePic, realname})) {
                     const defPic = ref(storage, "user/" + 'No file chosen.png')
                     getDownloadURL(defPic).then((url2) => {
-                      setAffiliationArray(affiliationArray.add({ uid, profilePic, realname, url2}))
+                      setAffiliationArray(affiliationArray.add({ uid, profilePic, realname, url2 }))
 
                     })
-                    .catch(error => {
-                      console.error("Error getting pfp url:", error);
+                      .catch(error => {
+                        console.error("Error getting pfp url:", error);
 
-                    })
+                      })
                     setAffiliationArray(affiliationArray.add({ uid, profilePic, realname, }))
 
-                  //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname}]);
-                  //}
-                  console.error("Error getting pfp url:", error);
-                });
+                    //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname}]);
+                    //}
+                    console.error("Error getting pfp url:", error);
+                  });
+                }
+              })
+              .catch((error) => {
+                console.error("Error fetching friend data:", error);
+              });
+          });
+          res.data.friends.forEach(friendId => {
+            console.log(friendId)
+            axios.get(`http://localhost:5001/user/${friendId}`)
+              .then((friendRes) => {
+                const { uid, profilePic, realname } = friendRes.data;
+                const picRef = ref(storage, "user/" + profilePic);
+                for (const affil of friendArray) {
+                  if (affil.uid === friendId) {
+                    friendArray.delete(affil)
+                  }
+                }
+                if (friendRes.data.friends.includes(userId)) {
+                  getDownloadURL(picRef).then((url) => {
+                    //if (!affiliationArray.has({ uid, profilePic, realname, url })) {
+                    //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname, url }]);
+                    setFriendArray(friendArray.add({ uid, profilePic, realname, url }))
+                    //}
+                    console.log("aff array")
+                    console.log(friendArray)
+                  }).catch(error => {
+                    //if (!affiliationArray.has({ uid, profilePic, realname})) {
+                    const defPic = ref(storage, "user/" + 'No file chosen.png')
+                    getDownloadURL(defPic).then((url2) => {
+                      setFriendArray(friendArray.add({ uid, profilePic, realname, url2 }))
+
+                    })
+                      .catch(error => {
+                        console.error("Error getting pfp url:", error);
+
+                      })
+                    setFriendArray(friendArray.add({ uid, profilePic, realname, }))
+
+                    //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname}]);
+                    //}
+                    console.error("Error getting pfp url:", error);
+                  });
                 }
               })
               .catch((error) => {
@@ -662,12 +707,16 @@ const Profile = () => {
   const ProfileInfo = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [showAffiliations, setShowAffiliations] = useState(false);
+    const [showFriends, setShowFriends] = useState(false);
     // // check for profile pic
     if (!userProfilePic.profilePic || userProfilePic.profilePic === null) {
       userProfilePic.profilePic = "No Profile Picture";
     }
     const handleViewAffiliations = () => {
       setShowAffiliations(!showAffiliations);
+    };
+    const handleViewFriends = () => {
+      setShowFriends(!showFriends);
     };
     // check for null skills and description and projects
     if (!userData.skills || userData.skills.length === 0) {
@@ -716,34 +765,63 @@ const Profile = () => {
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
-          <div>
-    <button onClick={handleViewAffiliations}>View Affiliations</button>
-    
-    {showAffiliations && (affiliationArray.size > 0 ? (
-      <div>
-        <div>Affiliations</div>
-        <div className="flex bg-gray-300">
-          {[...affiliationArray].map((affil, index) => (
-            <div key={index} className="flex items-center border-b border-gray-300 p-2">
-              <div>
-                <img
-                  onClick={() => {profileClicked(affil.uid)} }
-                  src={affil.url}
-                  alt={`${affil.realname}`}
-                  className="w-12 h-12 rounded-full cursor-pointer"
-                />
-              </div>
-              <div className="ml-4">
-                <p className="text-gray-800 font-semibold">{affil.realname}</p>
+        {userData.accountType === 0 ? (<div>
+          <button onClick={handleViewFriends}>View Friends</button>
+
+          {showFriends && (friendArray.size > 0 ? (
+            <div>
+              <div>Friends</div>
+              <div className="flex bg-gray-300">
+                {[...friendArray].map((affil, index) => (
+                  <div key={index} className="flex items-center border-b border-gray-300 p-2">
+                    <div>
+                      <img
+                        onClick={() => { profileClicked(affil.uid) }}
+                        src={affil.url}
+                        alt={`${affil.realname}`}
+                        className="w-12 h-12 rounded-full cursor-pointer"
+                      />
+                    </div>
+                    <div className="ml-4">
+                      <p className="text-gray-800 font-semibold">{affil.realname}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
+          ) : (friendArray.size === 0 && (<div>User does not yet have any affilitations</div>))
+          )}
+
+        </div>) : (<></>)
+  }
+        <div>
+          <button onClick={handleViewAffiliations}>View Affiliations</button>
+
+          {showAffiliations && (affiliationArray.size > 0 ? (
+            <div>
+              <div>Affiliations</div>
+              <div className="flex bg-gray-300">
+                {[...affiliationArray].map((affil, index) => (
+                  <div key={index} className="flex items-center border-b border-gray-300 p-2">
+                    <div>
+                      <img
+                        onClick={() => { profileClicked(affil.uid) }}
+                        src={affil.url}
+                        alt={`${affil.realname}`}
+                        className="w-12 h-12 rounded-full cursor-pointer"
+                      />
+                    </div>
+                    <div className="ml-4">
+                      <p className="text-gray-800 font-semibold">{affil.realname}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (affiliationArray.size === 0 && (<div>User does not yet have any affilitations</div>))
+          )}
+
         </div>
-      </div>
-    ) : (affiliationArray.size === 0 && (<div>User does not yet have any affilitations</div>))
-    )}
-    
-  </div>
 
         <div>Endorsements</div>
 
