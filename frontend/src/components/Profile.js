@@ -24,7 +24,6 @@ const Footer = () => {
 
 const Profile = () => {
   const [isRecordLabel, setIsRecordLabel] = useState(false);
-  const [affiliationRequested, setAffiliationRequested] = useState(false);
 
   /*Check if is RecordLabel BELOW*/
 
@@ -38,11 +37,7 @@ const Profile = () => {
       .catch((error) => console.error("Failed to fetch user profile:", error));
   }, [userId]);*/
 
-  const requestAffiliation = () => {
-    console.log("Requesting affiliation for", userData.name);
-    setAffiliationRequested(true);
-    // Here you might also call an API to handle the request on the backend
-  };
+
 
   const location = useLocation();
   const userId = location.state.userId;
@@ -64,6 +59,9 @@ const Profile = () => {
     description: "",
     friends: [],
     blockedUsers: [],
+    accountType: null,
+    joinedRecordLabels: [],
+    recordLabelMembers: [],
     skills: [],
     projects: [],
   });
@@ -75,6 +73,9 @@ const Profile = () => {
     description: "",
     friends: [],
     blockedUsers: [],
+    accountType: null,
+    joinedRecordLabels: [],
+    recordLabelMembers: [],
     skills: [],
     projects: [],
   });
@@ -248,6 +249,62 @@ const Profile = () => {
         // Optionally, handle the error or revert local state changes
       });
   };
+
+  const handleJoinLabel = () => {
+    axios
+      .post(
+        `http://localhost:5001/user/${localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/joinedLabels`,
+          {labelId: userId}
+      )
+      .then((response) => {
+        console.log("Label added successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error adding label:", error);
+      });
+  }
+
+  const handleLeaveLabel = () => {
+    axios
+      .delete(
+        `http://localhost:5001/user/${localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/joinedLabels/${userId}`,
+      )
+      .then((response) => {
+        console.log("Label removed successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error removing label:", error);
+      });
+  }
+
+  const handleAddUserToLabel = () => {
+    axios
+      .post(
+        `http://localhost:5001/user/${userId}/labelMembers`,
+          {joiner: loggedInId}
+      )
+      .then((response) => {
+        console.log("User added to label successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error adding user to label:", error);
+      });
+  }
+
+  const handleRemoveUserFromLabel = () => {
+    axios
+      .delete(
+        `http://localhost:5001/user/${userId}/labelMembers/${loggedInId}`,
+      )
+      .then((response) => {
+        console.log("User removed from label successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error removing user from label:", error);
+      });
+  }
 
   const handleBlock = () => {
     //console.log(id);
@@ -447,19 +504,6 @@ const Profile = () => {
           <img className="w-40" src={image} />
         )}
         <div>{userData.realname}</div>
-        {isRecordLabel && (
-          <div className="registered-label">Registered Label</div>
-        )}
-        {isRecordLabel && !affiliationRequested && (
-          <button onClick={requestAffiliation} className="cta-button">
-            Request Affiliation
-          </button>
-        )}
-        {isRecordLabel && affiliationRequested && (
-          <button disabled className="cta-button">
-            Requested...
-          </button>
-        )}
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
@@ -475,9 +519,7 @@ const Profile = () => {
         })}</div>
 
         <div className="flex justify-between items-center">
-          {userId === loggedInId ? (
-            <div></div>
-          ) : (userData.friends &&
+          {(userId !== loggedInId && userData.accountType == 0 && loggedInData.accountType == 0) ? (userData.friends &&
             userData.friends.includes(loggedInId) &&
             loggedInData.friends &&
             loggedInData.friends.includes(userId) ? (
@@ -511,7 +553,80 @@ const Profile = () => {
                   </div></>
               )
           )
-          )}
+          ) : (<div></div>)}
+
+          {(userId !== loggedInId && userData.accountType == 1 && loggedInData.accountType == 0) ? (userData.recordLabelMembers &&
+            userData.recordLabelMembers.includes(loggedInId) &&
+            loggedInData.joinedRecordLabels &&
+            loggedInData.joinedRecordLabels.includes(userId) ? (
+            <>
+              <div>
+                <button onClick={() => handleLeaveLabel()}
+                  className="button">
+                  Remove Label Affiliation </button>
+              </div></>) : (
+            ((!userData.recordLabelMembers || !userData.recordLabelMembers.includes(loggedInId)) && (loggedInData.joinedRecordLabels && loggedInData.joinedRecordLabels.includes(userId))) ?
+              (
+                <>
+                  <div>
+                    <button onClick={() => handleLeaveLabel()}
+                      className="button bg-gray-300"
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}>
+
+                      {isHovered ? "Rescind Label Join Request?" : "Label Join Request Pending"}
+                    </button>
+                  </div></>
+
+              )
+              : (
+                <>
+                  <div>
+                    <button onClick={() => handleJoinLabel()}
+                      className="button">
+                      {console.log(userData.friends)}
+                      Request to Join Label </button>
+                  </div></>
+              )
+          )
+          ) : (<div></div>)}
+          
+          {(userId !== loggedInId && userData.accountType == 0 && loggedInData.accountType == 1) ? (userData.joinedRecordLabels &&
+            userData.joinedRecordLabels.includes(loggedInId) &&
+            loggedInData.recordLabelMembers &&
+            loggedInData.recordLabelMembers.includes(userId) ? (
+            <>
+              <div>
+                <button onClick={() => handleRemoveUserFromLabel()}
+                  className="button">
+                  Deny Label Affiliation </button>
+              </div></>) : (
+            ((!userData.joinedRecordLabels || !userData.joinedRecordLabels.includes(loggedInId)) && (loggedInData.recordLabelMembers && loggedInData.recordLabelMembers.includes(userId))) ?
+              (
+                <>
+                  <div>
+                    <button onClick={() => handleRemoveUserFromLabel()}
+                      className="button bg-gray-300"
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}>
+
+                      {isHovered ? "Rescind Label Join Offer?" : "Label Join Offer Outgoing"}
+                    </button>
+                  </div></>
+
+              )
+              : (
+                <>
+                  <div>
+                    <button onClick={() => handleAddUserToLabel()}
+                      className="button">
+                      {console.log(userData.joinedRecordLabels)}
+                      Offer to Join Label </button>
+                  </div></>
+              )
+          )
+          ) : (<div></div>)}
+
           {userId === loggedInId ? (
             <div></div>
           ) : (
