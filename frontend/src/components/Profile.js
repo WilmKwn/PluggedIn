@@ -52,6 +52,7 @@ const Profile = () => {
   });
   const [endorsements, setEndorsements] = useState({});
   const [endorsedSkills, setEndorsedSkills] = useState({});
+  const [affiliationArray, setAffiliationArray] = useState([]);
   const [userData, setUserData] = useState({
     // profilePic: "",
     name: "",
@@ -65,6 +66,7 @@ const Profile = () => {
     skills: [],
     projects: [],
   });
+
 
   const [loggedInData, setLoggedInData] = useState({
     // profilePic: "",
@@ -219,13 +221,86 @@ const Profile = () => {
         // Handle any errors that occur during the fetch request
       });
   };
+  const fetchAffiliationListData = () => {
+   if (userData.accountType === 0) {
+    userData.joinedRecordLabels.forEach(labelId => {
+      axios.get(`http://localhost:5001/user/${labelId}`)
+        .then((labelRes) => {
+          const {uid, profilePic, realname} = labelRes.data;
+          const picRef = ref(storage, "user/" + profilePic);
+          getDownloadURL(picRef).then((url) => {
+            setAffiliationArray(prevArr => [...prevArr, {uid, profilePic, realname, url}]);
+          }).catch(error => {
+            console.error("Error getting pfp url:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching affiliation data1:", error);
+      });
+    });
+   }
+   else if (userData.accountType === 1) {
+    userData.recordLabelMembers.forEach(memberId => {
+      axios.get(`http://localhost:5001/user/${memberId}`)
+        .then((memberRes) => {
+          const {uid, profilePic, realname} = memberRes.data;
+          const picRef = ref(storage, "user/" + profilePic);
+          getDownloadURL(picRef).then((url) => {
+            setAffiliationArray(prevArr => [...prevArr, {uid, profilePic, realname}]);
+          }).catch(error => {
+            console.error("Error getting pfp url:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching affiliation data1:", error);
+      });
+    });
+   } 
+   if (loggedInData.accountType === 0) {
+    loggedInData.joinedRecordLabels.forEach(labelId => {
+      axios.get(`http://localhost:5001/user/${labelId}`)
+        .then((labelRes) => {
+          const {uid, profilePic, realname} = labelRes.data;
+          const picRef = ref(storage, "user/" + profilePic);
+          getDownloadURL(picRef).then((url) => {
+            setAffiliationArray(prevArr => [...prevArr, {uid, profilePic, realname}]);
+          }).catch(error => {
+            console.error("Error getting pfp url:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching affiliation data1:", error);
+      });
+    });
+   }
+   else if (loggedInData.accountType === 1) {
+    loggedInData.recordLabelMembers.forEach(memberId => {
+      axios.get(`http://localhost:5001/user/${memberId}`)
+        .then((memberRes) => {
+          const {uid, profilePic, realname} = memberRes.data;
+          const picRef = ref(storage, "user/" + profilePic);
+          getDownloadURL(picRef).then((url) => {
+            setAffiliationArray(prevArr => [...prevArr, {uid, profilePic, realname}]);
+          }).catch(error => {
+            console.error("Error getting pfp url:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching affiliation data1:", error);
+      });
+    });
+   }
+  }
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:8282");
     ws.onmessage = (event) => {
       fetchUserAndLoggedData();
+      fetchAffiliationListData();
       console.log("fetched");
     };
     fetchUserAndLoggedData();
+    fetchAffiliationListData();
+
   }, []);
   const handleConnect = () => {
     //console.log(id);
@@ -496,6 +571,11 @@ const Profile = () => {
         });
     }, []);
     console.log(userData.skills);
+    const profileClicked = (id) => {
+      const userId = id;
+      console.log("navigate to " + userId);
+      navigate("/profile", { state: { userId } });
+    };
     return (
       <div className="h-full pt-28 flex flex-col items-center">
         {userProfilePic.profilePic === "No file chosen" ? (
@@ -508,6 +588,8 @@ const Profile = () => {
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
         <div>Endorsements</div>
+        
+        {(userData.accountType === 0) ? (
         <div>{Object.entries(endorsements).map(([skill, endorsers]) => {
           return (
             <div key={skill}>
@@ -516,7 +598,28 @@ const Profile = () => {
               </div>
             </div>
           );
-        })}</div>
+        })}</div>) : (
+        <>
+          <div className="flex bg-gray-300">
+            {(affiliationArray).map((affil, index) => (
+              <div key={index} className="flex items-center border-b border-gray-300 p-2">
+                <div>
+                  <img
+                    src={affil.url}
+                    alt={`${affil.realname}`}
+                    className="w-12 h-12 rounded-full cursor-pointer"
+                    onClick={() => {profileClicked(affil.uid)} }
+                    />
+                </div>
+                <div className="ml-4">
+                <p className="text-gray-800 font-semibold">{affil.realname}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+        )
+      }
 
         <div className="flex justify-between items-center">
           {(userId !== loggedInId && userData.accountType == 0 && loggedInData.accountType == 0) ? (userData.friends &&
