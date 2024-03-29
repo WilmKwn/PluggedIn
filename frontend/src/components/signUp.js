@@ -19,7 +19,9 @@ const SignUp = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         // Handle successful Google sign-in here
-        navigate("/feed");
+        localStorage.setItem("userId", result.user.uid);
+
+        navigate("/onboarding");
       })
       .catch((error) => {
         console.error(error);
@@ -33,8 +35,11 @@ const SignUp = () => {
       .then((userCredential) => {
         // Sign-up successful.
         // You can use userCredential.user to access the registered user's information
-        const user = userCredential.user;
-        localStorage.setItem("uid", user.uid);
+        localStorage.setItem("uid", userCredential.user.uid);
+        localStorage.setItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
+          userCredential.user.uid
+        );
         navigate("/onboarding"); // Redirect user after sign-up
       })
       .catch((error) => {

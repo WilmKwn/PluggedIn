@@ -20,6 +20,12 @@ const SignIn = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         // Handle successful Google sign-in here
+        localStorage.setItem("userId", result.user.uid);
+        localStorage.setItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
+          result.user.uid
+        );
+
         navigate("/feed");
       })
       .catch((error) => {
@@ -34,6 +40,11 @@ const SignIn = () => {
       .then((userCredential) => {
         // Sign-in successful.
         // userCredential.user will have user details
+        localStorage.setItem("uid", userCredential.user.uid);
+        localStorage.setItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
+          userCredential.user.uid
+        );
         navigate("/feed"); // Redirect user after sign-in
       })
       .catch((error) => {

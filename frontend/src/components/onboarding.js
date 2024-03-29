@@ -55,6 +55,7 @@ const Onboarding = () => {
           /*
         uid: localStorage.getItem(
           "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+          
         ),*/
           uid: auth.currentUser.uid,
           realname: realname,
