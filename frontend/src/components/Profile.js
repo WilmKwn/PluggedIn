@@ -225,7 +225,7 @@ const Profile = () => {
                     setAffiliationArray(affiliationArray.add({ uid, profilePic, realname, url }))
                   //}
                   console.log("aff array")
-                    console.log(affiliationArray)
+                  console.log(affiliationArray)
                 }).catch(error => {
                   //if (!affiliationArray.has({ uid, profilePic, realname})) {
                     const defPic = ref(storage, "user/" + 'No file chosen.png')
@@ -269,7 +269,7 @@ const Profile = () => {
                     setAffiliationArray(affiliationArray.add({ uid, profilePic, realname, url }))
                   //}
                   console.log("aff array")
-                    console.log(affiliationArray)
+                  console.log(affiliationArray)
                 }).catch(error => {
                   //if (!affiliationArray.has({ uid, profilePic, realname})) {
                     const defPic = ref(storage, "user/" + 'No file chosen.png')
@@ -431,7 +431,7 @@ const Profile = () => {
     axios
       .post(
         `http://localhost:5001/user/${loggedInId}/joinedLabels`,
-          {labelId: userId}
+        { labelId: userId }
       )
       .then((response) => {
         console.log("Label added successfully:", response.data);
@@ -470,7 +470,7 @@ const Profile = () => {
     axios
       .post(
         `http://localhost:5001/user/${loggedInId}/labelMembers`,
-          {joiner: userId}
+        { joiner: userId }
       )
       .then((response) => {
         console.log("User added to label successfully:", response.data);
@@ -479,7 +479,7 @@ const Profile = () => {
         console.error("Error adding user to label:", error);
       });
   }
-  
+
   const handleRemoveUserFromLabel = () => {
     axios
       .delete(
@@ -739,20 +739,20 @@ const Profile = () => {
 
 }
         <div>Endorsements</div>
-        
+
         {(userData.accountType === 0) ? (
-        <div>{Object.entries(endorsements).map(([skill, endorsers]) => {
-          return (
-            <div key={skill}>
-              <div>Skill: {skill}</div>
-              <div>Endorses: {endorsers.length > 1 ? endorsers.map((endorser) => ` ${endorser} ,`) : endorsers[0]}
+          <div>{Object.entries(endorsements).map(([skill, endorsers]) => {
+            return (
+              <div key={skill}>
+                <div>Skill: {skill}</div>
+                <div>Endorsed by: {endorsers.length > 1 ? endorsers.map((endorser) => ` ${endorser} ,`) : endorsers[0]}
+                </div>
               </div>
-            </div>
-          );
-        })}</div>) : (
-        <>        </>
+            );
+          })}</div>) : (
+          <>        </>
         )
-      }
+        }
 
         <div className="flex justify-between items-center">
           {(userId !== loggedInId && userData.accountType == 0 && loggedInData.accountType == 0) ? (userData.friends &&
@@ -815,37 +815,39 @@ const Profile = () => {
                   </div></>
 
               )
-              : ((userData.recordLabelMembers && userData.recordLabelMembers.includes(loggedInId)) && (!loggedInData.joinedRecordLabels || !loggedInData.joinedRecordLabels.includes(userId)) ? 
-              (<div className="flex">
-              <button onClick={() => handleRejectRequestToJoinLabel()}
-                                    className="button bg-red-500">
-                                    Deny Invite to Join Label </button>
-                                    <button onClick={() => handleJoinLabel()}
-                                    className="button bg-green-500">
-                                    Accept Invite to Join Label </button>
+              : ((userData.recordLabelMembers && userData.recordLabelMembers.includes(loggedInId)) && (!loggedInData.joinedRecordLabels || !loggedInData.joinedRecordLabels.includes(userId)) ?
+                (<div className="flex">
+                  <button onClick={() => handleRejectRequestToJoinLabel()}
+                    className="button bg-red-500">
+                    Deny Invite to Join Label </button>
+                  <button onClick={() => handleJoinLabel()}
+                    className="button bg-green-500">
+                    Accept Invite to Join Label </button>
                 </div>)
-              : (
+                : (
 
-                <>
-                  <div>
-                    <button onClick={() => handleJoinLabel()}
-                      className="button">
-                      {console.log(userData.friends)}
-                      Request to Join Label </button>
-                  </div></>
-              )
+                  <>
+                    <div>
+                      <button onClick={() => handleJoinLabel()}
+                        className="button">
+                        {console.log(userData.friends)}
+                        Request to Join Label </button>
+                    </div></>
+                )
               )
           )
           ) : (<div></div>)}
-          
+
           {(userId !== loggedInId && userData.accountType == 0 && loggedInData.accountType == 1) ? (userData.joinedRecordLabels &&
             userData.joinedRecordLabels.includes(loggedInId) &&
             loggedInData.recordLabelMembers &&
             loggedInData.recordLabelMembers.includes(userId) ? (
             <>
               <div>
-                <button onClick={() => {handleRemoveUserFromLabel();
-                                        handleDenyFromLabel();}}
+                <button onClick={() => {
+                  handleRemoveUserFromLabel();
+                  handleDenyFromLabel();
+                }}
                   className="button">
                   Deny Label Affiliation </button>
               </div></>) : (
@@ -864,14 +866,14 @@ const Profile = () => {
 
               )
               : ((userData.joinedRecordLabels && userData.joinedRecordLabels.includes(loggedInId)) && (!loggedInData.recordLabelMembers || !loggedInData.recordLabelMembers.includes(userId))) ? (
-  <div className="flex">
-<button onClick={() => handleDenyFromLabel()}
-                      className="button bg-red-500">
-                      Deny Request to Join Label </button>
-                      <button onClick={() => handleAddUserToLabel()}
-                      className="button bg-green-500">
-                      Accept Request to Join Label </button>
-  </div>
+                <div className="flex">
+                  <button onClick={() => handleDenyFromLabel()}
+                    className="button bg-red-500">
+                    Deny Request to Join Label </button>
+                  <button onClick={() => handleAddUserToLabel()}
+                    className="button bg-green-500">
+                    Accept Request to Join Label </button>
+                </div>
               ) : (
                 <>
                   <div>
@@ -880,7 +882,7 @@ const Profile = () => {
                       Offer to Join Label </button>
                   </div></>
               )
-              
+
           )
           ) : (<div></div>)}
 
