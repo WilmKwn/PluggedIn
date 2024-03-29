@@ -334,10 +334,14 @@ const Post = ({ postParam }) => {
             console.log(err);
           });
       }
+    }).catch(err => {
+      console.log(err);
     });
     if (post.repost) {
       axios.get(`http://localhost:5001/user/${post.originalCreator}`).then((res) => {
         setOriginalCreator(res.data.realname);
+      }).catch(err => {
+        console.log(err);
       });
     }
   }, []);

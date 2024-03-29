@@ -70,7 +70,7 @@ const Feed = () => {
   };
 
   useEffect(() => {
-    //fetchPosts();
+    fetchPosts();
   }, [connections]);
 
   useEffect(() => {
