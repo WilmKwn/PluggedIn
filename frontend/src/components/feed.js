@@ -48,8 +48,8 @@ const Feed = () => {
         }
 
         if (searchText) {
-          finalPosts = finalPosts.filter(post =>
-            post.tags.some(tag => tag.includes(searchText))
+          finalPosts = finalPosts.filter((post) =>
+            post.tags.some((tag) => tag.includes(searchText))
           );
         }
 
@@ -70,7 +70,7 @@ const Feed = () => {
   };
 
   useEffect(() => {
-    fetchPosts();
+    //çfetchPosts();
   }, [connections]);
 
   useEffect(() => {

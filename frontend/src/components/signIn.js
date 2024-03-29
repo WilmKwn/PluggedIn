@@ -52,7 +52,7 @@ const SignIn = () => {
   return (
     <div className="app">
       <header className="app-header">
-        <div>Sign Up</div>
+        <div>Sign In</div>
       </header>
 
       <main className="landing">
