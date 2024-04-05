@@ -14,6 +14,12 @@ const Post = ({ postParam, input }) => {
     const arr = input.split(" ");
     if (arr[0] === "like" && arr[1] == "post") {
       handleLike();
+    } else if (arr[0] === "dislike" && arr[1] == "post") {
+      handleDislike();
+    } else if (arr[0] === "repost" && arr[1] == "post") {
+      handleRepost();
+    } else if (arr[0] === "laugh" && arr[1] == "post") {
+      handleLaugh();
     }
   }, [input]);
 
