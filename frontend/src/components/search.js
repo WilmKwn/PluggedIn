@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import Post from "./Post";
 
 import axios from "axios";
 import MainBanner from "./MainBanner";
@@ -11,6 +12,17 @@ const Search = () => {
   const navigate = useNavigate();
 
   const [searchText, setSearchText] = useState("");
+
+  const [activeHashtags, setActiveHashtags] = useState(new Set());
+  const [fetchedPosts, setFetchedPosts] = useState([]);
+  const [tags, setTags] = useState([
+    "foryou",
+    "music",
+    "travel",
+    "food",
+    "funny",
+  ]);
+
   const [filters, setFilters] = useState([
     { by: "Artists", checked: true },
     { by: "Songs", checked: true },
@@ -24,6 +36,47 @@ const Search = () => {
   const [showArtists, setShowArtists] = useState([]);
   const [showSongs, setShowSongs] = useState([]);
   const [showPosts, setShowPosts] = useState([]);
+  const fetchPosts = () => {
+    let apiUrl = "http://localhost:5001/post";
+
+    axios
+      .get(apiUrl)
+      .then((res) => {
+        setPosts(res.data); // Save the fetched posts in state
+      })
+      .catch((err) => {
+        console.log("Can't load posts: ", err);
+      });
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, [activeHashtags]);
+
+  const toggleHashtag = (hashtag) => {
+    setActiveHashtags((prevActiveHashtags) => {
+      const updatedActiveHashtags = new Set(prevActiveHashtags);
+      if (updatedActiveHashtags.has(hashtag)) {
+        updatedActiveHashtags.delete(hashtag);
+      } else {
+        updatedActiveHashtags.add(hashtag);
+      }
+      return updatedActiveHashtags;
+    });
+  };
+
+  const filteredPosts = useMemo(() => {
+    return posts.filter((post) => {
+      const hasAllActiveHashtags = Array.from(activeHashtags).every((hashtag) =>
+        post.tags.includes(hashtag)
+      );
+      const matchesSearchText =
+        post.title.toLowerCase().includes(searchText) ||
+        post.description.toLowerCase().includes(searchText);
+
+      return hasAllActiveHashtags && matchesSearchText;
+    });
+  }, [posts, activeHashtags, searchText]);
 
   useEffect(() => {
     if (filters[0].checked) {
@@ -79,7 +132,10 @@ const Search = () => {
     setShowSongs(temp);
 
     temp = posts.filter((post) => {
-      if (post.title.toLowerCase().includes(search) || post.description.toLowerCase().includes(search)) {
+      if (
+        post.title.toLowerCase().includes(search) ||
+        post.description.toLowerCase().includes(search)
+      ) {
         return post;
       }
     });
@@ -89,12 +145,17 @@ const Search = () => {
   const artistClicked = (id) => {
     const userId = id;
     console.log("navigate to " + userId);
-    navigate("/profile", {state: {userId}});
-  }
+    navigate("/profile", { state: { userId } });
+  };
 
   const ArtistCard = ({ artist }) => {
     return (
-      <div onClick={()=>{artistClicked(artist.uid)}} className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer">
+      <div
+        onClick={() => {
+          artistClicked(artist.uid);
+        }}
+        className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer"
+      >
         {artist.realname}
       </div>
     );
@@ -104,13 +165,15 @@ const Search = () => {
       <div className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer">
         Song
       </div>
-    );  };
+    );
+  };
   const PostCard = ({ post }) => {
     return (
       <div className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer">
         {post.title}
       </div>
-    );  };
+    );
+  };
 
   return (
     <div className="mb-72">
@@ -140,6 +203,25 @@ const Search = () => {
                 }}
               />
             </div>
+          ))}
+        </div>
+
+        <div className="hashtag-button-container">
+          {tags.map((tag, index) => (
+            <button
+              key={index}
+              className={`hashtag-button ${
+                activeHashtags.has(tag) ? "active" : ""
+              }`}
+              onClick={() => toggleHashtag(tag)}
+            >
+              #{tag}
+            </button>
+          ))}
+        </div>
+        <div className="posts-container">
+          {filteredPosts.map((post) => (
+            <Post key={post._id} postParam={post} />
           ))}
         </div>
 

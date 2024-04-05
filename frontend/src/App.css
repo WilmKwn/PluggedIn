@@ -536,3 +536,30 @@ p {
 .error-message {
   color: red; /* This sets the text color to red */
 }
+
+
+
+
+/* Hashtag Button Styles */
+.hashtag-button {
+  display: inline-block;
+  margin: 5px;
+  padding: 8px 16px;
+  font-size: 16px;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.hashtag-button:hover {
+  background-color: #f8f8f8;
+}
+
+.hashtag-button.active {
+  color: #fff;
+  background-color: #fe3e6d; /* Tinder's brand color for active state */
+  border-color: #fe3e6d;
+}

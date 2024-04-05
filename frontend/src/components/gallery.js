@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
+<<<<<<< Updated upstream
 import { signOut } from "firebase/auth";
+=======
+
+import axios from "axios";
+>>>>>>> Stashed changes
 
 import { storage, ref, getDownloadURL } from "./firebase";
 
@@ -31,10 +36,29 @@ const Gallery = () => {
         console.log("Cant load posts: ", err);
       });
 
+<<<<<<< Updated upstream
     axios.get("http://localhost:5001/song").then(res => {
       const d = res.data;
       setTags(d);
     });
+=======
+    axios.get("http://localhost:5001/song").then((res) => {
+      const d = res.data;
+      setTags(d);
+    });
+  };
+
+  useEffect(() => {
+    console.log(posts);
+  }, [posts]);
+
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:8080");
+    ws.onmessage = (event) => {
+      fetchPosts();
+    };
+    fetchPosts();
+>>>>>>> Stashed changes
   }, []);
 
   return (
