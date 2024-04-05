@@ -27,10 +27,6 @@ const SignIn = () => {
           "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
           result.user.uid
         );
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         navigate("/feed");
       })
       .catch((error) => {

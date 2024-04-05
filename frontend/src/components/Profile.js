@@ -24,6 +24,7 @@ const Footer = () => {
 
 const Profile = () => {
   const [isRecordLabel, setIsRecordLabel] = useState(false);
+  const navigate = useNavigate();
 
   /*Check if is RecordLabel BELOW*/
 
@@ -50,6 +51,9 @@ const Profile = () => {
   });
   const [endorsements, setEndorsements] = useState({});
   const [endorsedSkills, setEndorsedSkills] = useState({});
+  const [affiliationArray, setAffiliationArray] = useState(new Set());
+  const [friendArray, setFriendArray] = useState(new Set());
+
   const [userData, setUserData] = useState({
     // profilePic: "",
     name: "",
@@ -57,7 +61,7 @@ const Profile = () => {
     description: "",
     friends: [],
     blockedUsers: [],
-    accountType: null,
+    accountType: 0,
     joinedRecordLabels: [],
     recordLabelMembers: [],
     skills: [],
@@ -71,7 +75,7 @@ const Profile = () => {
     description: "",
     friends: [],
     blockedUsers: [],
-    accountType: null,
+    accountType: 0,
     joinedRecordLabels: [],
     recordLabelMembers: [],
     skills: [],
@@ -199,7 +203,181 @@ const Profile = () => {
       .then((res) => {
         // Process the user data here if the response was successful (status 200)
         console.log("got user data");
+        console.log(res.data.accountType);
         setUserData(res.data); // Update state with user data
+        console.log(userData.accountType);
+        if (res.data.accountType === 1) {
+          res.data.recordLabelMembers.forEach((friendId) => {
+            console.log(friendId);
+            axios
+              .get(`http://localhost:5001/user/${friendId}`)
+              .then((friendRes) => {
+                const { uid, profilePic, realname } = friendRes.data;
+                const picRef = ref(storage, "user/" + profilePic);
+                for (const affil of affiliationArray) {
+                  if (affil.uid === friendId) {
+                    affiliationArray.delete(affil);
+                  }
+                }
+                if (friendRes.data.joinedRecordLabels.includes(userId)) {
+                  getDownloadURL(picRef)
+                    .then((url) => {
+                      //if (!affiliationArray.has({ uid, profilePic, realname, url })) {
+                      //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname, url }]);
+                      setAffiliationArray(
+                        affiliationArray.add({ uid, profilePic, realname, url })
+                      );
+                      //}
+                      console.log("aff array");
+                      console.log(affiliationArray);
+                    })
+                    .catch((error) => {
+                      //if (!affiliationArray.has({ uid, profilePic, realname})) {
+                      const defPic = ref(
+                        storage,
+                        "user/" + "No file chosen.png"
+                      );
+                      getDownloadURL(defPic)
+                        .then((url2) => {
+                          setAffiliationArray(
+                            affiliationArray.add({
+                              uid,
+                              profilePic,
+                              realname,
+                              url2,
+                            })
+                          );
+                        })
+                        .catch((error) => {
+                          console.error("Error getting pfp url:", error);
+                        });
+                      setAffiliationArray(
+                        affiliationArray.add({ uid, profilePic, realname })
+                      );
+
+                      //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname}]);
+                      //}
+                      console.error("Error getting pfp url:", error);
+                    });
+                }
+              })
+              .catch((error) => {
+                console.error("Error fetching friend data:", error);
+              });
+          });
+        } else {
+          res.data.joinedRecordLabels.forEach((friendId) => {
+            console.log(friendId);
+            axios
+              .get(`http://localhost:5001/user/${friendId}`)
+              .then((friendRes) => {
+                const { uid, profilePic, realname } = friendRes.data;
+                const picRef = ref(storage, "user/" + profilePic);
+                for (const affil of affiliationArray) {
+                  if (affil.uid === friendId) {
+                    affiliationArray.delete(affil);
+                  }
+                }
+                if (friendRes.data.recordLabelMembers.includes(userId)) {
+                  getDownloadURL(picRef)
+                    .then((url) => {
+                      //if (!affiliationArray.has({ uid, profilePic, realname, url })) {
+                      //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname, url }]);
+                      setAffiliationArray(
+                        affiliationArray.add({ uid, profilePic, realname, url })
+                      );
+                      //}
+                      console.log("aff array");
+                      console.log(affiliationArray);
+                    })
+                    .catch((error) => {
+                      //if (!affiliationArray.has({ uid, profilePic, realname})) {
+                      const defPic = ref(
+                        storage,
+                        "user/" + "No file chosen.png"
+                      );
+                      getDownloadURL(defPic)
+                        .then((url2) => {
+                          setAffiliationArray(
+                            affiliationArray.add({
+                              uid,
+                              profilePic,
+                              realname,
+                              url2,
+                            })
+                          );
+                        })
+                        .catch((error) => {
+                          console.error("Error getting pfp url:", error);
+                        });
+                      setAffiliationArray(
+                        affiliationArray.add({ uid, profilePic, realname })
+                      );
+
+                      //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname}]);
+                      //}
+                      console.error("Error getting pfp url:", error);
+                    });
+                }
+              })
+              .catch((error) => {
+                console.error("Error fetching friend data:", error);
+              });
+          });
+          res.data.friends.forEach((friendId) => {
+            console.log(friendId);
+            axios
+              .get(`http://localhost:5001/user/${friendId}`)
+              .then((friendRes) => {
+                const { uid, profilePic, realname } = friendRes.data;
+                const picRef = ref(storage, "user/" + profilePic);
+                for (const affil of friendArray) {
+                  if (affil.uid === friendId) {
+                    friendArray.delete(affil);
+                  }
+                }
+                if (friendRes.data.friends.includes(userId)) {
+                  getDownloadURL(picRef)
+                    .then((url) => {
+                      //if (!affiliationArray.has({ uid, profilePic, realname, url })) {
+                      //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname, url }]);
+                      setFriendArray(
+                        friendArray.add({ uid, profilePic, realname, url })
+                      );
+                      //}
+                      console.log("aff array");
+                      console.log(friendArray);
+                    })
+                    .catch((error) => {
+                      //if (!affiliationArray.has({ uid, profilePic, realname})) {
+                      const defPic = ref(
+                        storage,
+                        "user/" + "No file chosen.png"
+                      );
+                      getDownloadURL(defPic)
+                        .then((url2) => {
+                          setFriendArray(
+                            friendArray.add({ uid, profilePic, realname, url2 })
+                          );
+                        })
+                        .catch((error) => {
+                          console.error("Error getting pfp url:", error);
+                        });
+                      setFriendArray(
+                        friendArray.add({ uid, profilePic, realname })
+                      );
+
+                      //setAffiliationArray(prevArr => [...prevArr, { uid, profilePic, realname}]);
+                      //}
+                      console.error("Error getting pfp url:", error);
+                    });
+                }
+              })
+              .catch((error) => {
+                console.error("Error fetching friend data:", error);
+              });
+          });
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -218,112 +396,96 @@ const Profile = () => {
         // Handle any errors that occur during the fetch request
       });
   };
-<<<<<<< Updated upstream
-=======
-  const fetchAffiliationListData = () => {
-    if (userData.accountType === 0) {
-      userData.joinedRecordLabels.forEach((labelId) => {
-        axios
-          .get(`http://localhost:5001/user/${labelId}`)
-          .then((labelRes) => {
-            const { uid, profilePic, realname } = labelRes.data;
-            const picRef = ref(storage, "user/" + profilePic);
-            getDownloadURL(picRef)
-              .then((url) => {
-                setAffiliationArray((prevArr) => [
-                  ...prevArr,
-                  { uid, profilePic, realname, url },
-                ]);
-              })
-              .catch((error) => {
-                console.error("Error getting pfp url:", error);
-              });
-          })
-          .catch((error) => {
-            console.error("Error fetching affiliation data1:", error);
-          });
-      });
-    } else if (userData.accountType === 1) {
-      userData.recordLabelMembers.forEach((memberId) => {
-        axios
-          .get(`http://localhost:5001/user/${memberId}`)
-          .then((memberRes) => {
-            const { uid, profilePic, realname } = memberRes.data;
-            const picRef = ref(storage, "user/" + profilePic);
-            getDownloadURL(picRef)
-              .then((url) => {
-                setAffiliationArray((prevArr) => [
-                  ...prevArr,
-                  { uid, profilePic, realname },
-                ]);
-              })
-              .catch((error) => {
-                console.error("Error getting pfp url:", error);
-              });
-          })
-          .catch((error) => {
-            console.error("Error fetching affiliation data1:", error);
-          });
-      });
-    }
-    if (loggedInData.accountType === 0) {
-      loggedInData.joinedRecordLabels.forEach((labelId) => {
-        axios
-          .get(`http://localhost:5001/user/${labelId}`)
-          .then((labelRes) => {
-            const { uid, profilePic, realname } = labelRes.data;
-            const picRef = ref(storage, "user/" + profilePic);
-            getDownloadURL(picRef)
-              .then((url) => {
-                setAffiliationArray((prevArr) => [
-                  ...prevArr,
-                  { uid, profilePic, realname },
-                ]);
-              })
-              .catch((error) => {
-                console.error("Error getting pfp url:", error);
-              });
-          })
-          .catch((error) => {
-            console.error("Error fetching affiliation data1:", error);
-          });
-      });
-    } else if (loggedInData.accountType === 1) {
-      loggedInData.recordLabelMembers.forEach((memberId) => {
-        axios
-          .get(`http://localhost:5001/user/${memberId}`)
-          .then((memberRes) => {
-            const { uid, profilePic, realname } = memberRes.data;
-            const picRef = ref(storage, "user/" + profilePic);
-            getDownloadURL(picRef)
-              .then((url) => {
-                setAffiliationArray((prevArr) => [
-                  ...prevArr,
-                  { uid, profilePic, realname },
-                ]);
-              })
-              .catch((error) => {
-                console.error("Error getting pfp url:", error);
-              });
-          })
-          .catch((error) => {
-            console.error("Error fetching affiliation data1:", error);
-          });
-      });
-    }
-  };
->>>>>>> Stashed changes
+  // const fetchAffiliationListData = () => {
+  //   console.log("Fetching affiliation data")
+  //   console.log(userData.accountType)
+  //  if (userData.accountType === 0) {
+  //   // userData.joinedRecordLabels.forEach(labelId => {console.log(labelId)
+  //   //   axios.get(`http://localhost:5001/user/${labelId}`)
+  //   //     .then((labelRes) => {
+  //   //       console.log(labelRes)
+  //   //       const {uid, profilePic, realname} = labelRes.data;
+  //   //       const picRef = ref(storage, "user/" + profilePic);
+  //   //       getDownloadURL(picRef).then((url) => {
+  //   //         if (labelRes.data.recordLabelMembers.includes(userId)) {
+  //   //           setAffiliationArray(prevArr => [...prevArr, {uid, profilePic, realname, url}]);
+  //   //         }
+  //   //       }).catch(error => {
+  //   //         console.error("Error getting pfp url:", error);
+  //   //       });
+  //   //   })
+  //   //   .catch((error) => {
+  //   //     console.error("Error fetching affiliation data1:", error);
+  //   //   });
+  //   // });
+  //  }
+  //  else if (userData.accountType === 1) {
+  //   console.log(userId)
+  //   userData.recordLabelMembers.forEach(memberId => {console.log(memberId)
+  //     // axios.get(`http://localhost:5001/user/${memberId}`)
+  //     //   .then((memberRes) => {
+  //     //     console.log(memberRes)
+
+  //     //     const {uid, profilePic, realname} = memberRes.data;
+  //     //     const picRef = ref(storage, "user/" + profilePic);
+  //     //     getDownloadURL(picRef).then((url) => {
+  //     //       if (memberRes.data.joinedRecordLabels.includes(userId)) {
+  //     //         setAffiliationArray(prevArr => [...prevArr, {uid, profilePic, realname, url}]);
+  //     //       }
+  //     //     }).catch(error => {
+  //     //       console.error("Error getting pfp url:", error);
+  //     //     });
+  //     // })
+  //     // .catch((error) => {
+  //     //   console.error("Error fetching affiliation data1:", error);
+  //     // });
+  //   });
+  //  }
+  //  /*if (loggedInData.accountType === 0) {
+  //   loggedInData.joinedRecordLabels.forEach(labelId => {
+  //     axios.get(`http://localhost:5001/user/${labelId}`)
+  //       .then((labelRes) => {
+  //         const {uid, profilePic, realname} = labelRes.data;
+  //         const picRef = ref(storage, "user/" + profilePic);
+  //         getDownloadURL(picRef).then((url) => {
+  //           setAffiliationArray(prevArr => [...prevArr, {uid, profilePic, realname, url}]);
+  //         }).catch(error => {
+  //           console.error("Error getting pfp url:", error);
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching affiliation data1:", error);
+  //     });
+  //   });
+  //  }
+  //  else if (loggedInData.accountType === 1) {
+  //   loggedInData.recordLabelMembers.forEach(memberId => {
+  //     axios.get(`http://localhost:5001/user/${memberId}`)
+  //       .then((memberRes) => {
+  //         const {uid, profilePic, realname} = memberRes.data;
+  //         const picRef = ref(storage, "user/" + profilePic);
+  //         getDownloadURL(picRef).then((url) => {
+  //           setAffiliationArray(prevArr => [...prevArr, {uid, profilePic, realname, url}]);
+  //         }).catch(error => {
+  //           console.error("Error getting pfp url:", error);
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching affiliation data1:", error);
+  //     });
+  //   });
+  //  }
+  //  */
+  // }
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:8282");
     ws.onmessage = (event) => {
       fetchUserAndLoggedData();
+      //fetchAffiliationListData();
       console.log("fetched");
     };
     fetchUserAndLoggedData();
-<<<<<<< Updated upstream
-=======
-    fetchAffiliationListData();
->>>>>>> Stashed changes
+    //fetchAffiliationListData();
   }, []);
   const handleConnect = () => {
     //console.log(id);
@@ -350,12 +512,9 @@ const Profile = () => {
 
   const handleJoinLabel = () => {
     axios
-      .post(
-        `http://localhost:5001/user/${localStorage.getItem(
-          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
-        )}/joinedLabels`,
-        { labelId: userId }
-      )
+      .post(`http://localhost:5001/user/${loggedInId}/joinedLabels`, {
+        labelId: userId,
+      })
       .then((response) => {
         console.log("Label added successfully:", response.data);
       })
@@ -366,11 +525,17 @@ const Profile = () => {
 
   const handleLeaveLabel = () => {
     axios
-      .delete(
-        `http://localhost:5001/user/${localStorage.getItem(
-          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
-        )}/joinedLabels/${userId}`
-      )
+      .delete(`http://localhost:5001/user/${loggedInId}/joinedLabels/${userId}`)
+      .then((response) => {
+        console.log("Label removed successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error removing label:", error);
+      });
+  };
+  const handleDenyFromLabel = () => {
+    axios
+      .delete(`http://localhost:5001/user/${userId}/joinedLabels/${loggedInId}`)
       .then((response) => {
         console.log("Label removed successfully:", response.data);
       })
@@ -381,8 +546,8 @@ const Profile = () => {
 
   const handleAddUserToLabel = () => {
     axios
-      .post(`http://localhost:5001/user/${userId}/labelMembers`, {
-        joiner: loggedInId,
+      .post(`http://localhost:5001/user/${loggedInId}/labelMembers`, {
+        joiner: userId,
       })
       .then((response) => {
         console.log("User added to label successfully:", response.data);
@@ -393,6 +558,17 @@ const Profile = () => {
   };
 
   const handleRemoveUserFromLabel = () => {
+    axios
+      .delete(`http://localhost:5001/user/${loggedInId}/labelMembers/${userId}`)
+      .then((response) => {
+        console.log("User removed from label successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error removing user from label:", error);
+      });
+  };
+
+  const handleRejectRequestToJoinLabel = () => {
     axios
       .delete(`http://localhost:5001/user/${userId}/labelMembers/${loggedInId}`)
       .then((response) => {
@@ -563,12 +739,18 @@ const Profile = () => {
 
   const ProfileInfo = () => {
     const [isHovered, setIsHovered] = useState(false);
-
+    const [showAffiliations, setShowAffiliations] = useState(false);
+    const [showFriends, setShowFriends] = useState(false);
     // // check for profile pic
     if (!userProfilePic.profilePic || userProfilePic.profilePic === null) {
       userProfilePic.profilePic = "No Profile Picture";
     }
-
+    const handleViewAffiliations = () => {
+      setShowAffiliations(!showAffiliations);
+    };
+    const handleViewFriends = () => {
+      setShowFriends(!showFriends);
+    };
     // check for null skills and description and projects
     if (!userData.skills || userData.skills.length === 0) {
       userData.skills = [];
@@ -598,15 +780,12 @@ const Profile = () => {
         });
     }, []);
     console.log(userData.skills);
-<<<<<<< Updated upstream
-=======
     const profileClicked = (id) => {
       const userId = id;
       console.log("navigate to " + userId);
-
       navigate("/profile", { state: { userId } });
+      window.location.reload();
     };
->>>>>>> Stashed changes
     return (
       <div className="h-full pt-28 flex flex-col items-center">
         {userProfilePic.profilePic === "No file chosen" ? (
@@ -615,21 +794,92 @@ const Profile = () => {
           <img className="w-40" src={image} />
         )}
         <div>{userData.realname}</div>
+        {userData.accountType === 1 && <div>Record Label</div>}
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
-        <div>Endorsements</div>
-<<<<<<< Updated upstream
-        <div>{Object.entries(endorsements).map(([skill, endorsers]) => {
-          return (
-            <div key={skill}>
-              <div>Skill: {skill}</div>
-              <div>Endorses: {endorsers.length > 1 ? endorsers.map((endorser) => ` ${endorser} ,`) : endorsers[0]}
+        {userData.accountType === 0 ? (
+          <div>
+            <button onClick={handleViewFriends}>View Friends</button>
+
+            {showFriends &&
+              (friendArray.size > 0 ? (
+                <div>
+                  <div>Friends</div>
+                  <div className="flex bg-gray-300">
+                    {[...friendArray].map((affil, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center border-b border-gray-300 p-2"
+                      >
+                        <div>
+                          <img
+                            onClick={() => {
+                              profileClicked(affil.uid);
+                            }}
+                            src={affil.url}
+                            alt={`${affil.realname}`}
+                            className="w-12 h-12 rounded-full cursor-pointer"
+                          />
+                        </div>
+                        <div className="ml-4">
+                          <p className="text-gray-800 font-semibold">
+                            {affil.realname}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                friendArray.size === 0 && (
+                  <div>User does not yet have any affilitations</div>
+                )
+              ))}
+          </div>
+        ) : (
+          <></>
+        )}
+        <div>
+          <button onClick={handleViewAffiliations}>View Affiliations</button>
+
+          {showAffiliations &&
+            (affiliationArray.size > 0 ? (
+              <div>
+                <div>Affiliations</div>
+                <div className="flex bg-gray-300">
+                  {[...affiliationArray].map((affil, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center border-b border-gray-300 p-2"
+                    >
+                      <div>
+                        <img
+                          onClick={() => {
+                            profileClicked(affil.uid);
+                          }}
+                          src={affil.url}
+                          alt={`${affil.realname}`}
+                          className="w-12 h-12 rounded-full cursor-pointer"
+                        />
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-gray-800 font-semibold">
+                          {affil.realname}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          );
-        })}</div>
-=======
+            ) : (
+              affiliationArray.size === 0 && (
+                <div>User does not yet have any affilitations</div>
+              )
+            ))}
+        </div>
+
+        <div>Endorsements</div>
 
         {userData.accountType === 0 ? (
           <div>
@@ -638,7 +888,7 @@ const Profile = () => {
                 <div key={skill}>
                   <div>Skill: {skill}</div>
                   <div>
-                    Endorses:{" "}
+                    Endorsed by:{" "}
                     {endorsers.length > 1
                       ? endorsers.map((endorser) => ` ${endorser} ,`)
                       : endorsers[0]}
@@ -648,34 +898,8 @@ const Profile = () => {
             })}
           </div>
         ) : (
-          <>
-            <div className="flex bg-gray-300">
-              {affiliationArray.map((affil, index) => (
-                <div
-                  key={index}
-                  className="flex items-center border-b border-gray-300 p-2"
-                >
-                  <div>
-                    <img
-                      src={affil.url}
-                      alt={`${affil.realname}`}
-                      className="w-12 h-12 rounded-full cursor-pointer"
-                      onClick={() => {
-                        profileClicked(affil.uid);
-                      }}
-                    />
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-gray-800 font-semibold">
-                      {affil.realname}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
+          <> </>
         )}
->>>>>>> Stashed changes
 
         <div className="flex justify-between items-center">
           {userId !== loggedInId &&
@@ -756,6 +980,24 @@ const Profile = () => {
                   </button>
                 </div>
               </>
+            ) : userData.recordLabelMembers &&
+              userData.recordLabelMembers.includes(loggedInId) &&
+              (!loggedInData.joinedRecordLabels ||
+                !loggedInData.joinedRecordLabels.includes(userId)) ? (
+              <div className="flex">
+                <button
+                  onClick={() => handleRejectRequestToJoinLabel()}
+                  className="button bg-red-500"
+                >
+                  Deny Invite to Join Label{" "}
+                </button>
+                <button
+                  onClick={() => handleJoinLabel()}
+                  className="button bg-green-500"
+                >
+                  Accept Invite to Join Label{" "}
+                </button>
+              </div>
             ) : (
               <>
                 <div>
@@ -780,7 +1022,10 @@ const Profile = () => {
               <>
                 <div>
                   <button
-                    onClick={() => handleRemoveUserFromLabel()}
+                    onClick={() => {
+                      handleRemoveUserFromLabel();
+                      handleDenyFromLabel();
+                    }}
                     className="button"
                   >
                     Deny Label Affiliation{" "}
@@ -805,6 +1050,24 @@ const Profile = () => {
                   </button>
                 </div>
               </>
+            ) : userData.joinedRecordLabels &&
+              userData.joinedRecordLabels.includes(loggedInId) &&
+              (!loggedInData.recordLabelMembers ||
+                !loggedInData.recordLabelMembers.includes(userId)) ? (
+              <div className="flex">
+                <button
+                  onClick={() => handleDenyFromLabel()}
+                  className="button bg-red-500"
+                >
+                  Deny Request to Join Label{" "}
+                </button>
+                <button
+                  onClick={() => handleAddUserToLabel()}
+                  className="button bg-green-500"
+                >
+                  Accept Request to Join Label{" "}
+                </button>
+              </div>
             ) : (
               <>
                 <div>
@@ -812,7 +1075,6 @@ const Profile = () => {
                     onClick={() => handleAddUserToLabel()}
                     className="button"
                   >
-                    {console.log(userData.joinedRecordLabels)}
                     Offer to Join Label{" "}
                   </button>
                 </div>
@@ -853,18 +1115,24 @@ const Profile = () => {
                 ? userData.skills.map((skill, index) => (
                     <li key={index} className="skill-list-item">
                       <span className="skill-label">{skill}</span>
-                      <button
-                        onClick={() => {
-                          toggleEndorseSkill(skill);
-                        }}
-                        className={`endorse-button ${
-                          endorsedSkills[skill] ? "endorsed" : ""
-                        }`}
-                      >
-                        {endorsedSkill(skill)
-                          ? "Revoke Endorsement"
-                          : "Endorse"}
-                      </button>
+                      {userId !== loggedInId ? (
+                        <>
+                          <button
+                            onClick={() => {
+                              toggleEndorseSkill(skill);
+                            }}
+                            className={`endorse-button ${
+                              endorsedSkills[skill] ? "endorsed" : ""
+                            }`}
+                          >
+                            {endorsedSkill(skill)
+                              ? "Revoke Endorsement"
+                              : "Endorse"}
+                          </button>
+                        </>
+                      ) : (
+                        <></>
+                      )}
                     </li>
                   ))
                 : "No skills listed"}

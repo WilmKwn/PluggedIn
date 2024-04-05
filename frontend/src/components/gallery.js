@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
-<<<<<<< Updated upstream
-import { signOut } from "firebase/auth";
-=======
-
 import axios from "axios";
->>>>>>> Stashed changes
 
-import { storage, ref, getDownloadURL } from "./firebase";
-
-import { useNavigate } from "react-router-dom";
-import { auth } from "./firebase";
-import axios from "axios";
 import MainBanner from "./MainBanner";
 import "../App.css";
 import "../index.css";
@@ -19,29 +9,44 @@ import Post from "./Post";
 import Song from "./Song";
 
 const Gallery = () => {
+  let fetchedPosts = [];
+  let sortedPosts = [];
+
   const [posts, setPosts] = useState([]);
   const [tags, setTags] = useState([]);
+  const [sortBy, setSortBy] = useState("Recent");
 
-  useEffect(() => {
+  const fetchPosts = () => {
+    let apiUrl = "http://localhost:5001/post";
+
     axios
-      .get("http://localhost:5001/post")
+      .get(apiUrl)
       .then((res) => {
-        const fetchedPosts = res.data;
-        const filteredPosts = fetchedPosts.reverse().filter((post) => {
+        fetchedPosts = res.data;
+        fetchedPosts = fetchedPosts.reverse().filter((post) => {
           return post.tags.includes("#song");
         });
-        setPosts(filteredPosts);
+
+        sortedPosts = [...fetchedPosts].sort((a, b) => {
+          const likesA = a.reactions.likes || 0;
+          const likesB = b.reactions.likes || 0;
+          return likesB - likesA;
+        });
+
+        let finalPosts;
+
+        if (sortBy === "Recent") {
+          finalPosts = fetchedPosts;
+        } else {
+          finalPosts = sortedPosts;
+        }
+
+        setPosts(finalPosts);
       })
       .catch((err) => {
-        console.log("Cant load posts: ", err);
+        console.log("Can't load posts: ", err);
       });
 
-<<<<<<< Updated upstream
-    axios.get("http://localhost:5001/song").then(res => {
-      const d = res.data;
-      setTags(d);
-    });
-=======
     axios.get("http://localhost:5001/song").then((res) => {
       const d = res.data;
       setTags(d);
@@ -58,23 +63,36 @@ const Gallery = () => {
       fetchPosts();
     };
     fetchPosts();
->>>>>>> Stashed changes
   }, []);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [sortBy]);
+
+  const toggleSortBy = () => {
+    const newSortBy = sortBy === "Recent" ? "Popular" : "Recent";
+    setSortBy(newSortBy);
+  };
 
   return (
     <div className="container">
       <MainBanner />
+      <div className="sort-by-text">Sort By</div>
+      <div className="toggle-button-container">
+        <button className="toggle-button" onClick={toggleSortBy}>
+          {sortBy}
+        </button>
+      </div>
       <div className="w-full h-full text-center pt-28">
         <div className="w-full h-full flex flex-col items-center pt-5 pb-20">
-          {posts.length === 0 && (
-            <div>Hello! This is your feed, a place to view humblebrags.</div>
-          )}
-          {posts.map((post, index) => (
-            <Post key={index} postParam={post} />
-          ))}
-          {tags.map((tag, index) => (
-            <Song key={index} songParam={tag} />
-          ))}
+          <div className="posts-container">
+            {posts.map((post) => (
+              <Post key={post._id} postParam={post} />
+            ))}
+            {tags.map((tag, index) => (
+              <Song key={index} songParam={tag} />
+            ))}
+          </div>
         </div>
       </div>
       <MainBottomBar />

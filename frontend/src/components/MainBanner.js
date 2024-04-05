@@ -12,12 +12,8 @@ import { faNewspaper } from "@fortawesome/free-solid-svg-icons";
 
 import Notification from "./Notification";
 
-<<<<<<< Updated upstream
-import { toast } from 'react-toastify';
-=======
 import { toast } from "react-toastify";
 import ringingBell from "../ringing.gif";
->>>>>>> Stashed changes
 
 import "../App.css";
 import "../index.css";
@@ -34,11 +30,6 @@ const MainBanner = () => {
         console.error("Sign out error:", error);
       });
   };
-
-  const handleExplore = () => {
-    navigate("/explore"); // Navigate to "/explore" or any route you have set up for this
-  };
-
   const handleSearch = () => {
     navigate("/search");
   };
@@ -71,8 +62,6 @@ const MainBanner = () => {
       });
   };
 
-<<<<<<< Updated upstream
-=======
   const [openPopup, setOpenPopup] = useState(false);
   const showPopup = () => {
     return (
@@ -92,15 +81,17 @@ const MainBanner = () => {
     );
   };
 
->>>>>>> Stashed changes
   // useEffect(() => {
   //   toast.info(notifications[0]);
   // }, [notifications]);
+
+  const [isNewNotis, setIsNewNotis] = useState("");
 
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:8282");
     ws.onmessage = (event) => {
       getNotifications();
+      setIsNewNotis(true);
     };
     getNotifications();
   }, []);
@@ -110,7 +101,7 @@ const MainBanner = () => {
       <div className="fixed w-full flex justify-between items-center p-3 pl-10 pr-10 bg-emerald-950">
         <div>
           <button onClick={handleSearch} className="button">
-            Explore <FontAwesomeIcon icon={faSearch} />
+            Search <FontAwesomeIcon icon={faSearch} />
           </button>
         </div>
 
@@ -133,9 +124,6 @@ const MainBanner = () => {
             News <FontAwesomeIcon icon={faNewspaper} />
           </button>
         </nav>
-<<<<<<< Updated upstream
-        <button onClick={() => setOpenNoti(!openNoti)} className="absolute text-2xl bg-gray-500 p-1 right-12 top-32 hover:bg-gray-400">🔔</button>
-=======
         {!isNewNotis ? (
           <button
             onClick={() => setOpenNoti(!openNoti)}
@@ -154,14 +142,14 @@ const MainBanner = () => {
             className="absolute text-2xlp-1 right-12 top-32 w-10"
           />
         )}
->>>>>>> Stashed changes
         {openNoti && (
           <div className="absolute w-1/4 h-80 bg-gray-300 p-1 right-12 top-44 px-2 py-2 overflow-y-scroll border-2 border-black">
             {notifications.map((noti, index) => (
-              <Notification key={index} message={noti} />
+              <Notification key={index} message={noti} func={setOpenPopup} />
             ))}
           </div>
         )}
+        {openPopup && showPopup(openPopup)}
         <nav>
           <button onClick={handleProfile} className="button">
             Your Profile <FontAwesomeIcon icon={faUser} />
