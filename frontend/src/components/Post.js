@@ -9,7 +9,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { library } from "@fortawesome/fontawesome-svg-core";
 
-const Post = ({ postParam }) => {
+const Post = ({ postParam, input }) => {
+  useEffect(() => {
+    const arr = input.split(" ");
+    if (arr[0] === "like" && arr[1] == "post") {
+      handleLike();
+    }
+  }, [input]);
+
   const [post] = useState(postParam);
   const navigate = useNavigate();
   // Dummy user details
@@ -35,7 +42,7 @@ const Post = ({ postParam }) => {
         setUserData(res.data); // Update state with user data
       })
       .catch((error) => {
-        console.error("Error:", error);
+        // console.error("Error:", error);
       });
   }, []);
   useEffect(() => {

@@ -408,6 +408,13 @@ p {
   color: #555;
 }
 
+.voice-assist {
+  position: absolute;
+  left: 20px; /* Adjust as needed */
+  top: 25%;
+  font-size: 16px;
+}
+
 .toggle-button-container {
   position: absolute;
   left: 20px; /* Adjust as needed */

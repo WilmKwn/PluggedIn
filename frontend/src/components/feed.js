@@ -6,6 +6,8 @@ import Post from "./Post";
 import "../App.css";
 import "../index.css";
 
+import useSpeechToText from "./hooks/useSpeechToText";
+
 const Feed = () => {
   let fetchedPosts = [];
   let sortedPosts = [];
@@ -15,6 +17,7 @@ const Feed = () => {
   const [sortBy, setSortBy] = useState("Recent");
   const [searchText, setSearchText] = useState(""); // Define searchText state
 
+  const {text, start, stop, listening} = useSpeechToText();
   
   const fetchPosts = () => {
     let apiUrl = "http://localhost:5001/post";
@@ -74,7 +77,7 @@ const Feed = () => {
 
     const ws = new WebSocket("ws://localhost:8080");
     ws.onmessage = (event) => {
-      // fetchPosts();
+      fetchPosts();
     };
   }, []);
   
@@ -96,12 +99,20 @@ const Feed = () => {
     setSearchText(event.target.value);
   };
 
+  const handleVoiceButton = () => {
+    if (listening) {
+      stop();
+    } else {
+      start();
+    }
+  }
+
   return (
     <div className="container">
       <MainBanner />
-      {/* Sort By text */}
+      <button onClick={()=>handleVoiceButton()} className={`voice-assist ${listening ? 'bg-red-300' : 'bg-gray-300'} p-2`}>Voice Assist</button>
+
       <div className="sort-by-text">Sort By</div>
-      {/* Toggle button */}
       <div className="toggle-button-container">
         <button className="toggle-button" onClick={() => toggleSortBy()}>
           {sortBy}
@@ -121,7 +132,7 @@ const Feed = () => {
           {/* Render posts */}
           <div className="posts-container">
             {posts.map((post) => (
-              <Post key={post._id} postParam={post} />
+              <Post key={post._id} postParam={post} input={text}/>
             ))}
           </div>
         </div>
