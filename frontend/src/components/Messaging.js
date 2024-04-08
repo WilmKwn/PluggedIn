@@ -205,13 +205,36 @@ const Messaging = ({ title }) => {
                         <>
                           <p>You have a conversation with {currFriendObj.realname}.</p>
                           {/* Display all messages in the selected conversation */}
-                          {selectedConversation.messages.map((message, index) => (
+                          {/*selectedConversation.messages.map((message, index) => (
                             <div key={index} className={`mb-2 ${message.senderUid === userId ? ' text-sm ml-auto bg-gray-300' : ' text-sm bg-blue-500 text-white'} p-2 rounded-md`} style={{ maxWidth: '75%' }}>
                               <p className="font-semibold">{message.senderUid === userId ? 'You' : currFriendObj.realname}:</p>
                               <p>{message.content}</p>
                               <p className="text-gray-500 text-xs mt-1">{new Date(message.sent).toLocaleString()}</p>
                             </div>
-                          ))}
+                          ))*/}
+                          {selectedConversation.messages.map((message, index) => {
+  // Regular expression to match Tenor GIF URLs
+  const tenorGifRegex = /^https?:\/\/tenor\.com\/view\/.*$/i;
+
+  // Check if the message content contains a Tenor GIF URL
+  const containsTenorGif = tenorGifRegex.test(message.content);
+  console.log(containsTenorGif);
+  return (
+    <div key={index} className={`mb-2 ${message.senderUid === userId ? ' text-sm ml-auto bg-gray-300' : ' text-sm bg-blue-500 text-white'} p-2 rounded-md`} style={{ maxWidth: '75%' }}>
+      <p className="font-semibold">{message.senderUid === userId ? 'You' : currFriendObj.realname}:</p>
+      {/* Check if the message contains a Tenor GIF */}
+      {containsTenorGif ? (
+        // If a Tenor GIF is present, embed it
+        <img src="https://tenor.com/view/my-wife-manhog-manhogging-man-hog-gif-25996833" alt="Tenor GIF" />
+      ) : (
+        // If no Tenor GIF is present, display the message content
+        <p>{message.content}</p>
+      )}
+      <p className="text-gray-500 text-xs mt-1">{new Date(message.sent).toLocaleString()}</p>
+    </div>
+  );
+})}
+
                         </>
                       )
                       : `Send a message to start a new conversation with ${currFriendObj.realname}!`}
