@@ -156,26 +156,28 @@ const Messaging = ({ title }) => {
 
     return;
 }
-function tenorCallback_share(responsetext)
-{
-    // no action is needed in the share callback
-}
+
 // callback for the top 8 GIFs of search
-function tenorCallback_search(responsetext)
-{
-    // Parse the JSON response
-    var response_objects = JSON.parse(responsetext);
+function tenorCallback_search(responsetext) {
+  // Parse the JSON response
+  var response_objects = JSON.parse(responsetext);
 
-    var top_10_gifs = response_objects["results"];
+  var top_10_gifs = response_objects["results"];
 
-    // load the GIFs -- for our example we will load the first GIFs preview size (nanogif) and share size (gif)
+  // Load all the GIFs
+  for (let i = 0; i < top_10_gifs.length; i++) {
+      const previewGifUrl = top_10_gifs[i]["media_formats"]["nanogif"]["url"];
+      const shareGifUrl = top_10_gifs[i]["media_formats"]["gif"]["url"];
 
-    document.getElementById("preview_gif").src = top_10_gifs[0]["media_formats"]["nanogif"]["url"];
+      // Create elements for each GIF and append to the container
+      const previewImg = document.createElement("img");
+      previewImg.src = previewGifUrl;
+      document.getElementById("preview_gifs_container").appendChild(previewImg);
 
-    document.getElementById("share_gif").src = top_10_gifs[0]["media_formats"]["gif"]["url"];
-
-    return;
-
+      const shareImg = document.createElement("img");
+      shareImg.src = shareGifUrl;
+      document.getElementById("share_gifs_container").appendChild(shareImg);
+  }
 }
 
 
@@ -330,13 +332,14 @@ function grab_data()
                 gif
               </button>
               {gifModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
+        <div className="flex fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
           <div className="bg-white p-4 rounded-md">
-          <h2># 1 GIF loaded - preview image</h2>
-<img id="preview_gif" src="" alt=""></img>
-
-<h2># 1 GIF loaded - share image</h2>
-<img id="share_gif" src="" alt=""></img>
+          <div id="preview_gifs_container" className="overflow-y-auto max-h-96">
+            {/* Container for preview GIFs */}
+        </div>
+        <div id="share_gifs_container" className="overflow-y-auto max-h-96">
+            {/* Container for share GIFs */}
+        </div> 
 
             <button onClick={closeGifModal} className="button mt-4">
               Close
