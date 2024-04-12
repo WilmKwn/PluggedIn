@@ -200,13 +200,8 @@ const Messaging = ({ title }) => {
     setTop_10_gifs(response_objects["results"]);
     // Load all the GIFs
     for (let i = 0; i < top_10_gifs.length; i++) {
-      const previewGifUrl = top_10_gifs[i]["media_formats"]["nanogif"]["url"];
       const shareGifUrl = top_10_gifs[i]["media_formats"]["gif"]["url"];
 
-      // Create elements for each GIF and append to the container
-      const previewImg = document.createElement("img");
-      previewImg.src = previewGifUrl;
-      document.getElementById("preview_gifs_container").appendChild(previewImg);
 
       const shareImg = document.createElement("img");
       shareImg.src = shareGifUrl;
