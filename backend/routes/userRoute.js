@@ -118,6 +118,31 @@ router.post('/:id/skills', async (req, res) => {
         return res.status(500).send(err.message);
     }
 });
+
+// add hashtag to user
+router.post('/:id/hashtags', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { hashtag } = req.body;
+
+        // Find the user by id
+        const user = await User.findOne({ uid: id });
+        // If user found, add the skill
+        if (user) {
+            if (!user.hashtags) {
+                user.hashtags = [];
+            }
+            user.hashtags.push(hashtag);
+            await user.save();
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).send('User not found');
+        }
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+
 // add friend to user
 router.post('/:id/friends', async (req, res) => {
     try {
@@ -207,6 +232,24 @@ router.delete('/:id/skills/:delSkill', async (req, res) => {
         // If user found, delete the skill
         if (user) {
             user.skills = user.skills.filter(skill => skill != delSkill);
+            await user.save();
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).send('User not found');
+        }
+    } catch (err) {
+        return res.status(500).send(err.message);
+    }
+});
+// delete hashtag from user
+router.delete('/:id/hashtags/:delHashtag', async (req, res) => {
+    try {
+        const { id, delHashtag } = req.params;
+        // Find the user by id
+        const user = await User.findOne({ uid: id });
+        // If user found, delete the skill
+        if (user) {
+            user.hashtags = user.hashtags.filter(hashtag => hashtag != delHashtag);
             await user.save();
             return res.status(200).json(user);
         } else {

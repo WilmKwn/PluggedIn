@@ -88,6 +88,9 @@ const userSchema = mongoose.Schema(
         notifications: {
             type: [String],
             required: true
+        },
+        hashtags: {
+            type: [String],
         }
     }
 );

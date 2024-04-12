@@ -66,7 +66,7 @@ const Search = () => {
 
     let temp = [];
     temp = artists.filter((artist) => {
-      if (artist.realname.toLowerCase().includes(search)) {
+      if (artist.realname.toLowerCase().includes(search) || artist.hashtags && artist.hashtags.some((hashtag) => hashtag.includes(search))) {
         return artist;
       }
     });

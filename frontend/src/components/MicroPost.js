@@ -127,11 +127,11 @@ const MicroPost = ({ postParam }) => {
 
     axios.get(`http://localhost:5001/user/${post.owner}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setUsername(res.data.realname);
         if (res.data.profilePic !== "No file chosen") {
           const profilePicRef = ref(storage, "user/" + res.data.profilePic);
-          console.log(profilePicRef);
+          // console.log(profilePicRef);
           getDownloadURL(profilePicRef)
             .then((url) => {
               setUserProfilePic(url);

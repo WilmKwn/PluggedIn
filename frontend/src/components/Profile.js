@@ -1015,6 +1015,21 @@ const Profile = () => {
             </ul>
           </div>
         </div>
+        
+        <div className="edit-profile-container">
+          <div className="skills-profile">
+            <h2>Hashtags</h2>
+            <ul>
+              {userData.hashtags && userData.hashtags.length > 0
+                ? userData.hashtags.map((hashtag) => (
+                  <li key={hashtag} className="skill-list-item">
+                    <span className="skill-label">{hashtag}</span>
+                  </li>
+                ))
+                : `No hashtags`}
+            </ul>
+          </div>
+        </div>
       </div>
     );
   };
