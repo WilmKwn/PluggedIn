@@ -12,9 +12,11 @@ const AddPost = () => {
   const [postMedia, setPostMedia] = useState(null);
   const [postMediaName, setPostMediaName] = useState("");
   const [postTags, setPostTags] = useState("");
+
   const [isSong, setIsSong] = useState(false);
   const [isProducerTag, setIsProducerTag] = useState(false);
   const [isNews, setIsNews] = useState(false);
+  const [isJob, setIsJob] = useState(false);
 
   const navigate = useNavigate();
 
@@ -30,20 +32,32 @@ const AddPost = () => {
 
     setIsSong(false);
     setIsNews(false);
+    setIsJob(false);
   };
 
   const handleSongSwitchChange = (newValue) => {
     setIsSong(newValue);
     if (newValue) {
       setIsNews(false);
+      setIsJob(false);
     }
   };
-
+  
   const handleNewsSwitchChange = (newValue) => {
     setIsNews(newValue);
     if (newValue) {
       setIsSong(false);
       setIsProducerTag(false);
+      setIsJob(false);
+    }
+  };
+  
+  const handleJobSwitchChange = (newValue) => {
+    setIsJob(newValue);
+    if (newValue) {
+      setIsSong(false);
+      setIsProducerTag(false);
+      setIsNews(false);
     }
   };
 
@@ -64,6 +78,9 @@ const AddPost = () => {
     }
     if (isNews) {
       tagsArray.push("#news");
+    }
+    if (isJob) {
+      tagsArray.push("#job");
     }
 
     if (postTags.trim()) {
@@ -184,6 +201,15 @@ const AddPost = () => {
               <Switch
                 checked={isNews}
                 onChange={handleNewsSwitchChange} // Updated to use the new handler
+                onColor="#007AFF"
+                offColor="#E5E5EA"
+              />
+            </div>
+            <div className="flex items-center justify-center mb-3">
+              <span className="mr-2">Job</span>
+              <Switch
+                checked={isJob}
+                onChange={handleJobSwitchChange} // Updated to use the new handler
                 onColor="#007AFF"
                 offColor="#E5E5EA"
               />

@@ -29,7 +29,7 @@ const Feed = () => {
         fetchedPosts.reverse();
         
         fetchedPosts = fetchedPosts.filter((post) =>
-        connections.includes(post.owner)
+          connections.includes(post.owner) || post.owner == localStorage.getItem("userId")
         );
         
         sortedPosts = [...fetchedPosts].sort((a, b) => {

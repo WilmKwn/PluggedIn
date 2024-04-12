@@ -181,7 +181,6 @@ const Post = ({ postParam, input }) => {
             notis
           }
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
-          alert("liked notification sent");
         }).catch(err => console.log(err));
     } catch (err) {
       console.log(err.message);
@@ -228,7 +227,6 @@ const Post = ({ postParam, input }) => {
           }
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
         }).catch(err => console.log(err));
-        alert("disliked notification sent");
     } catch (err) {
       console.log(err.message);
     }
@@ -267,7 +265,6 @@ const Post = ({ postParam, input }) => {
             notis
           }
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
-          alert("laughed notification sent");
         }).catch(err => console.log(err));
     } catch (err) {
       console.log(err.message);
@@ -315,7 +312,6 @@ const Post = ({ postParam, input }) => {
             notis
           }
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
-          alert("reposted notification sent");
         }).catch(err => console.log(err));
       } catch (err) {
         console.log(err.message);
@@ -350,7 +346,6 @@ const Post = ({ postParam, input }) => {
             notis
           }
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
-          alert("commented notification sent");
         }).catch(err => console.log(err));
       } catch (err) {
         console.log(err.message);
