@@ -21,6 +21,7 @@ const Messaging = ({ title }) => {
     friends: [],
   });
   const [messageText, setMessageText] = useState("");
+  const [top_10_gifs, setTop_10_gifs] = useState([]);
   const [friendObjArr, setFriendObjArr] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [currFriendObj, setCurrFriendObj] = useState({
@@ -195,8 +196,8 @@ const Messaging = ({ title }) => {
     // Parse the JSON response
     var response_objects = JSON.parse(responsetext);
 
-    var top_10_gifs = response_objects["results"];
-
+    //var top_10_gifs = response_objects["results"];
+    setTop_10_gifs(response_objects["results"]);
     // Load all the GIFs
     for (let i = 0; i < top_10_gifs.length; i++) {
       const previewGifUrl = top_10_gifs[i]["media_formats"]["nanogif"]["url"];
@@ -239,6 +240,22 @@ const Messaging = ({ title }) => {
     // data will be loaded by each call's callback
     return;
   }
+  function renderGifs() {
+    // Assuming top_10_gifs is an array containing GIF objects
+    return top_10_gifs.map((gif, index) => (
+        <img
+            key={index}
+            src={gif.media_formats.gif.url}
+            alt={`GIF ${index + 1}`}
+            className="cursor-pointer"
+            onClick={() => handleGifClick(gif.media_formats.gif.url)}
+        />
+    ));
+}
+const handleGifClick = (shareGifUrl) => {
+  setMessageText(shareGifUrl);
+
+};
 
   const modalStyles = {
     content: {
@@ -357,13 +374,13 @@ const Messaging = ({ title }) => {
                           ))*/}
                         {selectedConversation.messages.map((message, index) => {
                           // Regular expression to match Tenor GIF URLs
-                          const tenorGifRegex =
-                            /^https?:\/\/tenor\.com\/view\/.*$/i;
-
+                          //const tenorGifRegex = /^https?:\/*\/tenor\.com\/view\/.*$/i;
+                          const tenorGifRegex = /^https:\/\/.*tenor\.com.*$/;
                           // Check if the message content contains a Tenor GIF URL
                           const containsTenorGif = tenorGifRegex.test(
                             message.content
                           );
+                          console.log("reg test");
                           console.log(containsTenorGif);
                           return (
                             <div
@@ -385,7 +402,7 @@ const Messaging = ({ title }) => {
                               {containsTenorGif ? (
                                 // If a Tenor GIF is present, embed it
                                 <img
-                                  src="https://tenor.com/view/my-wife-manhog-manhogging-man-hog-gif-25996833"
+                                  src={message.content}
                                   alt="Tenor GIF"
                                 />
                               ) : (
@@ -435,26 +452,20 @@ const Messaging = ({ title }) => {
                 gif
               </button>
               {gifModalOpen && (
-                <div className="flex fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
-                  <div className="bg-white p-4 rounded-md">
-                    <div
-                      id="preview_gifs_container"
-                      className="overflow-y-auto max-h-96"
-                    >
-                      {/* Container for preview GIFs */}
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
+                <div className="bg-white p-4 rounded-md">
+                    {/*<div id="preview_gifs_container" className="overflow-y-auto max-h-96">
+                        
+              </div>*/}
+                    <div id="share_gifs_container" className="overflow-y-auto max-h-96">
+                        {renderGifs()}
                     </div>
-                    <div
-                      id="share_gifs_container"
-                      className="overflow-y-auto max-h-96"
-                    >
-                      {/* Container for share GIFs */}
-                    </div>
-
+            
                     <button onClick={closeGifModal} className="button mt-4">
-                      Close
+                        Close
                     </button>
-                  </div>
                 </div>
+            </div>
               )}
             </div>
           </div>
