@@ -55,16 +55,23 @@ const Messaging = ({ title }) => {
             .then((friendRes) => {
               const { uid, profilePic, realname } = friendRes.data;
               const picRef = ref(storage, "user/" + profilePic);
-              getDownloadURL(picRef)
-                .then((url) => {
-                  setFriendObjArr((prevArr) => [
-                    ...prevArr,
-                    { uid, profilePic, realname, url },
-                  ]);
-                })
-                .catch((error) => {
-                  console.error("Error getting pfp url:", error);
-                });
+              for (const friend in friendObjArr) {
+                if (friend.uid = friendId) {
+                  friendObjArr.delete(friend);
+                }
+              }
+              if (friendRes.data.friends.includes(userId)) {
+                getDownloadURL(picRef)
+                  .then((url) => {
+                    setFriendObjArr((prevArr) => [
+                      ...prevArr,
+                      { uid, profilePic, realname, url },
+                    ]);
+                  })
+                  .catch((error) => {
+                    console.error("Error getting pfp url:", error);
+                  });
+              }
             })
             .catch((error) => {
               console.error("Error fetching friend data:", error);
@@ -238,19 +245,19 @@ const Messaging = ({ title }) => {
   function renderGifs() {
     // Assuming top_10_gifs is an array containing GIF objects
     return top_10_gifs.map((gif, index) => (
-        <img
-            key={index}
-            src={gif.media_formats.gif.url}
-            alt={`GIF ${index + 1}`}
-            className="cursor-pointer"
-            onClick={() => handleGifClick(gif.media_formats.gif.url)}
-        />
+      <img
+        key={index}
+        src={gif.media_formats.gif.url}
+        alt={`GIF ${index + 1}`}
+        className="cursor-pointer"
+        onClick={() => handleGifClick(gif.media_formats.gif.url)}
+      />
     ));
-}
-const handleGifClick = (shareGifUrl) => {
-  setMessageText(shareGifUrl);
+  }
+  const handleGifClick = (shareGifUrl) => {
+    setMessageText(shareGifUrl);
 
-};
+  };
 
   const modalStyles = {
     content: {
@@ -380,11 +387,10 @@ const handleGifClick = (shareGifUrl) => {
                           return (
                             <div
                               key={index}
-                              className={`mb-2 ${
-                                message.senderUid === userId
+                              className={`mb-2 ${message.senderUid === userId
                                   ? " text-sm ml-auto bg-gray-300"
                                   : " text-sm bg-blue-500 text-white"
-                              } p-2 rounded-md`}
+                                } p-2 rounded-md`}
                               style={{ maxWidth: "75%" }}
                             >
                               <p className="font-semibold">
@@ -448,19 +454,19 @@ const handleGifClick = (shareGifUrl) => {
               </button>
               {gifModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
-                <div className="bg-white p-4 rounded-md">
+                  <div className="bg-white p-4 rounded-md">
                     {/*<div id="preview_gifs_container" className="overflow-y-auto max-h-96">
                         
               </div>*/}
                     <div id="share_gifs_container" className="overflow-y-auto max-h-96">
-                        {renderGifs()}
+                      {renderGifs()}
                     </div>
-            
+
                     <button onClick={closeGifModal} className="button mt-4">
-                        Close
+                      Close
                     </button>
+                  </div>
                 </div>
-            </div>
               )}
             </div>
           </div>
