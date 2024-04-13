@@ -105,6 +105,7 @@ const Post = ({ postParam, input }) => {
   const [dislikeStatus, setDislikeStatus] = useState(false);
   const [laughStatus, setLaughStatus] = useState(false);
   const [repostStatus, setRepostStatus] = useState(false);
+  const [hiddenBy, setHiddenBy] = useState([])
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [laughs, setLaughs] = useState(0);
@@ -143,6 +144,7 @@ const Post = ({ postParam, input }) => {
     setLaughs(post.reactions.laughs);
     setDislikes(post.reactions.dislikes);
     setReposts(post.reactions.reposts);
+    setHiddenBy(post.hiddenBy);
 
   }, [post.media, post.comments]);
 
@@ -173,15 +175,15 @@ const Post = ({ postParam, input }) => {
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
       axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
-          const data = res.data;
-          const notis = data.notifications;
-          notis.push(`${loggedInData.realname} liked your post: ${post.title}`);
-          const newData = {
-            ...data,
-            notis
-          }
-          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
-        }).catch(err => console.log(err));
+        const data = res.data;
+        const notis = data.notifications;
+        notis.push(`${loggedInData.realname} liked your post: ${post.title}`);
+        const newData = {
+          ...data,
+          notis
+        }
+        axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+      }).catch(err => console.log(err));
     } catch (err) {
       console.log(err.message);
     }
@@ -218,15 +220,15 @@ const Post = ({ postParam, input }) => {
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
       axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
-          const data = res.data;
-          const notis = data.notifications;
-          notis.push(`${loggedInData.realname} disliked your post: ${post.title}`);
-          const newData = {
-            ...data,
-            notis
-          }
-          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
-        }).catch(err => console.log(err));
+        const data = res.data;
+        const notis = data.notifications;
+        notis.push(`${loggedInData.realname} disliked your post: ${post.title}`);
+        const newData = {
+          ...data,
+          notis
+        }
+        axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+      }).catch(err => console.log(err));
     } catch (err) {
       console.log(err.message);
     }
@@ -257,15 +259,15 @@ const Post = ({ postParam, input }) => {
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
       axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
-          const data = res.data;
-          const notis = data.notifications;
-          notis.push(`${loggedInData.realname} laughed at post: ${post.title}`);
-          const newData = {
-            ...data,
-            notis
-          }
-          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
-        }).catch(err => console.log(err));
+        const data = res.data;
+        const notis = data.notifications;
+        notis.push(`${loggedInData.realname} laughed at post: ${post.title}`);
+        const newData = {
+          ...data,
+          notis
+        }
+        axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+      }).catch(err => console.log(err));
     } catch (err) {
       console.log(err.message);
     }
@@ -298,6 +300,7 @@ const Post = ({ postParam, input }) => {
         news: post.news,
         date: post.date,
         repost: true,
+        hiddenBy: post.hiddenBy,
         originalCreator: post.owner,
       };
       console.log(repostStatus)
@@ -318,6 +321,11 @@ const Post = ({ postParam, input }) => {
       }
     }
   };
+
+  const handleHide = () => {
+    console.log("Hide")
+    console.log(post.hiddenBy)
+  }
 
   const handleCommentSubmit = (event) => {
     event.preventDefault();
@@ -428,8 +436,12 @@ const Post = ({ postParam, input }) => {
                   <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
                     {/*  actions for each profile card */}
                     <div className="ml-4">
-                      <p className="text-gray-800 font-semibold">Button 1</p>
-                      {/* Add more information or actions here */}
+                      {/* <p className="text-gray-800 font-semibold">Hide Post</p>
+                      Add more information or actions here */}
+                      <button
+                        className="text-gray-800 font-semibold"
+                        onClick={handleHide}
+                      >Hide Post</button>
                     </div>
                   </div>
                   <div className="flex items-center h-1/3 border-b border-gray-300 p-2">

@@ -7,13 +7,13 @@ const useSpeechToText = () => {
     const recognition = useRef(null);
 
     useEffect(() => {
-        const {webkitSpeechRecognition} = window;
+        const { webkitSpeechRecognition } = window;
         recognition.current = new webkitSpeechRecognition();
         recognition.current.continuous = true;
         recognition.current.lang = 'en-US';
 
         recognition.current.onresult = (event) => {
-            setText(event.results[event.results.length-1][0].transcript);
+            setText(event.results[event.results.length - 1][0].transcript);
         }
     }, []);
 
@@ -22,13 +22,13 @@ const useSpeechToText = () => {
         recognition.current.start();
         setListening(true);
     }
-    
+
     const stop = () => {
         recognition.current.stop();
         setListening(false);
     }
 
-    return {text, listening, start, stop};
+    return { text, listening, start, stop };
 }
 
 export default useSpeechToText;
