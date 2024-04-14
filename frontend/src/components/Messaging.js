@@ -437,7 +437,7 @@ const Messaging = ({ title }) => {
                 className="button rounded-r-md ml-2 mb-1"
               >
                 <FontAwesomeIcon
-                  icon={listening ? faMicrophoneSlash : faMicrophone}
+                  icon={!listening ? faMicrophoneSlash : faMicrophone}
                 />
               </button>
               <button

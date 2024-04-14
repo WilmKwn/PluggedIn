@@ -9,6 +9,7 @@ import ProfileBanner from "./ProfileBanner";
 import MicroPost from "./MicroPost";
 
 import { useState, useEffect } from "react";
+import Messaging from "./Messaging";
 
 const Banner = (id) => {
   const navigate = useNavigate();
@@ -160,8 +161,49 @@ const Profile = () => {
         console.error("Error revoking endorsement skill:", error);
       });
   };
+  const [messageText, setMessageText] = useState("");
+  
+  const handleSendMessageWithConnection = () => {
+    if (messageText.trim() !== "" && userId !== "") {
+      // Check if the message is not empty
+      const newMessage = {
+        user1id: loggedInId,
+        user2id: userId,
+        content: messageText,
+        //timestamp: new Date().toISOString(),
+      };
 
+      axios
+        .post(`http://localhost:5001/conversation/message`, newMessage)
+        .then((response) => {
+          setMessageText("");
 
+          // update notifications of the recipient
+          axios
+            .get(`http://localhost:5001/user/${userId}`)
+            .then((res) => {
+              const data = res.data;
+              const notis = data.notifications;
+              notis.push(`New Message from ${loggedInData.name}`);
+              const newData = {
+                ...data,
+                notis,
+              };
+              axios.put(
+                `http://localhost:5001/user/${userId}`,
+                newData
+              );
+            });
+        })
+        .catch((error) => {
+          console.error("Error sending message:", error);
+        });
+    }
+    Messaging.setCurrFriendObj({
+      uid: userId,
+      realname: userData.name,
+    });
+  };
   const toggleEndorseSkill = (skill) => {
     // Check the current endorsement state for the skill
     const hasEndorsed = endorsedSkill(skill);
