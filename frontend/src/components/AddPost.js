@@ -5,6 +5,7 @@ import axios from "axios";
 import { auth, storage, ref, uploadBytes } from "./firebase";
 import { useNavigate } from "react-router-dom";
 import Switch from "react-ios-switch";
+import { faHandMiddleFinger } from "@fortawesome/free-solid-svg-icons";
 
 const AddPost = () => {
   const [postTitle, setPostTitle] = useState("");
@@ -42,7 +43,7 @@ const AddPost = () => {
       setIsJob(false);
     }
   };
-  
+
   const handleNewsSwitchChange = (newValue) => {
     setIsNews(newValue);
     if (newValue) {
@@ -51,7 +52,7 @@ const AddPost = () => {
       setIsJob(false);
     }
   };
-  
+
   const handleJobSwitchChange = (newValue) => {
     setIsJob(newValue);
     if (newValue) {
@@ -107,6 +108,7 @@ const AddPost = () => {
         laughs: 0,
       },
       isSong: isSong,
+      hiddenBy: []
     };
 
     // Attempt to submit the post
