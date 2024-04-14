@@ -438,8 +438,7 @@ const Post = ({ postParam, input }) => {
                   <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
                     {/*  actions for each profile card */}
                     <div className="ml-4">
-                      {/* <p className="text-gray-800 font-semibold">Hide Post</p>
-                      Add more information or actions here */}
+                      {/*Add more information or actions here */}
                       <button
                         className="text-gray-800 font-semibold"
                         onClick={handleHide}
@@ -449,15 +448,19 @@ const Post = ({ postParam, input }) => {
                   <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
                     {/*  actions for each profile card */}
                     <div className="ml-4">
-                      <p className="text-gray-800 font-semibold">Button 2</p>
                       {/* Add more information or actions here */}
+                      <button
+                        className="text-gray-800 font-semibold"
+                      >Block User</button>
                     </div>
                   </div>
                   <div className="flex items-center h-1/3 border-gray-300 p-2">
                     {/*  actions for each profile card */}
                     <div className="ml-4">
-                      <p className="text-gray-800 font-semibold">Button 3</p>
                       {/* Add more information or actions here */}
+                      <button
+                        className="text-gray-800 font-semibold"
+                      >Message User</button>
                     </div>
                   </div>
                 </div>
