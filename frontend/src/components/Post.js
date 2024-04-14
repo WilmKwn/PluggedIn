@@ -323,8 +323,10 @@ const Post = ({ postParam, input }) => {
   };
 
   const handleHide = () => {
-    console.log("Hide")
-    console.log(post.hiddenBy)
+    const newHiddenBy = [...hiddenBy, loggedInId];
+    setHiddenBy(newHiddenBy);
+    axios.put(`http://localhost:5001/post/${post._id}`, { hiddenBy: newHiddenBy });
+    window.location.reload();
   }
 
   const handleCommentSubmit = (event) => {
@@ -406,7 +408,7 @@ const Post = ({ postParam, input }) => {
 
   return (
     <div>
-      {(userData.blockedUsers.includes(loggedInId) || loggedInData.blockedUsers.includes(userId)) ? (
+      {(userData.blockedUsers.includes(loggedInId) || loggedInData.blockedUsers.includes(userId) || post.hiddenBy.includes(loggedInId)) ? (
         <><div></div></>
       ) : (<>
         <div className="post-card">
