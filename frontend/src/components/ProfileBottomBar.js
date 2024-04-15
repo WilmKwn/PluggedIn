@@ -10,7 +10,7 @@ import "../App.css";
 import "../index.css";
 // Search,
 
-const ProfileBottomBar = ({currentPlace}) => {
+const ProfileBottomBar = ({ currentPlace }) => {
   const navigate = useNavigate();
   const handleSettings = () => {
     navigate("/settings");

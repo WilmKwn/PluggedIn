@@ -793,7 +793,7 @@ const Profile = () => {
           )}
 
         </div>) : (<></>)
-  }
+        }
         <div>
           <button onClick={handleViewAffiliations}>View Affiliations</button>
 
@@ -1015,7 +1015,7 @@ const Profile = () => {
             </ul>
           </div>
         </div>
-        
+
         <div className="edit-profile-container">
           <div className="skills-profile">
             <h2>Hashtags</h2>

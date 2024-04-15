@@ -329,6 +329,72 @@ const Post = ({ postParam, input }) => {
     window.location.reload();
   }
 
+  const handleBlock = () => {
+    //console.log(id);
+    console.log("Handle Block");
+    console.log(
+      localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")
+    );
+    axios
+      .post(
+        `http://localhost:5001/user/${localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+        )}/blockedUsers`,
+        { blockee: userId }
+      )
+      .then((response) => {
+        console.log("User blocked successfully:", response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch((error) => {
+        console.error("Error blocking user:", error);
+        // Optionally, handle the error or revert local state changes
+      });
+    // also remove the user from the account they block's friends array
+    axios
+      .delete(
+        `http://localhost:5001/user/${userId}/friends/${localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+        )}`
+      )
+      .then((response) => {
+        console.log(
+          "Removed from blockee's friends successfully:",
+          response.data
+        );
+        // Optionally, update the UI or handle success
+      })
+      .catch((error) => {
+        console.error("Error removing from blockee's friends:", error);
+        // Optionally, handle the error or revert local state changes
+      });
+    // also also unfriend the user
+    axios
+      .delete(
+        `http://localhost:5001/user/${localStorage.getItem(
+          "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+        )}/friends/${userId}`
+      )
+      .then((response) => {
+        console.log("Friend deleted successfully:", response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch((error) => {
+        console.error("Error deleting friend:", error);
+        // Optionally, handle the error or revert local state changes
+      });
+    axios.delete(`http://localhost:5001/user/${localStorage.getItem("actualUserIdBecauseWilliamYongUkKwonIsAnnoying")}/friends/${userId}`)
+      .then(response => {
+        console.log('Friend deleted successfully:', response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch(error => {
+        console.error('Error deleting friend:', error);
+        // Optionally, handle the error or revert local state changes
+      });
+    window.location.reload();
+  };
+
   const handleCommentSubmit = (event) => {
     event.preventDefault();
     const owner = localStorage.getItem("userId");
@@ -451,6 +517,7 @@ const Post = ({ postParam, input }) => {
                       {/* Add more information or actions here */}
                       <button
                         className="text-gray-800 font-semibold"
+                        onClick={handleBlock}
                       >Block User</button>
                     </div>
                   </div>

@@ -27,7 +27,7 @@ const MainBottomBar = () => {
         navigate("/addpost");
     }
     const handleMessages = () => {
-        <Messaging/>
+        <Messaging />
     }
     return (
 
@@ -47,7 +47,7 @@ const MainBottomBar = () => {
             <div className="pr-4">
                 <Messaging title="Messages" content="Here you will see your conversations." />
             </div>
-            
+
         </footer>
     );
 };

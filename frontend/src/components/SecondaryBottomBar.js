@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { signOut } from "firebase/auth";
 
 import { useNavigate } from "react-router-dom";
@@ -25,10 +25,10 @@ const SecondaryBottomBar = () => {
             <div className="pl-4">
                 <button onClick={handleSettings}
                     className="button">
-                    Settings <FontAwesomeIcon icon={faGear}/>
+                    Settings <FontAwesomeIcon icon={faGear} />
                 </button>
             </div>
-  
+
             <div className="pr-4">
                 <Messaging title="Messages" content="Here you will see your conversations." />
             </div>

@@ -17,8 +17,8 @@ const Feed = () => {
   const [sortBy, setSortBy] = useState("Recent");
   const [searchText, setSearchText] = useState(""); // Define searchText state
 
-  const {text, start, stop, listening} = useSpeechToText();
-  
+  const { text, start, stop, listening } = useSpeechToText();
+
   const fetchPosts = () => {
     let apiUrl = "http://localhost:5001/post";
 
@@ -27,25 +27,25 @@ const Feed = () => {
       .then((res) => {
         fetchedPosts = res.data;
         fetchedPosts.reverse();
-        
+
         fetchedPosts = fetchedPosts.filter((post) =>
           connections.includes(post.owner) || post.owner == localStorage.getItem("userId")
         );
-        
+
         sortedPosts = [...fetchedPosts].sort((a, b) => {
           const likesA = a.reactions.likes || 0;
           const likesB = b.reactions.likes || 0;
           return likesB - likesA;
         });
-        
+
         let finalPosts;
-        
+
         if (sortBy === "Recent") {
           finalPosts = fetchedPosts;
         } else {
           finalPosts = sortedPosts;
         }
-        
+
         if (searchText) {
           finalPosts = finalPosts.filter(post =>
             post.tags.some(tag => tag.includes(searchText))
@@ -61,17 +61,17 @@ const Feed = () => {
 
   const fetchConnections = () => {
     axios
-    .get(`http://localhost:5001/user/${localStorage.getItem("userId")}`)
-    .then((res) => {
-      const d = res.data;
+      .get(`http://localhost:5001/user/${localStorage.getItem("userId")}`)
+      .then((res) => {
+        const d = res.data;
         setConnections(d.friends);
       });
-    };
-    
+  };
+
   useEffect(() => {
     fetchPosts();
   }, [connections]);
-    
+
   useEffect(() => {
     fetchConnections();
 
@@ -80,7 +80,7 @@ const Feed = () => {
       // fetchPosts();
     };
   }, []);
-  
+
   useEffect(() => {
     fetchPosts();
   }, [sortBy]);
@@ -88,12 +88,12 @@ const Feed = () => {
   useEffect(() => {
     fetchPosts();
   }, [searchText]);
-  
+
   const toggleSortBy = () => {
     const newSortBy = sortBy === "Recent" ? "Popular" : "Recent";
     setSortBy(newSortBy);
   };
-  
+
   // Define handleSearchInputChange function
   const handleSearchInputChange = (event) => {
     setSearchText(event.target.value);
@@ -110,7 +110,7 @@ const Feed = () => {
   return (
     <div className="container">
       <MainBanner />
-      <button onClick={()=>handleVoiceButton()} className={`voice-assist ${listening ? 'bg-red-300' : 'bg-gray-300'} p-2`}>Voice Assist</button>
+      <button onClick={() => handleVoiceButton()} className={`voice-assist ${listening ? 'bg-red-300' : 'bg-gray-300'} p-2`}>Voice Assist</button>
 
       <div className="sort-by-text">Sort By</div>
       <div className="toggle-button-container">
@@ -132,7 +132,7 @@ const Feed = () => {
           {/* Render posts */}
           <div className="posts-container">
             {posts.map((post) => (
-              <Post key={post._id} postParam={post} input={text}/>
+              <Post key={post._id} postParam={post} input={text} />
             ))}
           </div>
         </div>
