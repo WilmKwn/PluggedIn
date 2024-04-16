@@ -17,6 +17,7 @@ const Onboarding = () => {
   const [fileLabel, setFileLabel] = useState("No file chosen");
   const [isRecordLabelAccount, setIsRecordLabelAccount] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
+  const [newsTags, setNewsTags] = useState("");
 
   const handleSignOut = () => {
     signOut(auth)
@@ -43,69 +44,62 @@ const Onboarding = () => {
     }
     console.log("Setting account type");
 
-    console.log(isRecordLabelAccount)
+    console.log(isRecordLabelAccount);
 
     if (auth.currentUser) {
       if (isRecordLabelAccount === true) {
         try {
           const data = {
-            /*
-          uid: localStorage.getItem(
-            "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
-            
-          ),*/
             uid: auth.currentUser.uid,
             realname: realname,
             username: username,
-            accountType: 1, // This might need to be updated according to your account type logic
+            accountType: 1,
             profilePic: fileLabel,
             genre: genre,
             description: description,
-            recordLabelAccount: isRecordLabelAccount, // This is the new field for the record label account toggle
-            // ... you might have additional fields to include here
+            recordLabelAccount: isRecordLabelAccount,
+            newsTags: newsTags,
           };
 
           axios.post("http://localhost:5001/user", data).then(() => {
             console.log("successfully onboarded");
             localStorage.setItem("userId", auth.currentUser.uid);
             localStorage.setItem(
-              "actualUserIdBecauseWilliamYongUkKwonIsAnnoying", auth.currentUser.uid);
+              "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
+              auth.currentUser.uid
+            );
+            navigate("/feed");
+          });
+        } catch (error) {
+          console.error("Error updating profile: ", error);
+        }
+      } else if (isRecordLabelAccount === false) {
+        try {
+          const data = {
+            uid: auth.currentUser.uid,
+            realname: realname,
+            username: username,
+            accountType: 0,
+            profilePic: fileLabel,
+            genre: genre,
+            description: description,
+            recordLabelAccount: isRecordLabelAccount,
+            newsTags: newsTags,
+          };
+
+          axios.post("http://localhost:5001/user", data).then(() => {
+            console.log("successfully onboarded");
+            localStorage.setItem("userId", auth.currentUser.uid);
+            localStorage.setItem(
+              "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
+              auth.currentUser.uid
+            );
             navigate("/feed");
           });
         } catch (error) {
           console.error("Error updating profile: ", error);
         }
       }
-      else if (isRecordLabelAccount === false) {
-        try {
-          const data = {
-            /*
-          uid: localStorage.getItem(
-            "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
-            
-          ),*/
-            uid: auth.currentUser.uid,
-            realname: realname,
-            username: username,
-            accountType: 0, // This might need to be updated according to your account type logic
-            profilePic: fileLabel,
-            genre: genre,
-            description: description,
-            recordLabelAccount: isRecordLabelAccount, // This is the new field for the record label account toggle
-            // ... you might have additional fields to include here
-          };
-
-          axios.post("http://localhost:5001/user", data).then(() => {
-            console.log("successfully onboarded");
-            localStorage.setItem("userId", auth.currentUser.uid);
-            localStorage.setItem(
-              "actualUserIdBecauseWilliamYongUkKwonIsAnnoying", auth.currentUser.uid);
-            navigate("/feed");
-          });
-        } catch (error) {
-          console.error("Error updating profile: ", error);
-        }
-      }  
     }
   };
 
@@ -122,9 +116,7 @@ const Onboarding = () => {
 
   const handleRecordLabelSwitchChange = (newState) => {
     setIsRecordLabelAccount(newState);
-    console.log("handle label switch")
-    console.log(isRecordLabelAccount);
-    setShowWarning(newState); // Will show the warning if the toggle is switched on
+    setShowWarning(newState); 
   };
 
   return (
@@ -174,6 +166,16 @@ const Onboarding = () => {
             />
           </label>
           <label>
+            <b>News Tags:</b>
+            <div className="scrollable-box">
+              <textarea
+                value={newsTags}
+                onChange={(e) => setNewsTags(e.target.value)}
+                rows="4"
+              />
+            </div>
+          </label>
+          <label>
             <b>Profile Picture:</b>
             <div className="file-input-container">
               <input
@@ -188,7 +190,7 @@ const Onboarding = () => {
             <span className="mr-2">Record Label Account</span>
             <Switch
               checked={isRecordLabelAccount}
-              onChange={handleRecordLabelSwitchChange} // Use the custom handler here
+              onChange={handleRecordLabelSwitchChange} 
               onColor="#007AFF"
               offColor="#E5E5EA"
             />
