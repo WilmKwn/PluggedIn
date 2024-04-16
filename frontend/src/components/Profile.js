@@ -1,4 +1,5 @@
 import React from "react";
+import Modal from "react-modal"
 import { useNavigate, useLocation } from "react-router-dom";
 import { storage, ref, getDownloadURL } from "./firebase";
 import axios from "axios";
@@ -7,7 +8,8 @@ import MainBottomBar from "./MainBottomBar";
 import ProfileBottomBar from "./ProfileBottomBar";
 import ProfileBanner from "./ProfileBanner";
 import MicroPost from "./MicroPost";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faTimes} from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import Messaging from "./Messaging";
 
@@ -162,7 +164,7 @@ const Profile = () => {
       });
   };
   const [messageText, setMessageText] = useState("");
-  
+
   const handleSendMessageWithConnection = () => {
     if (messageText.trim() !== "" && userId !== "") {
       // Check if the message is not empty
@@ -750,9 +752,35 @@ const Profile = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [showAffiliations, setShowAffiliations] = useState(false);
     const [showFriends, setShowFriends] = useState(false);
+    const [isConnectNoteModalOpen, setisConnectNoteModalOpen] = useState(false);
+    const openNoteModal = () => setisConnectNoteModalOpen(true);
+    const closeNoteModal = () => setisConnectNoteModalOpen(false);
+
     // // check for profile pic
     if (!userProfilePic.profilePic || userProfilePic.profilePic === null) {
       userProfilePic.profilePic = "No Profile Picture";
+    }
+    const modalStytles = {
+      content: {
+        position: "absolute",
+        top: "25%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        marginRight: "10px",
+        marginBottom: "10px",
+        border: "none",
+        background: "white",
+        overflow: "hidden",
+        WebkitOverflowScrolling: "touch",
+        borderRadius: "5px",
+        outline: "none",
+        padding: "0px",
+        minWidth: "300px",
+        height: "200px",
+      },
+      overlay: {
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+      },
     }
     const handleViewAffiliations = () => {
       setShowAffiliations(!showAffiliations);
@@ -835,7 +863,7 @@ const Profile = () => {
           )}
 
         </div>) : (<></>)
-  }
+        }
         <div>
           <button onClick={handleViewAffiliations}>View Affiliations</button>
 
@@ -909,10 +937,38 @@ const Profile = () => {
               : (
                 <>
                   <div>
-                    <button onClick={() => handleConnect()}
-                      className="button">
+                    <button onClick={() => openNoteModal()}
+                      className="button"
+                    >
                       {console.log(userData.friends)}
                       Connect </button>
+                    <Modal
+                      isOpen={isConnectNoteModalOpen}
+                      onRequestClose={closeNoteModal}
+                      style={modalStytles}
+                    >
+                      <div className="modal-container">
+                        <header className="flex">
+                          <div className="messaging-banner flex justify-between items-center">
+                            <h1 className="text-1xl p-5 font-bold text-white mb-4">
+                            You can send a message with your connection!
+
+                            </h1>
+                            <button onClick={closeNoteModal} className="button m-5">
+                              <FontAwesomeIcon icon={faTimes} />
+                            </button>
+                          </div>
+                        </header>
+                        <div className="flex">
+                          
+                          <button onClick={() => handleConnect()}
+                            className="button"
+                          >
+                            {console.log(userData.friends)}
+                            Connect Without a Message </button>
+                        </div>
+                      </div>
+                    </Modal>
                   </div></>
               )
           )
@@ -1057,7 +1113,7 @@ const Profile = () => {
             </ul>
           </div>
         </div>
-        
+
         <div className="edit-profile-container">
           <div className="skills-profile">
             <h2>Hashtags</h2>
