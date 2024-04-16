@@ -91,6 +91,7 @@ const userSchema = mongoose.Schema(
         },
         hashtags: {
             type: [String],
+            required: true
         }
     }
 );

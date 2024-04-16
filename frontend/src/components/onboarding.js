@@ -44,6 +44,12 @@ const Onboarding = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Filter out the selected tags
+    const selectedTags = newsTags
+    .filter(tag => tag.selected)
+    .map(tag => tag.name.toLowerCase());
+
+
     if (profilePic) {
       const picRef = ref(storage, "user/" + fileLabel);
       uploadBytes(picRef, profilePic)
@@ -70,8 +76,10 @@ const Onboarding = () => {
             genre: genre,
             description: description,
             recordLabelAccount: isRecordLabelAccount,
-            newsTags: newsTags,
+            hashtags: selectedTags,
           };
+
+          // console.log("data is " + data)
 
           axios.post("http://localhost:5001/user", data).then(() => {
             console.log("successfully onboarded");
@@ -96,7 +104,7 @@ const Onboarding = () => {
             genre: genre,
             description: description,
             recordLabelAccount: isRecordLabelAccount,
-            newsTags: newsTags,
+            hashtags: selectedTags,
           };
 
           axios.post("http://localhost:5001/user", data).then(() => {
@@ -191,15 +199,8 @@ const Onboarding = () => {
     {newsTags.map((tag, index) => (
       <button
         key={index}
-        style={{
-          padding: '8px 16px',
-          border: 'none',
-          borderRadius: '20px',
-          background: tag.selected ? '#007AFF' : '#E5E5EA',
-          color: tag.selected ? 'white' : 'black',
-          cursor: 'pointer',
-          outline: 'none'
-        }}
+        type="button"  // Specify button type as button to prevent form submission
+        className={tag.selected ? "selected" : ""}
         onClick={() => handleTagChange(index)}
       >
         {tag.name}
@@ -207,6 +208,7 @@ const Onboarding = () => {
     ))}
   </div>
 </label>
+
           <label>
             <b>Profile Picture:</b>
             <div className="file-input-container">

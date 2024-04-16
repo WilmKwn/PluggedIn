@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
 //get all
 router.get('/', async (req, res) => {
     try {
-        console.log("getting convos")
+        // console.log("getting convos")
         const convos = await Conversation.find({});
         console.log(convos);
         return res.status(200).json(convos);
