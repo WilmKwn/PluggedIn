@@ -137,6 +137,7 @@ const Onboarding = () => {
     setNewsTags(newTags);
   };
   
+  
 
   return (
     <div className="app">
@@ -186,21 +187,26 @@ const Onboarding = () => {
           </label>
           <label>
   <b>News Tags:</b>
-  <div className="scrollable-box">
+  <div className="scrollable-box" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
     {newsTags.map((tag, index) => (
-      <div key={index}>
-        <input
-          type="checkbox"
-          checked={tag.selected}
-          onChange={() => handleTagChange(index)}
-          id={`tag-${index}`}
-        />
-        <label htmlFor={`tag-${index}`}>{tag.name}</label>
-      </div>
+      <button
+        key={index}
+        style={{
+          padding: '8px 16px',
+          border: 'none',
+          borderRadius: '20px',
+          background: tag.selected ? '#007AFF' : '#E5E5EA',
+          color: tag.selected ? 'white' : 'black',
+          cursor: 'pointer',
+          outline: 'none'
+        }}
+        onClick={() => handleTagChange(index)}
+      >
+        {tag.name}
+      </button>
     ))}
   </div>
 </label>
-
           <label>
             <b>Profile Picture:</b>
             <div className="file-input-container">
