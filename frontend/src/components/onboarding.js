@@ -17,7 +17,19 @@ const Onboarding = () => {
   const [fileLabel, setFileLabel] = useState("No file chosen");
   const [isRecordLabelAccount, setIsRecordLabelAccount] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
-  const [newsTags, setNewsTags] = useState("");
+  const [newsTags, setNewsTags] = useState([
+    { name: "Pop", selected: false },
+    { name: "Rock", selected: false },
+    { name: "Hip-hop/Rap", selected: false },
+    { name: "Electronic/Dance", selected: false },
+    { name: "R&B/Soul", selected: false },
+    { name: "Country", selected: false },
+    { name: "Jazz", selected: false },
+    { name: "Classical", selected: false },
+    { name: "Reggae", selected: false },
+    { name: "Indie/Alternative", selected: false },
+  ]);
+  
 
   const handleSignOut = () => {
     signOut(auth)
@@ -119,6 +131,13 @@ const Onboarding = () => {
     setShowWarning(newState); 
   };
 
+  const handleTagChange = (index) => {
+    const newTags = [...newsTags];
+    newTags[index].selected = !newTags[index].selected;
+    setNewsTags(newTags);
+  };
+  
+
   return (
     <div className="app">
       <header className="app-header">
@@ -166,15 +185,22 @@ const Onboarding = () => {
             />
           </label>
           <label>
-            <b>News Tags:</b>
-            <div className="scrollable-box">
-              <textarea
-                value={newsTags}
-                onChange={(e) => setNewsTags(e.target.value)}
-                rows="4"
-              />
-            </div>
-          </label>
+  <b>News Tags:</b>
+  <div className="scrollable-box">
+    {newsTags.map((tag, index) => (
+      <div key={index}>
+        <input
+          type="checkbox"
+          checked={tag.selected}
+          onChange={() => handleTagChange(index)}
+          id={`tag-${index}`}
+        />
+        <label htmlFor={`tag-${index}`}>{tag.name}</label>
+      </div>
+    ))}
+  </div>
+</label>
+
           <label>
             <b>Profile Picture:</b>
             <div className="file-input-container">
