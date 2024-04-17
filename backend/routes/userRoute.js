@@ -40,7 +40,8 @@ router.get('/:id', async (req, res) => {
         }
         return res.status(200).json(user);
     } catch (err) {
-        return res.status(500).send(err.message);
+        console.log("error" + err.message)
+        return res.status(404).send(err.message);
     }
 });
 
@@ -343,8 +344,10 @@ router.delete('/:id/endorse/:skill/:endorser', async (req, res) => {
         user.endorsed = user.endorsed.filter(endorsement => {
             return endorsement.endorser != endorser || endorsement.skill != skill;
         });
-        console.log(user.endorsed)
+        // console.log(user.endorsed)
         await user.save();
+
+
         return res.status(200).json(user);
     } catch (err) {
         return res.status(500).send(err.message);

@@ -77,6 +77,9 @@ const AddPost = () => {
     if (isSong) {
       tagsArray.push("#song");
     }
+    if (isProducerTag) {
+      tagsArray.push("#producertag");
+    }
     if (isNews) {
       tagsArray.push("#news");
     }
@@ -154,7 +157,7 @@ const AddPost = () => {
   return (
     <div>
       <SecondaryBanner />
-      <div className="w-full h-full text-center pt-28">
+      <div className="w-full h-full text-center pt-28 mb-96">
         <div className="w-full h-full flex flex-col items-center pt-5">
           <div className="w-1/2 h-1/2">
             <input

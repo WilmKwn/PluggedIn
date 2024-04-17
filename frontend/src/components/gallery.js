@@ -24,7 +24,7 @@ const Gallery = () => {
       .then((res) => {
         fetchedPosts = res.data;
         fetchedPosts = fetchedPosts.reverse().filter((post) => {
-          return post.tags.includes("#song");
+          return post.tags.includes("#song") || post.tags.includes("#producertag");
         });
 
         sortedPosts = [...fetchedPosts].sort((a, b) => {
@@ -89,9 +89,9 @@ const Gallery = () => {
             {posts.map((post) => (
               <Post key={post._id} postParam={post} />
             ))}
-            {tags.map((tag, index) => (
+            {/* {tags.map((tag, index) => (
               <Song key={index} songParam={tag} />
-            ))}
+            ))} */}
           </div>
         </div>
       </div>

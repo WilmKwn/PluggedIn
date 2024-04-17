@@ -51,6 +51,11 @@ const postSchema = mongoose.Schema(
             dislikes: { type: Number, default: 0 },
             laughs: { type: Number, default: 0 },
             reposts: { type: Number, default: 0 }
+        },
+        hiddenBy: {
+            type: [String],
+            default: [],
+            requried: true
         }
     }
 );

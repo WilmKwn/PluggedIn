@@ -16,6 +16,7 @@ import AddPost from "./components/AddPost";
 import Post from "./components/Post";
 import MicroPost from "./components/MicroPost";
 import EditProfile from "./components/EditProfile";
+import Explore from "./components/explore";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -31,6 +32,7 @@ const Root = () => {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/gallery" element={<Gallery />} />
+        <Route path="/explore" element={<Explore />} />
         <Route path="/news" element={<News />} />
         <Route path="/search" element={<Search />} />
         <Route path="/settings" element={<Settings />} />
