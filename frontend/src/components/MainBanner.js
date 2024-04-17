@@ -55,7 +55,8 @@ const MainBanner = () => {
       const data = res.data;
       setNotifications(data.notifications.reverse());
     }).catch(err => {
-      console.log(err);
+
+      console.log("error is ", err);
     });
   }
 

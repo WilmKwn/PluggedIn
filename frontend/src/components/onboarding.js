@@ -47,7 +47,7 @@ const Onboarding = () => {
     // Filter out the selected tags
     const selectedTags = newsTags
     .filter(tag => tag.selected)
-    .map(tag => tag.name.toLowerCase());
+    .map(tag => `#${tag.name.toLowerCase()}`);
 
 
     if (profilePic) {

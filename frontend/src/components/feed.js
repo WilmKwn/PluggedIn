@@ -63,6 +63,7 @@ const Feed = () => {
     axios
     .get(`http://localhost:5001/user/${localStorage.getItem("userId")}`)
     .then((res) => {
+      console.log("got data" + res.data);
       const d = res.data;
         setConnections(d.friends);
       });

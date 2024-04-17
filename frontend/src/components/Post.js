@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { library } from "@fortawesome/fontawesome-svg-core";
 
-const Post = ({ postParam, input }) => {
+const Post = ({ postParam, input = " "}) => {
   useEffect(() => {
     const arr = input.split(" ");
     if (arr[0] === "like" && arr[1] == "post") {
@@ -42,7 +42,7 @@ const Post = ({ postParam, input }) => {
   );
   useEffect(() => {
     axios
-      .get(`http://localhost:5001/user/${userId}`)
+      .get(`http://localhost:5001/user/${loggedInId}`)
       .then((res) => {
         console.log("got user data");
         setUserData(res.data); // Update state with user data
@@ -367,7 +367,10 @@ const Post = ({ postParam, input }) => {
 
 
   useEffect(() => {
-    //console.log(post.media);
+    // if post.media is null do not do anyting
+    if (!post.media) {
+      return;
+    }
     const picRef = ref(storage, "post/" + post.media);
     getDownloadURL(picRef)
       .then((url) => {
