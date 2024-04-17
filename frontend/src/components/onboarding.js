@@ -29,7 +29,6 @@ const Onboarding = () => {
     { name: "Reggae", selected: false },
     { name: "Indie/Alternative", selected: false },
   ]);
-  
 
   const handleSignOut = () => {
     signOut(auth)
@@ -46,9 +45,8 @@ const Onboarding = () => {
 
     // Filter out the selected tags
     const selectedTags = newsTags
-    .filter(tag => tag.selected)
-    .map(tag => `#${tag.name.toLowerCase()}`);
-
+      .filter((tag) => tag.selected)
+      .map((tag) => `#${tag.name.toLowerCase()}`);
 
     if (profilePic) {
       const picRef = ref(storage, "user/" + fileLabel);
@@ -136,7 +134,7 @@ const Onboarding = () => {
 
   const handleRecordLabelSwitchChange = (newState) => {
     setIsRecordLabelAccount(newState);
-    setShowWarning(newState); 
+    setShowWarning(newState);
   };
 
   const handleTagChange = (index) => {
@@ -144,8 +142,6 @@ const Onboarding = () => {
     newTags[index].selected = !newTags[index].selected;
     setNewsTags(newTags);
   };
-  
-  
 
   return (
     <div className="app">
@@ -194,20 +190,23 @@ const Onboarding = () => {
             />
           </label>
           <label>
-  <b>News Tags:</b>
-  <div className="scrollable-box" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-    {newsTags.map((tag, index) => (
-      <button
-        key={index}
-        type="button"  // Specify button type as button to prevent form submission
-        className={tag.selected ? "selected" : ""}
-        onClick={() => handleTagChange(index)}
-      >
-        {tag.name}
-      </button>
-    ))}
-  </div>
-</label>
+            <b>Which of These Categories Interest You?</b>
+            <div
+              className="scrollable-box"
+              style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}
+            >
+              {newsTags.map((tag, index) => (
+                <button
+                  key={index}
+                  type="button" // Specify button type as button to prevent form submission
+                  className={tag.selected ? "selected" : ""}
+                  onClick={() => handleTagChange(index)}
+                >
+                  {tag.name}
+                </button>
+              ))}
+            </div>
+          </label>
 
           <label>
             <b>Profile Picture:</b>
@@ -224,7 +223,7 @@ const Onboarding = () => {
             <span className="mr-2">Record Label Account</span>
             <Switch
               checked={isRecordLabelAccount}
-              onChange={handleRecordLabelSwitchChange} 
+              onChange={handleRecordLabelSwitchChange}
               onColor="#007AFF"
               offColor="#E5E5EA"
             />

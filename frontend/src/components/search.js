@@ -66,7 +66,11 @@ const Search = () => {
 
     let temp = [];
     temp = artists.filter((artist) => {
-      if (artist.realname.toLowerCase().includes(search) || artist.hashtags && artist.hashtags.some((hashtag) => hashtag.includes(search))) {
+      if (
+        artist.realname.toLowerCase().includes(search) ||
+        (artist.hashtags &&
+          artist.hashtags.some((hashtag) => hashtag.includes(search)))
+      ) {
         return artist;
       }
     });
@@ -79,7 +83,10 @@ const Search = () => {
     setShowSongs(temp);
 
     temp = posts.filter((post) => {
-      if (post.title.toLowerCase().includes(search) || post.description.toLowerCase().includes(search)) {
+      if (
+        post.title.toLowerCase().includes(search) ||
+        post.description.toLowerCase().includes(search)
+      ) {
         return post;
       }
     });
@@ -89,12 +96,17 @@ const Search = () => {
   const artistClicked = (id) => {
     const userId = id;
     console.log("navigate to " + userId);
-    navigate("/profile", {state: {userId}});
-  }
+    navigate("/profile", { state: { userId } });
+  };
 
   const ArtistCard = ({ artist }) => {
     return (
-      <div onClick={()=>{artistClicked(artist.uid)}} className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer">
+      <div
+        onClick={() => {
+          artistClicked(artist.uid);
+        }}
+        className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer"
+      >
         {artist.realname}
       </div>
     );
@@ -104,18 +116,29 @@ const Search = () => {
       <div className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer">
         Song
       </div>
-    );  };
+    );
+  };
   const PostCard = ({ post }) => {
     return (
       <div className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer">
         {post.title}
       </div>
-    );  };
+    );
+  };
+
+  const handleExplore = () => {
+    navigate("/explore");
+  };
 
   return (
     <div className="mb-72">
       <MainBanner />
       <div className="w-full h-screen flex flex-col items-center pt-32">
+        <div>
+          <button onClick={handleExplore} className="button">
+            Explore
+          </button>
+        </div>
         <input
           type="text"
           placeholder="Enter here"
