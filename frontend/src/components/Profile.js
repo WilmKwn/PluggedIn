@@ -9,9 +9,10 @@ import ProfileBottomBar from "./ProfileBottomBar";
 import ProfileBanner from "./ProfileBanner";
 import MicroPost from "./MicroPost";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faTimes} from "@fortawesome/free-solid-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import Messaging from "./Messaging";
+import ConnectMessaging from "./ConnectMessaging";
 
 const Banner = (id) => {
   const navigate = useNavigate();
@@ -51,6 +52,7 @@ const Profile = () => {
   const [userProfilePic, setUserProfilePic] = useState({
     profilePic: "",
   });
+
   const [loggedInProfilePic, setLoggedInProfilePic] = useState({
     profilePic: "",
   });
@@ -96,12 +98,12 @@ const Profile = () => {
       .get(`http://localhost:5001/user/${userId}`)
       .then((res) => {
         // Process the user data here if the response was successful (status 200)
-        console.log("got user pfp");
-        console.log(res.data);
+        // console.log("got user pfp");
+        // console.log(res.data);
         setUserProfilePic(res.data); // Update state with user data
-        console.log("PFP:");
-        console.log(userProfilePic.profilePic);
-        console.log(res.data.endorsed);
+        // console.log("PFP:");
+        // console.log(userProfilePic.profilePic);
+        // console.log(res.data.endorsed);
         res.data.endorsed.forEach((endorsement) => {
           setEndorsements((prevEndorsements) => {
             return {
@@ -163,49 +165,7 @@ const Profile = () => {
         console.error("Error revoking endorsement skill:", error);
       });
   };
-  const [messageText, setMessageText] = useState("");
-
-  const handleSendMessageWithConnection = () => {
-    if (messageText.trim() !== "" && userId !== "") {
-      // Check if the message is not empty
-      const newMessage = {
-        user1id: loggedInId,
-        user2id: userId,
-        content: messageText,
-        //timestamp: new Date().toISOString(),
-      };
-
-      axios
-        .post(`http://localhost:5001/conversation/message`, newMessage)
-        .then((response) => {
-          setMessageText("");
-
-          // update notifications of the recipient
-          axios
-            .get(`http://localhost:5001/user/${userId}`)
-            .then((res) => {
-              const data = res.data;
-              const notis = data.notifications;
-              notis.push(`New Message from ${loggedInData.name}`);
-              const newData = {
-                ...data,
-                notis,
-              };
-              axios.put(
-                `http://localhost:5001/user/${userId}`,
-                newData
-              );
-            });
-        })
-        .catch((error) => {
-          console.error("Error sending message:", error);
-        });
-    }
-    Messaging.setCurrFriendObj({
-      uid: userId,
-      realname: userData.name,
-    });
-  };
+  
   const toggleEndorseSkill = (skill) => {
     // Check the current endorsement state for the skill
     const hasEndorsed = endorsedSkill(skill);
@@ -299,7 +259,7 @@ const Profile = () => {
         }
         else {
           res.data.joinedRecordLabels.forEach(friendId => {
-            console.log(friendId)
+            //console.log(friendId)
             axios.get(`http://localhost:5001/user/${friendId}`)
               .then((friendRes) => {
                 const { uid, profilePic, realname } = friendRes.data;
@@ -341,7 +301,7 @@ const Profile = () => {
               });
           });
           res.data.friends.forEach(friendId => {
-            console.log(friendId)
+            //console.log(friendId)
             axios.get(`http://localhost:5001/user/${friendId}`)
               .then((friendRes) => {
                 const { uid, profilePic, realname } = friendRes.data;
@@ -388,7 +348,8 @@ const Profile = () => {
         console.error("Error:", error);
         // Handle any errors that occur during the fetch request
       });
-
+      console.log("test");
+      console.log(loggedInId)
     axios
       .get(`http://localhost:5001/user/${loggedInId}`)
       .then((res) => {
@@ -514,6 +475,9 @@ const Profile = () => {
         console.error("Error adding friend:", error);
         // Optionally, handle the error or revert local state changes
       });
+      // if (messageText) {
+      //   handleSendMessageWithConnection();  
+      // }
   };
 
   const handleJoinLabel = () => {
@@ -752,36 +716,13 @@ const Profile = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [showAffiliations, setShowAffiliations] = useState(false);
     const [showFriends, setShowFriends] = useState(false);
-    const [isConnectNoteModalOpen, setisConnectNoteModalOpen] = useState(false);
-    const openNoteModal = () => setisConnectNoteModalOpen(true);
-    const closeNoteModal = () => setisConnectNoteModalOpen(false);
+    
 
     // // check for profile pic
     if (!userProfilePic.profilePic || userProfilePic.profilePic === null) {
       userProfilePic.profilePic = "No Profile Picture";
     }
-    const modalStytles = {
-      content: {
-        position: "absolute",
-        top: "25%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        marginRight: "10px",
-        marginBottom: "10px",
-        border: "none",
-        background: "white",
-        overflow: "hidden",
-        WebkitOverflowScrolling: "touch",
-        borderRadius: "5px",
-        outline: "none",
-        padding: "0px",
-        minWidth: "300px",
-        height: "200px",
-      },
-      overlay: {
-        backgroundColor: "rgba(0, 0, 0, 0.6)",
-      },
-    }
+    
     const handleViewAffiliations = () => {
       setShowAffiliations(!showAffiliations);
     };
@@ -793,7 +734,7 @@ const Profile = () => {
       userData.skills = [];
     } else {
       setUserSkills(userData.skills);
-      console.log(userData.skills);
+      //console.log(userData.skills);
     }
 
     if (userData.description === null) {
@@ -816,13 +757,14 @@ const Profile = () => {
           console.log(err);
         });
     }, []);
-    console.log(userData.skills);
+    //console.log(userData.skills);
     const profileClicked = (id) => {
       const userId = id;
       console.log("navigate to " + userId);
       navigate("/profile", { state: { userId } });
       window.location.reload();
     };
+    
     return (
       <div className="h-full pt-28 flex flex-col items-center">
         {userProfilePic.profilePic === "No file chosen" ? (
@@ -936,40 +878,7 @@ const Profile = () => {
               )
               : (
                 <>
-                  <div>
-                    <button onClick={() => openNoteModal()}
-                      className="button"
-                    >
-                      {console.log(userData.friends)}
-                      Connect </button>
-                    <Modal
-                      isOpen={isConnectNoteModalOpen}
-                      onRequestClose={closeNoteModal}
-                      style={modalStytles}
-                    >
-                      <div className="modal-container">
-                        <header className="flex">
-                          <div className="messaging-banner flex justify-between items-center">
-                            <h1 className="text-1xl p-5 font-bold text-white mb-4">
-                            You can send a message with your connection!
-
-                            </h1>
-                            <button onClick={closeNoteModal} className="button m-5">
-                              <FontAwesomeIcon icon={faTimes} />
-                            </button>
-                          </div>
-                        </header>
-                        <div className="flex">
-                          
-                          <button onClick={() => handleConnect()}
-                            className="button"
-                          >
-                            {console.log(userData.friends)}
-                            Connect Without a Message </button>
-                        </div>
-                      </div>
-                    </Modal>
-                  </div></>
+                  <ConnectMessaging inId={userId}/></>
               )
           )
           ) : (<div></div>)}
@@ -1013,7 +922,7 @@ const Profile = () => {
                     <div>
                       <button onClick={() => handleJoinLabel()}
                         className="button">
-                        {console.log(userData.friends)}
+                        {/*console.log(userData.friends)*/}
                         Request to Join Label </button>
                     </div></>
                 )

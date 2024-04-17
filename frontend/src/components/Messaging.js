@@ -29,7 +29,9 @@ const Messaging = ({ title }) => {
     realname: "",
   });
   const userId = localStorage.getItem("userId");
-
+  const loggedInId = localStorage.getItem(
+    "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+  );
   // Speech-to-Text state and functions
   const { text, start, stop, listening } = useSpeechToText();
   const handleVoiceInput = () => {
@@ -46,7 +48,7 @@ const Messaging = ({ title }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5001/user/${userId}`)
+      .get(`http://localhost:5001/user/${loggedInId}`)
       .then((res) => {
         setMyName(res.data.realname);
         res.data.friends.forEach((friendId) => {
@@ -60,7 +62,7 @@ const Messaging = ({ title }) => {
                   friendObjArr.delete(friend);
                 }
               }
-              if (friendRes.data.friends.includes(userId)) {
+              if (friendRes.data.friends.includes(loggedInId)) {
                 getDownloadURL(picRef)
                   .then((url) => {
                     setFriendObjArr((prevArr) => [
@@ -81,7 +83,7 @@ const Messaging = ({ title }) => {
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
-  }, [userId]);
+  }, [loggedInId]);
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -388,8 +390,8 @@ const Messaging = ({ title }) => {
                             <div
                               key={index}
                               className={`mb-2 ${message.senderUid === userId
-                                  ? " text-sm ml-auto bg-gray-300"
-                                  : " text-sm bg-blue-500 text-white"
+                                ? " text-sm ml-auto bg-gray-300"
+                                : " text-sm bg-blue-500 text-white"
                                 } p-2 rounded-md`}
                               style={{ maxWidth: "75%" }}
                             >
