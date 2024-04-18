@@ -150,7 +150,8 @@ const Messaging = ({ title }) => {
             .then((res) => {
               const data = res.data;
               const notis = data.notifications;
-              notis.push(`New Message from ${myName}`);
+              notis.push(`New Message from ${myName}:\n
+              ${messageText}`);
               const newData = {
                 ...data,
                 notis,
