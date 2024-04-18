@@ -19,7 +19,7 @@ const SignUp = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         // Handle successful Google sign-in here
-        navigate("/feed");
+        navigate("/onboarding");
       })
       .catch((error) => {
         // Set custom error message based on error code

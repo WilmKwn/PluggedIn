@@ -543,3 +543,40 @@ p {
 .error-message {
   color: red; /* This sets the text color to red */
 }
+<<<<<<< Updated upstream
+=======
+
+
+.scrollable-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+.scrollable-box button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  background: #E5E5EA; /* Light gray for unselected */
+  color: black;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.scrollable-box button.selected {
+  background-color: #283e4a; /* Dark blue for selected */
+  color: white;
+}
+
+.scrollable-box button:hover {
+  background-color: #3e5867; /* Slightly lighter blue for hover */
+  color: white;
+}
+>>>>>>> Stashed changes
