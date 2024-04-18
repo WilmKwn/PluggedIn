@@ -878,7 +878,7 @@ const Profile = () => {
               )
               : (
                 <>
-                  <ConnectMessaging inId={userId}/></>
+                  <ConnectMessaging inId={userId} myName={loggedInData.realname}/></>
               )
           )
           ) : (<div></div>)}

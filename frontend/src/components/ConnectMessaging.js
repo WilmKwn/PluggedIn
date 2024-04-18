@@ -12,22 +12,22 @@ import {
   faMicrophoneSlash,
 } from "@fortawesome/free-solid-svg-icons";
 
-const ConnectMessaging = ({inId}) => {
+const ConnectMessaging = ({inId, myName}) => {
     const [isConnectNoteModalOpen, setisConnectNoteModalOpen] = useState(false);
   const openNoteModal = () => setisConnectNoteModalOpen(true);
   const closeNoteModal = () => setisConnectNoteModalOpen(false);
   const [messageText, setMessageText] = useState("");
 const pageId = inId;
-  const userId = localStorage.getItem("userId");
+  //const userId = localStorage.getItem("userId");
   const loggedInId = localStorage.getItem(
     "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
   );
   const handleSendMessageWithConnection = () => {
-    if (messageText.trim() !== "" && userId !== "") {
+    if (messageText.trim() !== "" && pageId !== "") {
       // Check if the message is not empty
       const newMessage = {
         user1id: loggedInId,
-        user2id: userId,
+        user2id: pageId,
         content: messageText,
         //timestamp: new Date().toISOString(),
       };
@@ -39,17 +39,17 @@ const pageId = inId;
 
           // update notifications of the recipient
           axios
-            .get(`http://localhost:5001/user/${userId}`)
+            .get(`http://localhost:5001/user/${pageId}`)
             .then((res) => {
               const data = res.data;
               const notis = data.notifications;
-              notis.push(`New Message from ${loggedInId}`);
+              notis.push(`New Message from ${myName}`);
               const newData = {
                 ...data,
                 notis,
               };
               axios.put(
-                `http://localhost:5001/user/${userId}`,
+                `http://localhost:5001/user/${pageId}`,
                 newData
               );
             });
