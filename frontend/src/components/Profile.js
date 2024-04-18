@@ -165,7 +165,7 @@ const Profile = () => {
         console.error("Error revoking endorsement skill:", error);
       });
   };
-  
+
   const toggleEndorseSkill = (skill) => {
     // Check the current endorsement state for the skill
     const hasEndorsed = endorsedSkill(skill);
@@ -348,8 +348,8 @@ const Profile = () => {
         console.error("Error:", error);
         // Handle any errors that occur during the fetch request
       });
-      console.log("test");
-      console.log(loggedInId)
+    console.log("test");
+    console.log(loggedInId)
     axios
       .get(`http://localhost:5001/user/${loggedInId}`)
       .then((res) => {
@@ -475,9 +475,9 @@ const Profile = () => {
         console.error("Error adding friend:", error);
         // Optionally, handle the error or revert local state changes
       });
-      // if (messageText) {
-      //   handleSendMessageWithConnection();  
-      // }
+    // if (messageText) {
+    //   handleSendMessageWithConnection();  
+    // }
   };
 
   const handleJoinLabel = () => {
@@ -716,13 +716,13 @@ const Profile = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [showAffiliations, setShowAffiliations] = useState(false);
     const [showFriends, setShowFriends] = useState(false);
-    
+
 
     // // check for profile pic
     if (!userProfilePic.profilePic || userProfilePic.profilePic === null) {
       userProfilePic.profilePic = "No Profile Picture";
     }
-    
+
     const handleViewAffiliations = () => {
       setShowAffiliations(!showAffiliations);
     };
@@ -764,7 +764,7 @@ const Profile = () => {
       navigate("/profile", { state: { userId } });
       window.location.reload();
     };
-    
+
     return (
       <div className="h-full pt-28 flex flex-col items-center">
         {userProfilePic.profilePic === "No file chosen" ? (
@@ -774,6 +774,7 @@ const Profile = () => {
         )}
         <div>{userData.realname}</div>
         {userData.accountType === 1 && <div>Record Label</div>}
+        {userData.accountType === 2 && <div>News Account</div>}
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
@@ -878,7 +879,7 @@ const Profile = () => {
               )
               : (
                 <>
-                  <ConnectMessaging inId={userId}/></>
+                  <ConnectMessaging inId={userId} /></>
               )
           )
           ) : (<div></div>)}
