@@ -1,42 +1,44 @@
 import mongoose from "mongoose";
-const messageSchema = mongoose.Schema(
-    {
-        senderUid: {
-            type: String,
-            required: true
-        },
-        sent: {
-            type: Date,
-            required: true
-        },
-        content: {
-            type: String,
-            required: true
-        }
-    }
-);
+const messageSchema = mongoose.Schema({
+  senderUid: {
+    type: String,
+    required: true,
+  },
+  sent: {
+    type: Date,
+    required: true,
+  },
+  content: {
+    type: String,
+    required: true,
+  },
+  isReply: {
+    type: Boolean, // if it's a reply
+    required: true,
+    default: false,
+  },
+});
 const conversationSchema = mongoose.Schema(
-
-    // Replace the ref: parameters with the correct table name
-    {
-        uid: {
-            type: String,
-            required: true,
-        },
-        user1id: { // first alphabetically
-            type: String,
-            required: true,
-        },
-        user2id: {
-            type: String,
-            required: true,
-        },
-        messages: {
-            type: [messageSchema],
-            required: false
-        }
-        
-    }
+  // Replace the ref: parameters with the correct table name
+  {
+    uid: {
+      type: String,
+      required: true,
+    },
+    user1id: {
+      // first alphabetically
+      type: String,
+      required: true,
+    },
+    user2id: {
+      type: String,
+      required: true,
+    },
+    messages: {
+      type: [messageSchema],
+      required: false,
+    },
+  }
 );
 
-export const Conversation = mongoose.model('conversations', conversationSchema);
+export const Conversation = mongoose.model("conversations", conversationSchema);

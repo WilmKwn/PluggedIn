@@ -18,6 +18,7 @@ const Messaging = ({ title }) => {
 
   const [showReactions, setShowReactions] = useState(false);
   const [activeMessageId, setActiveMessageId] = useState(null);
+  const [isReply, setIsReply] = useState(false); // Track if the current message is a reply
 
   const [interactionActive, setInteractionActive] = useState(false); // Track if any interaction is active
 
@@ -90,15 +91,19 @@ const Messaging = ({ title }) => {
   const handleSendMessage = () => {
     if (messageText.trim() !== "" && currFriendObj.uid !== "") {
       let content = messageText;
+      let replyFlag = false; // We'll use a local variable instead
 
       if (replyingToMessage) {
         content = `${messageText} (reply to: '${replyingToMessage.content}')`;
+        replyFlag = true; // Change the local variable since it is a reply
       }
 
+      console.log("isReply: ", isReply);
       const newMessage = {
         user1id: localStorage.getItem("userId"),
         user2id: currFriendObj.uid,
         content: content,
+        isReply: replyFlag, // Use the local variable here
       };
 
       axios
@@ -106,7 +111,9 @@ const Messaging = ({ title }) => {
         .then((response) => {
           setMessageText("");
           setReplyingToMessage(null);
+          setIsReply(false); // Now we reset the state for future messages
           setPlaceholder("Type your message..."); // Reset placeholder after sending
+          setInteractionActive(false);
         })
         .catch((error) => {
           console.error("Error sending message:", error);
@@ -246,25 +253,34 @@ const Messaging = ({ title }) => {
 
   const handleEmojiClick = (emoji) => {
     console.log(`Reacted with ${emoji} to message ${activeMessageId}`);
-    handleSendEmojiMessage(emoji);
+    let replyFlag = false;
+    if (activeMessageId && replyingToMessage) {
+      replyFlag = true; // It's a reply to a message
+    }
+    handleSendEmojiMessage(emoji); // Pass the flag directly
     setShowReactions(false);
     setReplyingToMessage(null);
     setActiveMessageId(null);
-    setInteractionActive(false); // Reset interaction state
+    setIsReply(false); // Reset the isReply state
+    setInteractionActive(false);
   };
 
   const handleSendEmojiMessage = (emoji) => {
     if (currFriendObj.uid !== "" && replyingToMessage) {
-      const originalMessage = replyingToMessage.content; // Assuming this is how you access the original message content
+      const originalMessage = replyingToMessage.content;
       const content = `${emoji} (reply to: '${originalMessage.substring(
         0,
         50
-      )}')`; // Truncate if necessary
+      )}')`;
+      //setIsReply(true);
+
+      console.log("isReply: ", isReply);
 
       const newMessage = {
         user1id: localStorage.getItem("userId"),
         user2id: currFriendObj.uid,
         content: content,
+        isReply: isReply, // Use the passed parameter to set the isReply field.
       };
 
       axios
@@ -543,7 +559,7 @@ const Messaging = ({ title }) => {
                 </>
               ) : (
                 <div>
-                  {["❤️", "👍", "😂", "🔊", "🔇"].map((emoji) => (
+                  {["❤️", "👍", "😂", "👎", "😈", "🔊", "🔇"].map((emoji) => (
                     <button
                       key={emoji}
                       onClick={() => handleEmojiClick(emoji)}
