@@ -8,6 +8,16 @@ import { faMessage } from '@fortawesome/free-solid-svg-icons';
 import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const Messaging = ({ title }) => {
+<<<<<<< Updated upstream
+=======
+  const [placeholder, setPlaceholder] = useState("Type your message...");
+
+  const [showReactions, setShowReactions] = useState(false);
+  const [activeMessageId, setActiveMessageId] = useState(null);
+  const [isReply, setIsReply] = useState(false); // Track if the current message is a reply
+
+  const [interactionActive, setInteractionActive] = useState(false); // Track if any interaction is active
+>>>>>>> Stashed changes
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [myName, setMyName] = useState("");
@@ -25,7 +35,64 @@ const Messaging = ({ title }) => {
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
+<<<<<<< Updated upstream
     axios.get(`http://localhost:5001/user/${userId}`)
+=======
+    // Whenever 'text' changes, update the messageText state
+    setMessageText(text);
+  }, [text]);
+
+  const handleCancelReply = () => {
+    setReplyingToMessage(null);
+    setMessageText("");
+    setPlaceholder("Type your message..."); // Reset placeholder
+    setInteractionActive(false);
+  };
+  const handleCancelReact = () => {
+    setShowReactions(false);
+    setReplyingToMessage(null);
+    setMessageText("");
+    setPlaceholder("Type your message..."); // Reset placeholder
+    setInteractionActive(false);
+  };
+
+  const handleSendMessage = () => {
+    if (messageText.trim() !== "" && currFriendObj.uid !== "") {
+      let content = messageText;
+      let replyFlag = false; // We'll use a local variable instead
+
+      if (replyingToMessage) {
+        content = `${messageText} (reply to: '${replyingToMessage.content}')`;
+        replyFlag = true; // Change the local variable since it is a reply
+      }
+
+      console.log("isReply: ", isReply);
+      const newMessage = {
+        user1id: localStorage.getItem("userId"),
+        user2id: currFriendObj.uid,
+        content: content,
+        isReply: replyFlag, // Use the local variable here
+      };
+
+      axios
+        .post(`http://localhost:5001/conversation/message`, newMessage)
+        .then((response) => {
+          setMessageText("");
+          setReplyingToMessage(null);
+          setIsReply(false); // Now we reset the state for future messages
+          setPlaceholder("Type your message..."); // Reset placeholder after sending
+          setInteractionActive(false);
+        })
+        .catch((error) => {
+          console.error("Error sending message:", error);
+        });
+    }
+  };
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5001/user/${userId}`)
+>>>>>>> Stashed changes
       .then((res) => {
         setMyName(res.data.realname);
         res.data.friends.forEach(friendId => {
@@ -92,6 +159,7 @@ const Messaging = ({ title }) => {
   }, []);
 
   const selectedConversation = findConversation();
+<<<<<<< Updated upstream
   const handleSendMessage = () => {
     if (messageText.trim() !== "" && currFriendObj.uid !== "") {
       // Check if the message is not empty
@@ -100,6 +168,85 @@ const Messaging = ({ title }) => {
         user2id: currFriendObj.uid,
         content: messageText,
         //timestamp: new Date().toISOString(),
+=======
+
+  //AIzaSyDQ5G0U8_26WdvFn-_l5EAQ9BDcATMiKEs
+  const handleGif = () => {
+    grab_data();
+    setGifModalOpen(true);
+  };
+  const closeGifModal = () => {
+    // Close the GIF modal
+    setGifModalOpen(false);
+  };
+  function httpGetAsync(theUrl, callback) {
+    // create the request object
+    var xmlHttp = new XMLHttpRequest();
+
+    // set the state change callback to capture when the response comes in
+    xmlHttp.onreadystatechange = function () {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+        callback(xmlHttp.responseText);
+      }
+    };
+
+    // open as a GET call, pass in the url and set async = True
+    xmlHttp.open("GET", theUrl, true);
+
+    // call send with no params as they were passed in on the url string
+    xmlHttp.send(null);
+
+    return;
+  }
+
+  // callback for the top 8 GIFs of search
+  function tenorCallback_search(responsetext) {
+    // Parse the JSON response
+    var response_objects = JSON.parse(responsetext);
+
+    //var top_10_gifs = response_objects["results"];
+    setTop_10_gifs(response_objects["results"]);
+    // Load all the GIFs
+    for (let i = 0; i < top_10_gifs.length; i++) {
+      const shareGifUrl = top_10_gifs[i]["media_formats"]["gif"]["url"];
+
+      const shareImg = document.createElement("img");
+      shareImg.src = shareGifUrl;
+      document.getElementById("share_gifs_container").appendChild(shareImg);
+    }
+  }
+
+  const handleEmojiClick = (emoji) => {
+    console.log(`Reacted with ${emoji} to message ${activeMessageId}`);
+    let replyFlag = false;
+    if (activeMessageId && replyingToMessage) {
+      replyFlag = true; // It's a reply to a message
+    }
+    handleSendEmojiMessage(emoji); // Pass the flag directly
+    setShowReactions(false);
+    setReplyingToMessage(null);
+    setActiveMessageId(null);
+    setIsReply(false); // Reset the isReply state
+    setInteractionActive(false);
+  };
+
+  const handleSendEmojiMessage = (emoji) => {
+    if (currFriendObj.uid !== "" && replyingToMessage) {
+      const originalMessage = replyingToMessage.content;
+      const content = `${emoji} (reply to: '${originalMessage.substring(
+        0,
+        50
+      )}')`;
+      //setIsReply(true);
+
+      console.log("isReply: ", isReply);
+
+      const newMessage = {
+        user1id: localStorage.getItem("userId"),
+        user2id: currFriendObj.uid,
+        content: content,
+        isReply: isReply, // Use the passed parameter to set the isReply field.
+>>>>>>> Stashed changes
       };
 
       axios.post(`http://localhost:5001/conversation/message`, newMessage)
@@ -220,12 +367,55 @@ const Messaging = ({ title }) => {
               </div>
             </div>
             <div className="flex items-center mt-4">
+<<<<<<< Updated upstream
               <input type="text"
                 placeholder="Type your message..."
                 className="w-full p-3 ml-1 mb-1 border border-gray-300 rounded-l-md"
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)} />
               <button onClick={handleSendMessage} className="button rounded-r-md ml-2 mb-1">
+=======
+              {!showReactions ? (
+                <>
+                  <input
+                    type="text"
+                    id="messageInput"
+                    placeholder={placeholder}
+                    className="w-full p-3 ml-1 mb-1 border border-gray-300 rounded-l-md"
+                    value={messageText}
+                    onChange={(e) => setMessageText(e.target.value)}
+                  />
+                  {interactionActive &&
+                    (replyingToMessage || showReactions) && (
+                      <button
+                        onClick={handleCancelReact}
+                        className="button ml-2"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                </>
+              ) : (
+                <div>
+                  {["❤️", "👍", "😂", "👎", "😈", "🔊", "🔇"].map((emoji) => (
+                    <button
+                      key={emoji}
+                      onClick={() => handleEmojiClick(emoji)}
+                      className="button rounded-r-md ml-2 mb-1"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                  <button onClick={handleCancelReact} className="button ml-2">
+                    Cancel
+                  </button>
+                </div>
+              )}
+              <button
+                onClick={handleSendMessage}
+                className="button rounded-r-md ml-2 mb-1"
+              >
+>>>>>>> Stashed changes
                 <FontAwesomeIcon icon={faPaperPlane} />
               </button>
             </div>
