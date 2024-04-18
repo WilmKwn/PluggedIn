@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { library } from "@fortawesome/fontawesome-svg-core";
 
-const Post = ({ postParam, input = " "}) => {
+const Post = ({ postParam, input = " " }) => {
   useEffect(() => {
     const arr = input.split(" ");
     if (arr[0] === "like" && arr[1] == "post") {
@@ -329,6 +329,19 @@ const Post = ({ postParam, input = " "}) => {
     window.location.reload();
   }
 
+  const setPostClass = (title) => {
+    if (post.news) {
+      return 'post-news';
+    }
+    const words = ["congrats", "congratulations", "proud", "happy",];
+    if (words.some(word => title.toLowerCase().includes(word))) {
+      return 'post-congrats';
+    }
+
+    return 'post-card'
+  }
+
+
   const handleCommentSubmit = (event) => {
     event.preventDefault();
     const owner = localStorage.getItem("userId");
@@ -414,7 +427,7 @@ const Post = ({ postParam, input = " "}) => {
       {(userData.blockedUsers.includes(loggedInId) || loggedInData.blockedUsers.includes(userId) || post.hiddenBy.includes(loggedInId)) ? (
         <><div></div></>
       ) : (<>
-        <div className="post-card">
+        <div className={`${setPostClass(post.title)}`}>
           <div className="user-info-container">
             <img
               onClick={() => { profileClicked(userId) }}

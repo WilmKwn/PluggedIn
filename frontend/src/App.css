@@ -195,6 +195,30 @@ p {
   display: block;
 }
 
+.post-congrats {
+  border: 5px solid #ccc;
+  border-radius: 8px;
+  margin: 20px auto;
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  border-color: #32CD32
+}
+
+.post-news {
+  border: 5px solid #ccc;
+  border-radius: 8px;
+  margin: 20px auto;
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  border-color: #B22222
+}
+
 .post-tags {
   font-style: italic;
   color: #0073b1;
@@ -288,7 +312,8 @@ p {
 .registered-label {
   font-size: 1rem;
   color: #555;
-  margin-top: 0.5rem; /* Adjust as needed */
+  margin-top: 0.5rem;
+  /* Adjust as needed */
   font-weight: bold;
 }
 
@@ -401,7 +426,8 @@ p {
 
 .sort-by-text {
   position: absolute;
-  left: 20px; /* Adjust as needed */
+  left: 20px;
+  /* Adjust as needed */
   top: 35%;
   transform: translateY(-50%);
   font-size: 16px;
@@ -410,15 +436,18 @@ p {
 
 .voice-assist {
   position: absolute;
-  left: 20px; /* Adjust as needed */
+  left: 20px;
+  /* Adjust as needed */
   top: 25%;
   font-size: 16px;
 }
 
 .toggle-button-container {
   position: absolute;
-  left: 20px; /* Adjust as needed */
-  top: calc(35% + 20px); /* Position below the text */
+  left: 20px;
+  /* Adjust as needed */
+  top: calc(35% + 20px);
+  /* Position below the text */
 }
 
 .toggle-button {
@@ -438,7 +467,8 @@ p {
 
 .search-for-text {
   position: absolute;
-  left: 20px; /* Adjust as needed */
+  left: 20px;
+  /* Adjust as needed */
   top: 50%;
   transform: translateY(-50%);
   font-size: 16px;
@@ -447,13 +477,17 @@ p {
 
 .search-textbox {
   position: absolute;
-  left: 20px; /* Adjust as needed */
-  top: calc(50% + 20px); /* Adjust as needed */
+  left: 20px;
+  /* Adjust as needed */
+  top: calc(50% + 20px);
+  /* Adjust as needed */
 }
 
 .search-textbox input[type="text"] {
-  width: 200px; /* Adjust as needed */
-  height: 30px; /* Adjust as needed */
+  width: 200px;
+  /* Adjust as needed */
+  height: 30px;
+  /* Adjust as needed */
   font-size: 16px;
   color: #333;
   padding: 5px;
@@ -481,16 +515,19 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px; /* Space between skill items */
+  margin-bottom: 10px;
+  /* Space between skill items */
 }
 
 .skill-label {
-  margin-right: 20px; /* Space between the skill label and the button */
+  margin-right: 20px;
+  /* Space between the skill label and the button */
 }
 
 .skill-name {
   /* Additional class for skill name */
-  margin-right: 10px; /* Adjust this value to create more or less space */
+  margin-right: 10px;
+  /* Adjust this value to create more or less space */
 }
 
 .endorse-button {
@@ -505,12 +542,14 @@ p {
 
 .endorse-button.endorsed {
   /* Styles for the endorsed button state */
-  background-color: #4CAF50; /* Green */
+  background-color: #4CAF50;
+  /* Green */
   color: white;
 }
 
 .endorse-button.endorsed:hover {
-  background-color: #45a049; /* Slightly darker green on hover */
+  background-color: #45a049;
+  /* Slightly darker green on hover */
 }
 
 .endorse-button:hover {
@@ -525,7 +564,8 @@ p {
 
 .endorsed {
   /* Styles for the endorsed label */
-  background-color: #4CAF50; /* Green */
+  background-color: #4CAF50;
+  /* Green */
   color: white;
   padding: 5px 10px;
   border-radius: 4px;
@@ -534,13 +574,17 @@ p {
 
 /*ONBOARDING*/
 .warning-text {
-  color: #d32f2f; /* Red */
-  margin-top: 8px; /* Spacing above the warning text */
-  font-size: 0.9rem; /* Smaller font size for the warning */
+  color: #d32f2f;
+  /* Red */
+  margin-top: 8px;
+  /* Spacing above the warning text */
+  font-size: 0.9rem;
+  /* Smaller font size for the warning */
 }
 
 .error-message {
-  color: red; /* This sets the text color to red */
+  color: red;
+  /* This sets the text color to red */
 }
 
 .scrollable-box {
@@ -559,7 +603,8 @@ p {
   padding: 8px 16px;
   border: none;
   border-radius: 20px;
-  background: #E5E5EA; /* Light gray for unselected */
+  background: #E5E5EA;
+  /* Light gray for unselected */
   color: black;
   cursor: pointer;
   outline: none;
@@ -567,11 +612,13 @@ p {
 }
 
 .scrollable-box button.selected {
-  background-color: #283e4a; /* Dark blue for selected */
+  background-color: #283e4a;
+  /* Dark blue for selected */
   color: white;
 }
 
 .scrollable-box button:hover {
-  background-color: #3e5867; /* Slightly lighter blue for hover */
+  background-color: #3e5867;
+  /* Slightly lighter blue for hover */
   color: white;
 }
