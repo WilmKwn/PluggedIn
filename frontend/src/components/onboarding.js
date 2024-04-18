@@ -16,6 +16,7 @@ const Onboarding = () => {
   const [profilePic, setProfilePic] = useState(null);
   const [fileLabel, setFileLabel] = useState("No file chosen");
   const [isRecordLabelAccount, setIsRecordLabelAccount] = useState(false);
+  const [isNewsAccount, setIsNewsAccount] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [newsTags, setNewsTags] = useState([
     { name: "Pop", selected: false },
@@ -91,17 +92,42 @@ const Onboarding = () => {
         } catch (error) {
           console.error("Error updating profile: ", error);
         }
-      } else if (isRecordLabelAccount === false) {
+      } else if (isNewsAccount === true) {
         try {
           const data = {
             uid: auth.currentUser.uid,
             realname: realname,
             username: username,
-            accountType: 0,
+            accountType: 2,
             profilePic: fileLabel,
             genre: genre,
             description: description,
             recordLabelAccount: isRecordLabelAccount,
+            hashtags: selectedTags,
+          };
+
+          axios.post("http://localhost:5001/user", data).then(() => {
+            console.log("successfully onboarded");
+            localStorage.setItem("userId", auth.currentUser.uid);
+            localStorage.setItem(
+              "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
+              auth.currentUser.uid
+            );
+            navigate("/feed");
+          });
+        } catch (error) {
+          console.error("Error updating profile: ", error);
+        }
+      } else {
+        try {
+          const data = {
+            uid: auth.currentUser.uid,
+            realname: realname,
+            username: username,
+            accountType: 2,
+            profilePic: fileLabel,
+            genre: genre,
+            description: description,
             hashtags: selectedTags,
           };
 
@@ -133,7 +159,18 @@ const Onboarding = () => {
   };
 
   const handleRecordLabelSwitchChange = (newState) => {
+    if (newState) {
+      setIsNewsAccount(false);
+    }
     setIsRecordLabelAccount(newState);
+    setShowWarning(newState);
+  };
+
+  const handleNewsSwitchChange = (newState) => {
+    if (newState) {
+      setIsRecordLabelAccount(false);
+    }
+    setIsNewsAccount(newState);
     setShowWarning(newState);
   };
 
@@ -224,6 +261,13 @@ const Onboarding = () => {
             <Switch
               checked={isRecordLabelAccount}
               onChange={handleRecordLabelSwitchChange}
+              onColor="#007AFF"
+              offColor="#E5E5EA"
+            />
+            <span className="mr-2">News Account</span>
+            <Switch
+              checked={isNewsAccount}
+              onChange={handleNewsSwitchChange}
               onColor="#007AFF"
               offColor="#E5E5EA"
             />
