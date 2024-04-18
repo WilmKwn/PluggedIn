@@ -74,6 +74,7 @@ const Profile = () => {
     recordLabelMembers: [],
     skills: [],
     projects: [],
+    followers: [],
   });
 
 
@@ -89,6 +90,7 @@ const Profile = () => {
     recordLabelMembers: [],
     skills: [],
     projects: [],
+    followers: [],
   });
   const [userPosts, setUserPosts] = useState([]);
 
@@ -559,6 +561,31 @@ const Profile = () => {
       });
   }
 
+  const handleFollowNews = () => {
+    console.log(userData.followers)
+    const data = { ...userData, followers: [...userData.followers, loggedInId] }
+    console.log(data.followers)
+    axios.put(`http://localhost:5001/user/${userId}`, { followers: data.followers })
+      .then((response) => {
+        console.log("User followed successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error following user:", error);
+      });
+
+  }
+
+  const handleUnfollowNews = () => {
+    const data = { ...userData, followers: userData.followers.filter(follower => follower !== loggedInId) }
+    axios.put(`http://localhost:5001/user/${userId}`, { followers: data.followers })
+      .then((response) => {
+        console.log("User unfollowed successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error unfollowing user:", error);
+      });
+  }
+
   const handleBlock = () => {
     //console.log(id);
     console.log("Handle Block");
@@ -765,6 +792,8 @@ const Profile = () => {
       window.location.reload();
     };
 
+
+
     return (
       <div className="h-full pt-28 flex flex-col items-center">
         {userProfilePic.profilePic === "No file chosen" ? (
@@ -879,7 +908,7 @@ const Profile = () => {
               )
               : (
                 <>
-                  <ConnectMessaging inId={userId} myName={loggedInData.realname}/></>
+                  <ConnectMessaging inId={userId} myName={loggedInData.realname} /></>
               )
           )
           ) : (<div></div>)}
@@ -929,6 +958,26 @@ const Profile = () => {
                 )
               )
           )
+          ) : (<div></div>)}
+          {(userId !== loggedInId && userData.accountType === 2) ? (
+            !userData.followers.includes(loggedInId) ? (
+              <div>
+                <button onClick={() => handleFollowNews()} className="button">
+                  Follow
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  onClick={() => handleUnfollowNews()}
+                  className="button bg-gray-300"
+                >
+                  {isHovered ? 'Unfollow' : 'Following'}
+                </button>
+              </div>
+            )
           ) : (<div></div>)}
 
           {(userId !== loggedInId && userData.accountType == 0 && loggedInData.accountType == 1) ? (userData.joinedRecordLabels &&
@@ -1038,7 +1087,7 @@ const Profile = () => {
             </ul>
           </div>
         </div>
-      </div>
+      </div >
     );
   };
   const BlockedPage = () => {

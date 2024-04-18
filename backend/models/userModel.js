@@ -92,6 +92,11 @@ const userSchema = mongoose.Schema(
         hashtags: {
             type: [String],
             required: true
+        },
+        followers: {
+            type: [String],
+            default: [],
+            required: true
         }
     }
 );
