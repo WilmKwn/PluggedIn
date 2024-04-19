@@ -12,7 +12,7 @@ import Switch from "react-ios-switch";
 
 const EditProfile = () => {
   const navigate = useNavigate();
-  
+
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState("");
 
@@ -20,9 +20,10 @@ const EditProfile = () => {
   const [newHashtag, setNewHashtag] = useState("");
 
   const [isNewsAccount, setNewsAccount] = useState(false);
+  const [newUsername, setNewUsername] = useState("");
 
   const userId = localStorage.getItem("userId");
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -64,7 +65,7 @@ const EditProfile = () => {
           console.error('Error adding skill:', error);
           // Optionally, handle the error or revert local state changes
         });
-        setNewSkill("");
+      setNewSkill("");
     }
   };
 
@@ -82,10 +83,21 @@ const EditProfile = () => {
         console.error('Error deleting skill:', error);
         // Optionally, handle the error or revert local state changes
       });
-    };
-    
-    const handleSkillChange = (event) => {
-      setNewSkill(event.target.value);
+  };
+
+  const handleSkillChange = (event) => {
+    setNewSkill(event.target.value);
+  };
+
+  const handleChangeUsername = () => {
+    console.log(userId, newUsername)
+    axios.put(`http://localhost:5001/user/${userId}`, { username: newUsername })
+      .then(response => {
+        console.log('Username changed successfully:', response.data);
+      })
+      .catch(error => {
+        console.error('Error changing username:', error);
+      });
   };
 
   const addHashtag = () => {
@@ -97,7 +109,7 @@ const EditProfile = () => {
       // Make API call to add skill to the user
       const tag = "#" + newHashtag;
       axios.post(`http://localhost:5001/user/${userId}/hashtags`, { hashtag: temp })
-      .then(response => {
+        .then(response => {
           console.log('Hashtag added successfully:', response.data);
           // Optionally, update the UI or handle success
         })
@@ -105,25 +117,25 @@ const EditProfile = () => {
           console.error('Error adding skill:', error);
           // Optionally, handle the error or revert local state changes
         });
-        setNewHashtag("");
-      }
+      setNewHashtag("");
     }
-    
-    const deleteHashtag = (hashtagToDelete) => {
-      // Update the local state first
-      setHashtags(hashtags.filter((hashtag) => hashtag !== hashtagToDelete));
-    
-      // Make API call to delete skill from the user
-      axios.delete(`http://localhost:5001/user/${userId}/hashtags/${hashtagToDelete}`)
-        .then(response => {
-          console.log('Skill deleted successfully:', response.data);
-          // Optionally, update the UI or handle success
-        })
-        .catch(error => {
-          console.error('Error deleting skill:', error);
-          // Optionally, handle the error or revert local state changes
-        });
-    }
+  }
+
+  const deleteHashtag = (hashtagToDelete) => {
+    // Update the local state first
+    setHashtags(hashtags.filter((hashtag) => hashtag !== hashtagToDelete));
+
+    // Make API call to delete skill from the user
+    axios.delete(`http://localhost:5001/user/${userId}/hashtags/${hashtagToDelete}`)
+      .then(response => {
+        console.log('Skill deleted successfully:', response.data);
+        // Optionally, update the UI or handle success
+      })
+      .catch(error => {
+        console.error('Error deleting skill:', error);
+        // Optionally, handle the error or revert local state changes
+      });
+  }
 
   const handleHashtagChange = (event) => {
     setNewHashtag(event.target.value);
@@ -133,7 +145,17 @@ const EditProfile = () => {
     <div>
       <SecondaryBanner />
       <div className="edit-profile-container mb-96">
+        <div style={{ marginTop: '50px' }}>
+          <input
+            type="text"
+            value={newUsername}
+            onChange={(event) => setNewUsername(event.target.value)}
+            placeholder="New username"
+          />
+          <button onClick={handleChangeUsername}>Change Username</button>
+        </div>
         <div className="skills-container">
+
           <h2>Edit Skills</h2>
           <ul>
             {skills.map((skill, index) => (
@@ -196,7 +218,7 @@ const EditProfile = () => {
           Complete Edit
         </button>
       </div>
-      <SecondaryBottomBar/>
+      <SecondaryBottomBar />
     </div>
   );
 };
