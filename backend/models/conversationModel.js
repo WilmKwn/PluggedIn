@@ -14,8 +14,7 @@ const messageSchema = mongoose.Schema({
   },
   isReply: {
     type: Boolean, // if it's a reply
-    required: true,
-    default: false,
+    required: false,
   },
 });
 const conversationSchema = mongoose.Schema(

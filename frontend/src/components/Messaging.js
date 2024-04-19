@@ -43,6 +43,8 @@ const Messaging = ({ title }) => {
   const { text, start, stop, listening } = useSpeechToText();
 
   const handleReply = (message) => {
+    console.log("handle reply");
+    setIsReply(true);
     setReplyingToMessage(message);
     setMessageText(""); // Clear the message text
     // Update placeholder dynamically based on the message content
@@ -92,7 +94,7 @@ const Messaging = ({ title }) => {
     if (messageText.trim() !== "" && currFriendObj.uid !== "") {
       let content = messageText;
       let replyFlag = false; // We'll use a local variable instead
-
+      console.log("replyign to message is" + replyingToMessage);
       if (replyingToMessage) {
         content = `${messageText} (reply to: '${replyingToMessage.content}')`;
         replyFlag = true; // Change the local variable since it is a reply
@@ -103,21 +105,21 @@ const Messaging = ({ title }) => {
         user1id: localStorage.getItem("userId"),
         user2id: currFriendObj.uid,
         content: content,
-        isReply: replyFlag, // Use the local variable here
+        isReply: isReply, // Use the local variable here
       };
-
       axios
         .post(`http://localhost:5001/conversation/message`, newMessage)
         .then((response) => {
           setMessageText("");
           setReplyingToMessage(null);
-          setIsReply(false); // Now we reset the state for future messages
           setPlaceholder("Type your message..."); // Reset placeholder after sending
           setInteractionActive(false);
         })
         .catch((error) => {
           console.error("Error sending message:", error);
         });
+        setIsReply(false); // Now we reset the state for future messages
+
     }
   };
 
@@ -261,7 +263,7 @@ const Messaging = ({ title }) => {
     setShowReactions(false);
     setReplyingToMessage(null);
     setActiveMessageId(null);
-    setIsReply(false); // Reset the isReply state
+    //setIsReply(false); // Reset the isReply state
     setInteractionActive(false);
   };
 
