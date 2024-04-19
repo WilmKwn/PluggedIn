@@ -76,8 +76,9 @@ const userSchema = mongoose.Schema(
             required: true,
         },
         recentActivity: {
+            saldlkasjd
             type: [mongoose.Schema.Types.ObjectId],
-            validate: {alskfhas
+            validate: {
                 validator: function (arr) {
                     return arr.length <= 5;
                 },
