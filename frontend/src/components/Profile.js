@@ -1,4 +1,5 @@
 import React from "react";
+import Modal from "react-modal"
 import { useNavigate, useLocation } from "react-router-dom";
 import { storage, ref, getDownloadURL } from "./firebase";
 import axios from "axios";
@@ -7,8 +8,11 @@ import MainBottomBar from "./MainBottomBar";
 import ProfileBottomBar from "./ProfileBottomBar";
 import ProfileBanner from "./ProfileBanner";
 import MicroPost from "./MicroPost";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
+import Messaging from "./Messaging";
+import ConnectMessaging from "./ConnectMessaging";
 
 const Banner = (id) => {
   const navigate = useNavigate();
@@ -48,6 +52,7 @@ const Profile = () => {
   const [userProfilePic, setUserProfilePic] = useState({
     profilePic: "",
   });
+
   const [loggedInProfilePic, setLoggedInProfilePic] = useState({
     profilePic: "",
   });
@@ -69,6 +74,7 @@ const Profile = () => {
     recordLabelMembers: [],
     skills: [],
     projects: [],
+    followers: [],
   });
 
 
@@ -84,6 +90,7 @@ const Profile = () => {
     recordLabelMembers: [],
     skills: [],
     projects: [],
+    followers: [],
   });
   const [userPosts, setUserPosts] = useState([]);
 
@@ -93,12 +100,12 @@ const Profile = () => {
       .get(`http://localhost:5001/user/${userId}`)
       .then((res) => {
         // Process the user data here if the response was successful (status 200)
-        console.log("got user pfp");
-        console.log(res.data);
+        // console.log("got user pfp");
+        // console.log(res.data);
         setUserProfilePic(res.data); // Update state with user data
-        console.log("PFP:");
-        console.log(userProfilePic.profilePic);
-        console.log(res.data.endorsed);
+        // console.log("PFP:");
+        // console.log(userProfilePic.profilePic);
+        // console.log(res.data.endorsed);
         res.data.endorsed.forEach((endorsement) => {
           setEndorsements((prevEndorsements) => {
             return {
@@ -160,7 +167,6 @@ const Profile = () => {
         console.error("Error revoking endorsement skill:", error);
       });
   };
-
 
   const toggleEndorseSkill = (skill) => {
     // Check the current endorsement state for the skill
@@ -255,7 +261,7 @@ const Profile = () => {
         }
         else {
           res.data.joinedRecordLabels.forEach(friendId => {
-            console.log(friendId)
+            //console.log(friendId)
             axios.get(`http://localhost:5001/user/${friendId}`)
               .then((friendRes) => {
                 const { uid, profilePic, realname } = friendRes.data;
@@ -297,7 +303,7 @@ const Profile = () => {
               });
           });
           res.data.friends.forEach(friendId => {
-            console.log(friendId)
+            //console.log(friendId)
             axios.get(`http://localhost:5001/user/${friendId}`)
               .then((friendRes) => {
                 const { uid, profilePic, realname } = friendRes.data;
@@ -344,7 +350,8 @@ const Profile = () => {
         console.error("Error:", error);
         // Handle any errors that occur during the fetch request
       });
-
+    console.log("test");
+    console.log(loggedInId)
     axios
       .get(`http://localhost:5001/user/${loggedInId}`)
       .then((res) => {
@@ -470,6 +477,9 @@ const Profile = () => {
         console.error("Error adding friend:", error);
         // Optionally, handle the error or revert local state changes
       });
+    // if (messageText) {
+    //   handleSendMessageWithConnection();  
+    // }
   };
 
   const handleJoinLabel = () => {
@@ -548,6 +558,31 @@ const Profile = () => {
       })
       .catch((error) => {
         console.error("Error removing user from label:", error);
+      });
+  }
+
+  const handleFollowNews = () => {
+    console.log(userData.followers)
+    const data = { ...userData, followers: [...userData.followers, loggedInId] }
+    console.log(data.followers)
+    axios.put(`http://localhost:5001/user/${userId}`, { followers: data.followers })
+      .then((response) => {
+        console.log("User followed successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error following user:", error);
+      });
+
+  }
+
+  const handleUnfollowNews = () => {
+    const data = { ...userData, followers: userData.followers.filter(follower => follower !== loggedInId) }
+    axios.put(`http://localhost:5001/user/${userId}`, { followers: data.followers })
+      .then((response) => {
+        console.log("User unfollowed successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error unfollowing user:", error);
       });
   }
 
@@ -708,10 +743,13 @@ const Profile = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [showAffiliations, setShowAffiliations] = useState(false);
     const [showFriends, setShowFriends] = useState(false);
+
+
     // // check for profile pic
     if (!userProfilePic.profilePic || userProfilePic.profilePic === null) {
       userProfilePic.profilePic = "No Profile Picture";
     }
+
     const handleViewAffiliations = () => {
       setShowAffiliations(!showAffiliations);
     };
@@ -723,7 +761,7 @@ const Profile = () => {
       userData.skills = [];
     } else {
       setUserSkills(userData.skills);
-      console.log(userData.skills);
+      //console.log(userData.skills);
     }
 
     if (userData.description === null) {
@@ -746,13 +784,16 @@ const Profile = () => {
           console.log(err);
         });
     }, []);
-    console.log(userData.skills);
+    //console.log(userData.skills);
     const profileClicked = (id) => {
       const userId = id;
       console.log("navigate to " + userId);
       navigate("/profile", { state: { userId } });
       window.location.reload();
     };
+
+
+
     return (
       <div className="h-full pt-28 flex flex-col items-center">
         {userProfilePic.profilePic === "No file chosen" ? (
@@ -762,6 +803,7 @@ const Profile = () => {
         )}
         <div>{userData.realname}</div>
         {userData.accountType === 1 && <div>Record Label</div>}
+        {userData.accountType === 2 && <div>News Account</div>}
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
@@ -793,7 +835,7 @@ const Profile = () => {
           )}
 
         </div>) : (<></>)
-  }
+        }
         <div>
           <button onClick={handleViewAffiliations}>View Affiliations</button>
 
@@ -866,12 +908,7 @@ const Profile = () => {
               )
               : (
                 <>
-                  <div>
-                    <button onClick={() => handleConnect()}
-                      className="button">
-                      {console.log(userData.friends)}
-                      Connect </button>
-                  </div></>
+                  <ConnectMessaging inId={userId} myName={loggedInData.realname} /></>
               )
           )
           ) : (<div></div>)}
@@ -915,12 +952,32 @@ const Profile = () => {
                     <div>
                       <button onClick={() => handleJoinLabel()}
                         className="button">
-                        {console.log(userData.friends)}
+                        {/*console.log(userData.friends)*/}
                         Request to Join Label </button>
                     </div></>
                 )
               )
           )
+          ) : (<div></div>)}
+          {(userId !== loggedInId && userData.accountType === 2) ? (
+            !userData.followers.includes(loggedInId) ? (
+              <div>
+                <button onClick={() => handleFollowNews()} className="button">
+                  Follow
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  onClick={() => handleUnfollowNews()}
+                  className="button bg-gray-300"
+                >
+                  {isHovered ? 'Unfollow' : 'Following'}
+                </button>
+              </div>
+            )
           ) : (<div></div>)}
 
           {(userId !== loggedInId && userData.accountType == 0 && loggedInData.accountType == 1) ? (userData.joinedRecordLabels &&
@@ -1015,7 +1072,7 @@ const Profile = () => {
             </ul>
           </div>
         </div>
-        
+
         <div className="edit-profile-container">
           <div className="skills-profile">
             <h2>Hashtags</h2>
@@ -1030,7 +1087,7 @@ const Profile = () => {
             </ul>
           </div>
         </div>
-      </div>
+      </div >
     );
   };
   const BlockedPage = () => {

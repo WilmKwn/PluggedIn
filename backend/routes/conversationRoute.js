@@ -64,7 +64,7 @@ router.delete('/:id', async (req, res) => {
 // create new message in a found conversation or create a new conversation
 router.post('/message', async (req, res) => {
     try {
-        const { user1id, user2id, content } = req.body;
+        const { user1id, user2id, content, isReply} = req.body;
         //console.log(req.body);
 
         // Find the conversation based on user IDs
@@ -97,10 +97,12 @@ router.post('/message', async (req, res) => {
         //console.log(content)
         // Add the new message to the conversation
         try {
+            console.log(isReply);
         conversation.messages.push({
             senderUid: user1id,
             sent: new Date(),
             content,
+            isReply: isReply,
             });
         }
         catch (error) 
@@ -108,11 +110,11 @@ router.post('/message', async (req, res) => {
             console.error("Error adding message:", error);
             return res.status(500).send("Error adding message");
         }
-        //console.log(conversation);
+        console.log(conversation);
 
         // Save the updated conversation
         await conversation.save();
-
+        console.log("test");
         return res.status(200).send('Message sent successfully');
     } catch (err) {
         return res.status(500).send(err.message);

@@ -14,8 +14,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const Messaging = ({ title }) => {
+  const [placeholder, setPlaceholder] = useState("Type your message...");
+
+  const [showReactions, setShowReactions] = useState(false);
+  const [activeMessageId, setActiveMessageId] = useState(null);
+  const [isReply, setIsReply] = useState(false); // Track if the current message is a reply
+
+  const [interactionActive, setInteractionActive] = useState(false); // Track if any interaction is active
+
   const [isModalOpen, setModalOpen] = useState(false);
   const [myName, setMyName] = useState("");
+  const [replyingToMessage, setReplyingToMessage] = useState(null);
   const [userData, setUserData] = useState({
     realname: "",
     friends: [],
@@ -32,6 +41,29 @@ const Messaging = ({ title }) => {
 
   // Speech-to-Text state and functions
   const { text, start, stop, listening } = useSpeechToText();
+
+  const handleReply = (message) => {
+    console.log("handle reply");
+    setIsReply(true);
+    setReplyingToMessage(message);
+    setMessageText(""); // Clear the message text
+    // Update placeholder dynamically based on the message content
+    setPlaceholder(`Reply to '${message.content.substring(0, 50)}'`); // Truncate if necessary
+    setTimeout(() => {
+      const inputElement = document.getElementById("messageInput");
+      if (inputElement) inputElement.focus();
+      else console.error("messageInput element not found");
+    }, 0);
+    setInteractionActive(true);
+  };
+
+  const handleReact = (message, messageId) => {
+    setReplyingToMessage(message);
+    setShowReactions((prevState) => !prevState);
+    setActiveMessageId(messageId);
+    setInteractionActive(true);
+  };
+
   const handleVoiceInput = () => {
     if (listening) {
       stop();
@@ -43,6 +75,53 @@ const Messaging = ({ title }) => {
     // Whenever 'text' changes, update the messageText state
     setMessageText(text);
   }, [text]);
+
+  const handleCancelReply = () => {
+    setReplyingToMessage(null);
+    setMessageText("");
+    setPlaceholder("Type your message..."); // Reset placeholder
+    setInteractionActive(false);
+  };
+  const handleCancelReact = () => {
+    setShowReactions(false);
+    setReplyingToMessage(null);
+    setMessageText("");
+    setPlaceholder("Type your message..."); // Reset placeholder
+    setInteractionActive(false);
+  };
+
+  const handleSendMessage = () => {
+    if (messageText.trim() !== "" && currFriendObj.uid !== "") {
+      let content = messageText;
+      let replyFlag = false; // We'll use a local variable instead
+      console.log("replyign to message is" + replyingToMessage);
+      if (replyingToMessage) {
+        content = `${messageText} (reply to: '${replyingToMessage.content}')`;
+        replyFlag = true; // Change the local variable since it is a reply
+      }
+
+      console.log("isReply: ", isReply);
+      const newMessage = {
+        user1id: localStorage.getItem("userId"),
+        user2id: currFriendObj.uid,
+        content: content,
+        isReply: isReply, // Use the local variable here
+      };
+      axios
+        .post(`http://localhost:5001/conversation/message`, newMessage)
+        .then((response) => {
+          setMessageText("");
+          setReplyingToMessage(null);
+          setPlaceholder("Type your message..."); // Reset placeholder after sending
+          setInteractionActive(false);
+        })
+        .catch((error) => {
+          console.error("Error sending message:", error);
+        });
+        setIsReply(false); // Now we reset the state for future messages
+
+    }
+  };
 
   useEffect(() => {
     axios
@@ -56,7 +135,7 @@ const Messaging = ({ title }) => {
               const { uid, profilePic, realname } = friendRes.data;
               const picRef = ref(storage, "user/" + profilePic);
               for (const friend in friendObjArr) {
-                if (friend.uid = friendId) {
+                if ((friend.uid = friendId)) {
                   friendObjArr.delete(friend);
                 }
               }
@@ -127,48 +206,7 @@ const Messaging = ({ title }) => {
   }, []);
 
   const selectedConversation = findConversation();
-  const handleSendMessage = () => {
-    if (messageText.trim() !== "" && currFriendObj.uid !== "") {
-      // Check if the message is not empty
-      const newMessage = {
-        user1id: localStorage.getItem("userId"),
-        user2id: currFriendObj.uid,
-        content: messageText,
-        //timestamp: new Date().toISOString(),
-      };
 
-      axios
-        .post(`http://localhost:5001/conversation/message`, newMessage)
-        .then((response) => {
-          setMessageText("");
-
-          // update notifications of the recipient
-          axios
-            .get(`http://localhost:5001/user/${currFriendObj.uid}`)
-            .then((res) => {
-              const data = res.data;
-              const notis = data.notifications;
-              notis.push(`New Message from ${myName}`);
-              const newData = {
-                ...data,
-                notis,
-              };
-              axios.put(
-                `http://localhost:5001/user/${currFriendObj.uid}`,
-                newData
-              );
-            });
-        })
-        .catch((error) => {
-          console.error("Error sending message:", error);
-        });
-    }
-    setCurrFriendObj({
-      uid: currFriendObj.uid,
-      realname: currFriendObj.realname,
-    });
-    findConversation();
-  };
   //AIzaSyDQ5G0U8_26WdvFn-_l5EAQ9BDcATMiKEs
   const handleGif = () => {
     grab_data();
@@ -209,12 +247,57 @@ const Messaging = ({ title }) => {
     for (let i = 0; i < top_10_gifs.length; i++) {
       const shareGifUrl = top_10_gifs[i]["media_formats"]["gif"]["url"];
 
-
       const shareImg = document.createElement("img");
       shareImg.src = shareGifUrl;
       document.getElementById("share_gifs_container").appendChild(shareImg);
     }
   }
+
+  const handleEmojiClick = (emoji) => {
+    console.log(`Reacted with ${emoji} to message ${activeMessageId}`);
+    let replyFlag = false;
+    if (activeMessageId && replyingToMessage) {
+      replyFlag = true; // It's a reply to a message
+    }
+    handleSendEmojiMessage(emoji); // Pass the flag directly
+    setShowReactions(false);
+    setReplyingToMessage(null);
+    setActiveMessageId(null);
+    //setIsReply(false); // Reset the isReply state
+    setInteractionActive(false);
+  };
+
+  const handleSendEmojiMessage = (emoji) => {
+    if (currFriendObj.uid !== "" && replyingToMessage) {
+      const originalMessage = replyingToMessage.content;
+      const content = `${emoji} (reply to: '${originalMessage.substring(
+        0,
+        50
+      )}')`;
+      //setIsReply(true);
+
+      console.log("isReply: ", isReply);
+
+      const newMessage = {
+        user1id: localStorage.getItem("userId"),
+        user2id: currFriendObj.uid,
+        content: content,
+        isReply: isReply, // Use the passed parameter to set the isReply field.
+      };
+
+      axios
+        .post(`http://localhost:5001/conversation/message`, newMessage)
+        .then((response) => {
+          console.log("Emoji sent as message:", response);
+          setMessageText("");
+          setReplyingToMessage(null);
+          setPlaceholder("Type your message..."); // Reset placeholder after sending
+        })
+        .catch((error) => {
+          console.error("Error sending emoji message:", error);
+        });
+    }
+  };
 
   // function to call the trending and category endpoints
   function grab_data() {
@@ -256,7 +339,6 @@ const Messaging = ({ title }) => {
   }
   const handleGifClick = (shareGifUrl) => {
     setMessageText(shareGifUrl);
-
   };
 
   const modalStyles = {
@@ -288,7 +370,6 @@ const Messaging = ({ title }) => {
       <button onClick={openModal} className="button">
         Messages <FontAwesomeIcon icon={faMessage} />
       </button>
-      {/* Modal */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
@@ -374,7 +455,9 @@ const Messaging = ({ title }) => {
                               <p className="text-gray-500 text-xs mt-1">{new Date(message.sent).toLocaleString()}</p>
                             </div>
                           ))*/}
+
                         {selectedConversation.messages.map((message, index) => {
+                          const isUserMessage = message.senderUid === userId;
                           // Regular expression to match Tenor GIF URLs
                           //const tenorGifRegex = /^https?:\/*\/tenor\.com\/view\/.*$/i;
                           const tenorGifRegex = /^https:\/\/.*tenor\.com.*$/;
@@ -387,32 +470,63 @@ const Messaging = ({ title }) => {
                           return (
                             <div
                               key={index}
-                              className={`mb-2 ${message.senderUid === userId
+                              className={`mb-2 ${
+                                message.senderUid === userId
                                   ? " text-sm ml-auto bg-gray-300"
                                   : " text-sm bg-blue-500 text-white"
-                                } p-2 rounded-md`}
+                              } p-2 rounded-md`}
                               style={{ maxWidth: "75%" }}
                             >
-                              <p className="font-semibold">
-                                {message.senderUid === userId
-                                  ? "You"
-                                  : currFriendObj.realname}
-                                :
-                              </p>
-                              {/* Check if the message contains a Tenor GIF */}
-                              {containsTenorGif ? (
-                                // If a Tenor GIF is present, embed it
-                                <img
-                                  src={message.content}
-                                  alt="Tenor GIF"
-                                />
-                              ) : (
-                                // If no Tenor GIF is present, display the message content
-                                <p>{message.content}</p>
+                              <div
+                                className={`mb-2 ${
+                                  isUserMessage
+                                    ? "bg-gray-300"
+                                    : "bg-blue-500 text-white"
+                                } p-2 rounded-md`}
+                                style={{ maxWidth: "75%" }}
+                              >
+                                <p className="font-semibold">
+                                  {message.senderUid === userId
+                                    ? "You"
+                                    : currFriendObj.realname}
+                                  :
+                                </p>
+                                {/* Check if the message contains a Tenor GIF */}
+                                {containsTenorGif ? (
+                                  // If a Tenor GIF is present, embed it
+                                  <img src={message.content} alt="Tenor GIF" />
+                                ) : (
+                                  // If no Tenor GIF is present, display the message content
+                                  <p>{message.content}</p>
+                                )}
+                                <p className="text-gray-500 text-xs mt-1">
+                                  {new Date(message.sent).toLocaleString()}
+                                </p>
+                              </div>
+                              {!isUserMessage && (
+                                <div>
+                                  <div>
+                                    {!interactionActive && (
+                                      <div>
+                                        <button
+                                          onClick={() => handleReply(message)}
+                                          className="ml-2 button"
+                                        >
+                                          Reply
+                                        </button>
+                                        <button
+                                          onClick={() =>
+                                            handleReact(message, message.uid)
+                                          }
+                                          className="ml-2 button"
+                                        >
+                                          React
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
                               )}
-                              <p className="text-gray-500 text-xs mt-1">
-                                {new Date(message.sent).toLocaleString()}
-                              </p>
                             </div>
                           );
                         })}
@@ -425,13 +539,48 @@ const Messaging = ({ title }) => {
               </div>
             </div>
             <div className="flex items-center mt-4">
-              <input
-                type="text"
-                placeholder="Type your message..."
-                className="w-full p-3 ml-1 mb-1 border border-gray-300 rounded-l-md"
-                value={messageText}
-                onChange={(e) => setMessageText(e.target.value)}
-              />
+              {!showReactions ? (
+                <>
+                  <input
+                    type="text"
+                    id="messageInput"
+                    placeholder={placeholder}
+                    className="w-full p-3 ml-1 mb-1 border border-gray-300 rounded-l-md"
+                    value={messageText}
+                    onChange={(e) => setMessageText(e.target.value)}
+                  />
+                  {interactionActive &&
+                    (replyingToMessage || showReactions) && (
+                      <button
+                        onClick={handleCancelReact}
+                        className="button ml-2"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                </>
+              ) : (
+                <div>
+                  {["❤️", "👍", "😂", "👎", "😈", "🔊", "🔇"].map((emoji) => (
+                    <button
+                      key={emoji}
+                      onClick={() => handleEmojiClick(emoji)}
+                      className="button rounded-r-md ml-2 mb-1"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                  <button onClick={handleCancelReact} className="button ml-2">
+                    Cancel
+                  </button>
+                </div>
+              )}
+              <button
+                onClick={handleSendMessage}
+                className="button rounded-r-md ml-2 mb-1"
+              >
+                <FontAwesomeIcon icon={faPaperPlane} />
+              </button>
               <button
                 onClick={handleVoiceInput}
                 className="button rounded-r-md ml-2 mb-1"
@@ -439,12 +588,6 @@ const Messaging = ({ title }) => {
                 <FontAwesomeIcon
                   icon={listening ? faMicrophoneSlash : faMicrophone}
                 />
-              </button>
-              <button
-                onClick={handleSendMessage}
-                className="button rounded-r-md ml-2 mb-1"
-              >
-                <FontAwesomeIcon icon={faPaperPlane} />
               </button>
               <button
                 onClick={handleGif}
@@ -455,13 +598,12 @@ const Messaging = ({ title }) => {
               {gifModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
                   <div className="bg-white p-4 rounded-md">
-                    {/*<div id="preview_gifs_container" className="overflow-y-auto max-h-96">
-                        
-              </div>*/}
-                    <div id="share_gifs_container" className="overflow-y-auto max-h-96">
+                    <div
+                      id="share_gifs_container"
+                      className="overflow-y-auto max-h-96"
+                    >
                       {renderGifs()}
                     </div>
-
                     <button onClick={closeGifModal} className="button mt-4">
                       Close
                     </button>

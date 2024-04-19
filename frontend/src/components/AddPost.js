@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SecondaryBanner from "./SecondaryBanner";
 import SecondaryBottomBar from "./SecondaryBottomBar";
 import axios from "axios";
@@ -8,16 +8,20 @@ import Switch from "react-ios-switch";
 import { faHandMiddleFinger } from "@fortawesome/free-solid-svg-icons";
 
 const AddPost = () => {
+
   const [postTitle, setPostTitle] = useState("");
   const [postDescription, setPostDescription] = useState("");
   const [postMedia, setPostMedia] = useState(null);
   const [postMediaName, setPostMediaName] = useState("");
   const [postTags, setPostTags] = useState("");
-
+  const [isNewsAccount, setIsNewsAccount] = useState(false);
   const [isSong, setIsSong] = useState(false);
   const [isProducerTag, setIsProducerTag] = useState(false);
   const [isNews, setIsNews] = useState(false);
   const [isJob, setIsJob] = useState(false);
+  const loggedInId = localStorage.getItem(
+    "actualUserIdBecauseWilliamYongUkKwonIsAnnoying"
+  );
 
   const navigate = useNavigate();
 
@@ -35,6 +39,23 @@ const AddPost = () => {
     setIsNews(false);
     setIsJob(false);
   };
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5001/user/${loggedInId}`)
+      .then((res) => {
+        console.log("got loggedIn data");
+        if (res.data.accountType === 2) {
+          setIsNewsAccount(true);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  })
+
+
+
 
   const handleSongSwitchChange = (newValue) => {
     setIsSong(newValue);
@@ -203,15 +224,17 @@ const AddPost = () => {
                 </div>
               </div>
             )}
-            <div className="flex items-center justify-center mb-3">
-              <span className="mr-2">News</span>
-              <Switch
-                checked={isNews}
-                onChange={handleNewsSwitchChange} // Updated to use the new handler
-                onColor="#007AFF"
-                offColor="#E5E5EA"
-              />
-            </div>
+            {isNewsAccount &&
+              <div className="flex items-center justify-center mb-3">
+                <span className="mr-2">News</span>
+                <Switch
+                  checked={isNews}
+                  onChange={handleNewsSwitchChange} // Updated to use the new handler
+                  onColor="#007AFF"
+                  offColor="#E5E5EA"
+                />
+              </div>
+            }
             <div className="flex items-center justify-center mb-3">
               <span className="mr-2">Job</span>
               <Switch
