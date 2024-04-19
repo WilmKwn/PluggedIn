@@ -10,8 +10,116 @@ import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 const Post = ({ postParam, input }) => {
 =======
+=======
+const ShareModal = ({ isOpen, onRequestClose, userId, post }) => {
+  const [friends, setFriends] = useState([]);
+
+  const modalStyles = {
+    content: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      border: "1px solid #ccc",
+      background: "#fff",
+      overflow: "auto",
+      WebkitOverflowScrolling: "touch",
+      borderRadius: "4px",
+      outline: "none",
+      padding: "20px",
+    },
+  };
+
+  const handleShare = (friendRealname, postId) => {
+    // Log the post ID to the console
+    console.log(`Post ID: ${postId}`);
+    // Then alert the user that the post has been shared
+    alert(`Post shared with ${friendRealname}!`);
+  };
+
+  useEffect(() => {
+    if (!userId) {
+      console.error("User ID is undefined. Cannot fetch friends.");
+      return;
+    }
+
+    axios
+      .get(`http://localhost:5001/user/${userId}`)
+      .then((response) => {
+        const friendsData = response.data.friends || [];
+        return Promise.all(
+          friendsData.map((friendId) =>
+            axios
+              .get(`http://localhost:5001/user/${friendId}`)
+              .then((friendRes) => {
+                const { uid, realname } = friendRes.data;
+                const picRef = ref(
+                  storage,
+                  "user/" + friendRes.data.profilePic
+                );
+                return getDownloadURL(picRef)
+                  .then((url) => {
+                    return { uid, realname, url };
+                  })
+                  .catch(() => ({
+                    uid,
+                    realname,
+                    url: "https://via.placeholder.com/150",
+                  }));
+              })
+          )
+        );
+      })
+      .then((friends) => {
+        setFriends(friends);
+      })
+      .catch((error) => console.error("Error fetching friends:", error));
+  }, [userId]);
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      style={modalStyles}
+      contentLabel="Share Post Modal"
+      post={post}
+    >
+      <h2>Share this Post</h2>
+      <div>
+        {friends.map((friend, index) => (
+          <div
+            key={index}
+            className="flex items-center border-b border-gray-300 p-2"
+          >
+            <div>
+              <img
+                src={friend.url}
+                alt={`Profile ${index + 1}`}
+                className="w-12 h-12 rounded-full cursor-pointer"
+                onClick={() => handleShare(friend.realname, post._id)}
+              />
+            </div>
+            <div className="ml-4">
+              <p className="text-gray-800 font-semibold">{friend.realname}</p>
+              <button onClick={() => handleShare(friend.realname, post._id)}>
+                Share
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button onClick={onRequestClose}>Close</button>
+    </Modal>
+  );
+};
+
+>>>>>>> Stashed changes
 const Post = ({ postParam, input = " " }) => {
   const [isShareModalOpen, setShareModalOpen] = useState(false);
 
@@ -30,6 +138,13 @@ const Post = ({ postParam, input = " " }) => {
       handleLaugh();
     }
   }, [input]);
+
+  const [isShareModalOpen, setShareModalOpen] = useState(false); // Add this line
+
+  // Existing useEffect and function definitions
+
+  const handleOpenShareModal = () => setShareModalOpen(true); // Function to open ShareModal
+  const handleCloseShareModal = () => setShareModalOpen(false);
 
   const [post] = useState(postParam);
   const navigate = useNavigate();
@@ -114,6 +229,10 @@ const Post = ({ postParam, input = " " }) => {
   const [laughStatus, setLaughStatus] = useState(false);
   const [repostStatus, setRepostStatus] = useState(false);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+  const [hiddenBy, setHiddenBy] = useState([]);
+>>>>>>> Stashed changes
 =======
   const [hiddenBy, setHiddenBy] = useState([]);
 >>>>>>> Stashed changes
@@ -159,6 +278,9 @@ const Post = ({ postParam, input = " " }) => {
 
 =======
     setHiddenBy(post.hiddenBy);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   }, [post.media, post.comments]);
 
@@ -188,7 +310,13 @@ const Post = ({ postParam, input = " " }) => {
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
+=======
+      axios
+        .get(`http://localhost:5001/user/${post.owner}`)
+        .then((res) => {
+>>>>>>> Stashed changes
 =======
       axios
         .get(`http://localhost:5001/user/${post.owner}`)
@@ -200,17 +328,23 @@ const Post = ({ postParam, input = " " }) => {
           const newData = {
             ...data,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             notis
           }
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
           alert("liked notification sent");
         }).catch(err => console.log(err));
 =======
+=======
+>>>>>>> Stashed changes
             notis,
           };
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
         })
         .catch((err) => console.log(err));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     } catch (err) {
       console.log(err.message);
@@ -248,6 +382,7 @@ const Post = ({ postParam, input = " " }) => {
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
           const data = res.data;
           const notis = data.notifications;
@@ -260,6 +395,8 @@ const Post = ({ postParam, input = " " }) => {
         }).catch(err => console.log(err));
         alert("disliked notification sent");
 =======
+=======
+>>>>>>> Stashed changes
       axios
         .get(`http://localhost:5001/user/${post.owner}`)
         .then((res) => {
@@ -275,6 +412,9 @@ const Post = ({ postParam, input = " " }) => {
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
         })
         .catch((err) => console.log(err));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     } catch (err) {
       console.log(err.message);
@@ -306,7 +446,13 @@ const Post = ({ postParam, input = " " }) => {
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
+=======
+      axios
+        .get(`http://localhost:5001/user/${post.owner}`)
+        .then((res) => {
+>>>>>>> Stashed changes
 =======
       axios
         .get(`http://localhost:5001/user/${post.owner}`)
@@ -318,17 +464,23 @@ const Post = ({ postParam, input = " " }) => {
           const newData = {
             ...data,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             notis
           }
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
           alert("laughed notification sent");
         }).catch(err => console.log(err));
 =======
+=======
+>>>>>>> Stashed changes
             notis,
           };
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
         })
         .catch((err) => console.log(err));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     } catch (err) {
       console.log(err.message);
@@ -368,6 +520,7 @@ const Post = ({ postParam, input = " " }) => {
       try {
         axios.post(`http://localhost:5001/post`, repost);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
           const data = res.data;
           const notis = data.notifications;
@@ -380,6 +533,8 @@ const Post = ({ postParam, input = " " }) => {
           alert("reposted notification sent");
         }).catch(err => console.log(err));
 =======
+=======
+>>>>>>> Stashed changes
         axios
           .get(`http://localhost:5001/user/${post.owner}`)
           .then((res) => {
@@ -395,6 +550,9 @@ const Post = ({ postParam, input = " " }) => {
             axios.put(`http://localhost:5001/user/${post.owner}`, newData);
           })
           .catch((err) => console.log(err));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       } catch (err) {
         console.log(err.message);
@@ -445,6 +603,7 @@ const Post = ({ postParam, input = " " }) => {
           setComments([...comments, newComment]);
         });
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
           const data = res.data;
           const notis = data.notifications;
@@ -457,6 +616,8 @@ const Post = ({ postParam, input = " " }) => {
           alert("commented notification sent");
         }).catch(err => console.log(err));
 =======
+=======
+>>>>>>> Stashed changes
         axios
           .get(`http://localhost:5001/user/${post.owner}`)
           .then((res) => {
@@ -472,6 +633,9 @@ const Post = ({ postParam, input = " " }) => {
             axios.put(`http://localhost:5001/user/${post.owner}`, newData);
           })
           .catch((err) => console.log(err));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       } catch (err) {
         console.log(err.message);
@@ -529,6 +693,7 @@ const Post = ({ postParam, input = " " }) => {
 
   return (
     <div>
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
       {(userData.blockedUsers.includes(loggedInId) || loggedInData.blockedUsers.includes(userId)) ? (
         <><div></div></>
@@ -647,6 +812,8 @@ const Post = ({ postParam, input = " " }) => {
                 onChange={(e) => setCommentInput(e.target.value)}
                 placeholder="Add a comment..."
 =======
+=======
+>>>>>>> Stashed changes
       {userData.blockedUsers.includes(loggedInId) ||
       loggedInData.blockedUsers.includes(userId) ||
       post.hiddenBy.includes(loggedInId) ? (
@@ -665,6 +832,9 @@ const Post = ({ postParam, input = " " }) => {
                 alt="User profile"
                 style={{ width: "50px", height: "50px" }}
                 className="user-profile-pic"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
               />
               <span className="username">
@@ -747,11 +917,16 @@ const Post = ({ postParam, input = " " }) => {
                 <source src={media} type={`audio/${mediaExtension}`} />
               </audio>
             )}
+<<<<<<< Updated upstream
 
             <div>&nbsp;</div>
 
             <div className="post-tags">Tags: {post.tags.join(" ")}</div>
 
+=======
+            <div>&nbsp;</div>
+            <div className="post-tags">Tags: {post.tags.join(" ")}</div>
+>>>>>>> Stashed changes
             <div className="post-interactions">
               <button
                 className={`post-button ${likeStatus ? "active" : ""}`}
@@ -778,11 +953,24 @@ const Post = ({ postParam, input = " " }) => {
                 Repost ({reposts})
               </button>
             </div>
+<<<<<<< Updated upstream
             <div className="post-comments">
               <button onClick={handleOpenShareModal} className="post-button">
                 Share
               </button>
 
+=======
+            <button onClick={handleOpenShareModal} className="post-button">
+              Share
+            </button>{" "}
+            {/* Share button */}
+            <ShareModal
+              isOpen={isShareModalOpen}
+              onRequestClose={handleCloseShareModal}
+              userId={userId} // Make sure you pass the necessary userId or any other props needed
+            />
+            <div className="post-comments">
+>>>>>>> Stashed changes
               {comments.map(({ text, owner }, index) => {
                 return (
                   <div key={index} className="comment">
