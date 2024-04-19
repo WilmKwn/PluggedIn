@@ -11,15 +11,21 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 
 const Post = ({ postParam, input = " " }) => {
   useEffect(() => {
-    const arr = input.split(" ");
-    if (arr[0] === "like" && arr[1] == "post") {
-      handleLike();
-    } else if (arr[0] === "dislike" && arr[1] == "post") {
-      handleDislike();
-    } else if (arr[0] === "repost" && arr[1] == "post") {
-      handleRepost();
-    } else if (arr[0] === "laugh" && arr[1] == "post") {
-      handleLaugh();
+    try {
+      let arr = input.toLowerCase().split(" ");
+      arr = arr.slice(0, 2).concat(arr.slice(2).join(""));
+      console.log(arr, " - ", post.title);
+      if (arr[0] === "like" && arr[1] === "post" && arr[2] === post.title) {
+        handleLike();
+      } else if (arr[0] === "dislike" && arr[1] === "post" && arr[2] === post.title) {
+        handleDislike();
+      } else if (arr[0] === "repost" && arr[1] === "post" && arr[2] === post.title) {
+        handleRepost();
+      } else if ((arr[0] === "laugh" || arr[0] === "last") && arr[1] === "post"  && arr[2] === post.title) {
+        handleLaugh();
+      }
+    } catch (err) {
+      // console.log(err);
     }
   }, [input]);
 
@@ -136,6 +142,8 @@ const Post = ({ postParam, input = " " }) => {
         });
     }
     setComments(post.comments.map((comment) => comment.text));
+
+    console.log("CHANGED");
   }, [post]);
 
   useEffect(() => {
