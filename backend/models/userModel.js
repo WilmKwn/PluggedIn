@@ -77,7 +77,7 @@ const userSchema = mongoose.Schema(
         },
         recentActivity: {
             type: [mongoose.Schema.Types.ObjectId],
-            validate: {
+            validate: {alskfhas
                 validator: function (arr) {
                     return arr.length <= 5;
                 },
