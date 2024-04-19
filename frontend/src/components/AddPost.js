@@ -133,6 +133,8 @@ const AddPost = () => {
       console.log("Error submitting post", err.message);
     }
 
+    // ignore this comment
+    
     if (isSong || isProducerTag) {
       const song = {
         title: postTitle,
