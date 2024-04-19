@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import React, { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import axios from "axios";
@@ -616,7 +617,34 @@ const Messaging = ({ title }) => {
         </div>
       </Modal>
     </div>
+=======
+import React, { useEffect, useState } from "react";
+import ShareModal from "./ShareModal";
+
+const Post = () => {
+  const [isShareModalOpen, setShareModalOpen] = useState(false);
+  const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    if (!userId) {
+      console.error("No user ID found");
+      // Handle lack of userId (redirect or display message)
+    }
+  }, [userId]);
+
+  return (
+    <>
+      <button onClick={() => setShareModalOpen(true)}>Share</button>
+      {userId && (
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onRequestClose={() => setShareModalOpen(false)}
+          userId={userId}
+        />
+      )}
+    </>
+>>>>>>> Stashed changes
   );
 };
 
-export default Messaging;
+export default Post;

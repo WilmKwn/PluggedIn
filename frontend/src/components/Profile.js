@@ -1,4 +1,8 @@
 import React from "react";
+<<<<<<< Updated upstream
+=======
+import Modal from "react-modal";
+>>>>>>> Stashed changes
 import { useNavigate, useLocation } from "react-router-dom";
 import { storage, ref, getDownloadURL } from "./firebase";
 import axios from "axios";
@@ -267,7 +271,11 @@ const Profile = () => {
           });
         } else {
           res.data.joinedRecordLabels.forEach((friendId) => {
+<<<<<<< Updated upstream
             console.log(friendId);
+=======
+            //console.log(friendId)
+>>>>>>> Stashed changes
             axios
               .get(`http://localhost:5001/user/${friendId}`)
               .then((friendRes) => {
@@ -325,7 +333,11 @@ const Profile = () => {
               });
           });
           res.data.friends.forEach((friendId) => {
+<<<<<<< Updated upstream
             console.log(friendId);
+=======
+            //console.log(friendId)
+>>>>>>> Stashed changes
             axios
               .get(`http://localhost:5001/user/${friendId}`)
               .then((friendRes) => {
@@ -383,7 +395,12 @@ const Profile = () => {
         console.error("Error:", error);
         // Handle any errors that occur during the fetch request
       });
+<<<<<<< Updated upstream
 
+=======
+    console.log("test");
+    console.log(loggedInId);
+>>>>>>> Stashed changes
     axios
       .get(`http://localhost:5001/user/${loggedInId}`)
       .then((res) => {
@@ -508,6 +525,12 @@ const Profile = () => {
         console.error("Error adding friend:", error);
         // Optionally, handle the error or revert local state changes
       });
+<<<<<<< Updated upstream
+=======
+    // if (messageText) {
+    //   handleSendMessageWithConnection();
+    // }
+>>>>>>> Stashed changes
   };
 
   const handleJoinLabel = () => {
@@ -578,6 +601,47 @@ const Profile = () => {
         console.error("Error removing user from label:", error);
       });
   };
+<<<<<<< Updated upstream
+=======
+
+  const handleFollowNews = () => {
+    console.log(userData.followers);
+    const data = {
+      ...userData,
+      followers: [...userData.followers, loggedInId],
+    };
+    console.log(data.followers);
+    axios
+      .put(`http://localhost:5001/user/${userId}`, {
+        followers: data.followers,
+      })
+      .then((response) => {
+        console.log("User followed successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error following user:", error);
+      });
+  };
+
+  const handleUnfollowNews = () => {
+    const data = {
+      ...userData,
+      followers: userData.followers.filter(
+        (follower) => follower !== loggedInId
+      ),
+    };
+    axios
+      .put(`http://localhost:5001/user/${userId}`, {
+        followers: data.followers,
+      })
+      .then((response) => {
+        console.log("User unfollowed successfully:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error unfollowing user:", error);
+      });
+  };
+>>>>>>> Stashed changes
 
   const handleBlock = () => {
     //console.log(id);
@@ -741,6 +805,10 @@ const Profile = () => {
     const [isHovered, setIsHovered] = useState(false);
     const [showAffiliations, setShowAffiliations] = useState(false);
     const [showFriends, setShowFriends] = useState(false);
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     // // check for profile pic
     if (!userProfilePic.profilePic || userProfilePic.profilePic === null) {
       userProfilePic.profilePic = "No Profile Picture";
@@ -786,6 +854,10 @@ const Profile = () => {
       navigate("/profile", { state: { userId } });
       window.location.reload();
     };
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     return (
       <div className="h-full pt-28 flex flex-col items-center">
         {userProfilePic.profilePic === "No file chosen" ? (
@@ -936,12 +1008,19 @@ const Profile = () => {
               </>
             ) : (
               <>
+<<<<<<< Updated upstream
                 <div>
                   <button onClick={() => handleConnect()} className="button">
                     {console.log(userData.friends)}
                     Connect{" "}
                   </button>
                 </div>
+=======
+                <ConnectMessaging
+                  inId={userId}
+                  myName={loggedInData.realname}
+                />
+>>>>>>> Stashed changes
               </>
             )
           ) : (
@@ -996,6 +1075,7 @@ const Profile = () => {
                   className="button bg-green-500"
                 >
                   Accept Invite to Join Label{" "}
+<<<<<<< Updated upstream
                 </button>
               </div>
             ) : (
@@ -1007,6 +1087,41 @@ const Profile = () => {
                   </button>
                 </div>
               </>
+=======
+                </button>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <button onClick={() => handleJoinLabel()} className="button">
+                    {/*console.log(userData.friends)*/}
+                    Request to Join Label{" "}
+                  </button>
+                </div>
+              </>
+            )
+          ) : (
+            <div></div>
+          )}
+          {userId !== loggedInId && userData.accountType === 2 ? (
+            !userData.followers.includes(loggedInId) ? (
+              <div>
+                <button onClick={() => handleFollowNews()} className="button">
+                  Follow
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  onClick={() => handleUnfollowNews()}
+                  className="button bg-gray-300"
+                >
+                  {isHovered ? "Unfollow" : "Following"}
+                </button>
+              </div>
+>>>>>>> Stashed changes
             )
           ) : (
             <div></div>
@@ -1156,6 +1271,9 @@ const Profile = () => {
             </ul>
           </div>
         </div>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       </div>
     );

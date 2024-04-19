@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Modal from 'react-modal';
+import Modal from "react-modal";
 
 import "../App.css";
 import axios from "axios";
 import { storage, ref, getDownloadURL, auth } from "./firebase";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
+<<<<<<< Updated upstream
 const Post = ({ postParam, input }) => {
+=======
+const Post = ({ postParam, input = " " }) => {
+  const [isShareModalOpen, setShareModalOpen] = useState(false);
+
+  const handleOpenShareModal = () => setShareModalOpen(true);
+  const handleCloseShareModal = () => setShareModalOpen(false);
+>>>>>>> Stashed changes
   useEffect(() => {
     const arr = input.split(" ");
     if (arr[0] === "like" && arr[1] == "post") {
@@ -36,7 +44,7 @@ const Post = ({ postParam, input }) => {
   });
   const [loggedInData, setLoggedInData] = useState({
     blockedUsers: [],
-  })
+  });
   const [userProfilePic, setUserProfilePic] = useState(
     "https://via.placeholder.com/150"
   );
@@ -60,7 +68,7 @@ const Post = ({ postParam, input }) => {
       })
       .catch((error) => {
         console.error("Error:", error);
-      })
+      });
   }, []);
   const [isModalOpen, setModalOpen] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
@@ -76,35 +84,39 @@ const Post = ({ postParam, input }) => {
     // console.log(modalTop);
     const modalLeft = oButtRect.left + window.scrollX;
     setModalPosition({ top: modalTop, left: modalLeft });
-    setModalOpen(true)
+    setModalOpen(true);
   };
   const closeModal = () => setModalOpen(false);
   const modalStyles = {
     content: {
-      position: 'relative',
+      position: "relative",
       bottom: 0,
       top: `${modalPosition.top}px`,
       left: `${modalPosition.left}px`,
-      marginRight: '10px',
-      marginBottom: '10px',
-      border: 'none',
-      background: 'white',
-      overflow: 'hidden',
-      WebkitOverflowScrolling: 'touch',
-      borderRadius: '5px',
-      outline: 'none',
-      padding: '0px',
-      width: '300px',
-      height: '200px'
+      marginRight: "10px",
+      marginBottom: "10px",
+      border: "none",
+      background: "white",
+      overflow: "hidden",
+      WebkitOverflowScrolling: "touch",
+      borderRadius: "5px",
+      outline: "none",
+      padding: "0px",
+      width: "300px",
+      height: "200px",
     },
     overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
     },
   };
   const [likeStatus, setLikeStatus] = useState(false);
   const [dislikeStatus, setDislikeStatus] = useState(false);
   const [laughStatus, setLaughStatus] = useState(false);
   const [repostStatus, setRepostStatus] = useState(false);
+<<<<<<< Updated upstream
+=======
+  const [hiddenBy, setHiddenBy] = useState([]);
+>>>>>>> Stashed changes
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [laughs, setLaughs] = useState(0);
@@ -143,9 +155,12 @@ const Post = ({ postParam, input }) => {
     setLaughs(post.reactions.laughs);
     setDislikes(post.reactions.dislikes);
     setReposts(post.reactions.reposts);
+<<<<<<< Updated upstream
 
+=======
+    setHiddenBy(post.hiddenBy);
+>>>>>>> Stashed changes
   }, [post.media, post.comments]);
-
 
   const handleLike = () => {
     setLikeStatus(!likeStatus);
@@ -169,20 +184,34 @@ const Post = ({ postParam, input }) => {
       dislikes: newDislikes,
       laughs: newLaughs,
       reposts: reposts,
-    }
+    };
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
+<<<<<<< Updated upstream
       axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
+=======
+      axios
+        .get(`http://localhost:5001/user/${post.owner}`)
+        .then((res) => {
+>>>>>>> Stashed changes
           const data = res.data;
           const notis = data.notifications;
           notis.push(`${loggedInData.realname} liked your post: ${post.title}`);
           const newData = {
             ...data,
+<<<<<<< Updated upstream
             notis
           }
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
           alert("liked notification sent");
         }).catch(err => console.log(err));
+=======
+            notis,
+          };
+          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+        })
+        .catch((err) => console.log(err));
+>>>>>>> Stashed changes
     } catch (err) {
       console.log(err.message);
     }
@@ -215,9 +244,10 @@ const Post = ({ postParam, input }) => {
       dislikes: newDislikes,
       laughs: newLaughs,
       reposts: reposts,
-    }
+    };
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
+<<<<<<< Updated upstream
       axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
           const data = res.data;
           const notis = data.notifications;
@@ -229,6 +259,23 @@ const Post = ({ postParam, input }) => {
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
         }).catch(err => console.log(err));
         alert("disliked notification sent");
+=======
+      axios
+        .get(`http://localhost:5001/user/${post.owner}`)
+        .then((res) => {
+          const data = res.data;
+          const notis = data.notifications;
+          notis.push(
+            `${loggedInData.realname} disliked your post: ${post.title}`
+          );
+          const newData = {
+            ...data,
+            notis,
+          };
+          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+        })
+        .catch((err) => console.log(err));
+>>>>>>> Stashed changes
     } catch (err) {
       console.log(err.message);
     }
@@ -255,20 +302,34 @@ const Post = ({ postParam, input }) => {
       dislikes: newDislikes,
       laughs: newLaughs,
       reposts: reposts,
-    }
+    };
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
+<<<<<<< Updated upstream
       axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
+=======
+      axios
+        .get(`http://localhost:5001/user/${post.owner}`)
+        .then((res) => {
+>>>>>>> Stashed changes
           const data = res.data;
           const notis = data.notifications;
           notis.push(`${loggedInData.realname} laughed at post: ${post.title}`);
           const newData = {
             ...data,
+<<<<<<< Updated upstream
             notis
           }
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
           alert("laughed notification sent");
         }).catch(err => console.log(err));
+=======
+            notis,
+          };
+          axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+        })
+        .catch((err) => console.log(err));
+>>>>>>> Stashed changes
     } catch (err) {
       console.log(err.message);
     }
@@ -284,7 +345,7 @@ const Post = ({ postParam, input }) => {
       dislikes: dislikes,
       laughs: laughs,
       reposts: newReposts,
-    }
+    };
     try {
       axios.put(`http://localhost:5001/post/${post._id}`, { reactions });
     } catch (err) {
@@ -303,9 +364,10 @@ const Post = ({ postParam, input }) => {
         repost: true,
         originalCreator: post.owner,
       };
-      console.log(repostStatus)
+      console.log(repostStatus);
       try {
         axios.post(`http://localhost:5001/post`, repost);
+<<<<<<< Updated upstream
         axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
           const data = res.data;
           const notis = data.notifications;
@@ -317,12 +379,53 @@ const Post = ({ postParam, input }) => {
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
           alert("reposted notification sent");
         }).catch(err => console.log(err));
+=======
+        axios
+          .get(`http://localhost:5001/user/${post.owner}`)
+          .then((res) => {
+            const data = res.data;
+            const notis = data.notifications;
+            notis.push(
+              `${loggedInData.realname} reposted your post: ${post.title}`
+            );
+            const newData = {
+              ...data,
+              notis,
+            };
+            axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+          })
+          .catch((err) => console.log(err));
+>>>>>>> Stashed changes
       } catch (err) {
         console.log(err.message);
       }
     }
   };
 
+<<<<<<< Updated upstream
+=======
+  const handleHide = () => {
+    const newHiddenBy = [...hiddenBy, loggedInId];
+    setHiddenBy(newHiddenBy);
+    axios.put(`http://localhost:5001/post/${post._id}`, {
+      hiddenBy: newHiddenBy,
+    });
+    window.location.reload();
+  };
+
+  const setPostClass = (title) => {
+    if (post.news) {
+      return "post-news";
+    }
+    const words = ["congrats", "congratulations", "proud", "happy"];
+    if (words.some((word) => title.toLowerCase().includes(word))) {
+      return "post-congrats";
+    }
+
+    return "post-card";
+  };
+
+>>>>>>> Stashed changes
   const handleCommentSubmit = (event) => {
     event.preventDefault();
     const owner = localStorage.getItem("userId");
@@ -341,6 +444,7 @@ const Post = ({ postParam, input }) => {
           );
           setComments([...comments, newComment]);
         });
+<<<<<<< Updated upstream
         axios.get(`http://localhost:5001/user/${post.owner}`).then(res => {
           const data = res.data;
           const notis = data.notifications;
@@ -352,6 +456,23 @@ const Post = ({ postParam, input }) => {
           axios.put(`http://localhost:5001/user/${post.owner}`, newData);
           alert("commented notification sent");
         }).catch(err => console.log(err));
+=======
+        axios
+          .get(`http://localhost:5001/user/${post.owner}`)
+          .then((res) => {
+            const data = res.data;
+            const notis = data.notifications;
+            notis.push(
+              `New Comment by ${loggedInData.realname} on post: ${post.title}`
+            );
+            const newData = {
+              ...data,
+              notis,
+            };
+            axios.put(`http://localhost:5001/user/${post.owner}`, newData);
+          })
+          .catch((err) => console.log(err));
+>>>>>>> Stashed changes
       } catch (err) {
         console.log(err.message);
       }
@@ -359,7 +480,6 @@ const Post = ({ postParam, input }) => {
       setCommentInput("");
     }
   };
-
 
   useEffect(() => {
     //console.log(post.media);
@@ -374,35 +494,42 @@ const Post = ({ postParam, input }) => {
     const comments = post.comments;
     setComments(comments);
 
-    axios.get(`http://localhost:5001/user/${post.owner}`).then((res) => {
-      // console.log(res.data);
-      setUsername(res.data.realname);
-      setUserId(res.data.uid);
-      if (res.data.profilePic !== "No file chosen") {
-        const profilePicRef = ref(storage, "user/" + res.data.profilePic);
-        // console.log(profilePicRef);
-        getDownloadURL(profilePicRef)
-          .then((url) => {
-            setUserProfilePic(url);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    }).catch(err => {
-      console.log(err);
-    });
-    if (post.repost) {
-      axios.get(`http://localhost:5001/user/${post.originalCreator}`).then((res) => {
-        setOriginalCreator(res.data.realname);
-      }).catch(err => {
+    axios
+      .get(`http://localhost:5001/user/${post.owner}`)
+      .then((res) => {
+        // console.log(res.data);
+        setUsername(res.data.realname);
+        setUserId(res.data.uid);
+        if (res.data.profilePic !== "No file chosen") {
+          const profilePicRef = ref(storage, "user/" + res.data.profilePic);
+          // console.log(profilePicRef);
+          getDownloadURL(profilePicRef)
+            .then((url) => {
+              setUserProfilePic(url);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      })
+      .catch((err) => {
         console.log(err);
       });
+    if (post.repost) {
+      axios
+        .get(`http://localhost:5001/user/${post.originalCreator}`)
+        .then((res) => {
+          setOriginalCreator(res.data.realname);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, []);
 
   return (
     <div>
+<<<<<<< Updated upstream
       {(userData.blockedUsers.includes(loggedInId) || loggedInData.blockedUsers.includes(userId)) ? (
         <><div></div></>
       ) : (<>
@@ -519,15 +646,167 @@ const Post = ({ postParam, input }) => {
                 value={commentInput}
                 onChange={(e) => setCommentInput(e.target.value)}
                 placeholder="Add a comment..."
+=======
+      {userData.blockedUsers.includes(loggedInId) ||
+      loggedInData.blockedUsers.includes(userId) ||
+      post.hiddenBy.includes(loggedInId) ? (
+        <>
+          <div></div>
+        </>
+      ) : (
+        <>
+          <div className={`${setPostClass(post.title)}`}>
+            <div className="user-info-container">
+              <img
+                onClick={() => {
+                  profileClicked(userId);
+                }}
+                src={userProfilePic}
+                alt="User profile"
+                style={{ width: "50px", height: "50px" }}
+                className="user-profile-pic"
+>>>>>>> Stashed changes
               />
-              <button type="submit" className="submit-button">
-                Comment
+              <span className="username">
+                {username}
+                {post.repost && (
+                  <span className="repost">
+                    Reposted from {originalCreator}
+                  </span>
+                )}
+              </span>
+              <button
+                className="options-button ml-auto"
+                id="optionsButt"
+                onClick={(event) => openModal(event)}
+              >
+                <FontAwesomeIcon icon={faEllipsisV} />
               </button>
-            </form>
+              <Modal
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                style={modalStyles}
+              >
+                <div className="modal-container">
+                  <div
+                    className="w-full bg-gray-100 overflow-y-scroll"
+                    style={{ height: "200px", borderRadius: "5px" }}
+                  >
+                    <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
+                      {/*  actions for each profile card */}
+                      <div className="ml-4">
+                        {/*Add more information or actions here */}
+                        <button
+                          className="text-gray-800 font-semibold"
+                          onClick={handleHide}
+                        >
+                          Hide Post
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex items-center h-1/3 border-b border-gray-300 p-2">
+                      {/*  actions for each profile card */}
+                      <div className="ml-4">
+                        {/* Add more information or actions here */}
+                        <button className="text-gray-800 font-semibold">
+                          Block User
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex items-center h-1/3 border-gray-300 p-2">
+                      {/*  actions for each profile card */}
+                      <div className="ml-4">
+                        {/* Add more information or actions here */}
+                        <button className="text-gray-800 font-semibold">
+                          Message User
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Modal>
+            </div>
+            <div className="post-header">
+              <h2 className="font-bold">{post.title}</h2>
+              <p>{post.description}</p>
+            </div>
+            {mediaType === "image" && media !== "" && (
+              <img
+                src={media}
+                alt="Post media"
+                className="post-image center-media"
+              />
+            )}
+            {mediaType === "video" && media !== "" && (
+              <video controls className="post-video center-media">
+                <source src={media} />
+              </video>
+            )}
+            {mediaType === "audio" && media !== "" && (
+              <audio controls className="post-audio center-media">
+                <source src={media} type={`audio/${mediaExtension}`} />
+              </audio>
+            )}
+
+            <div>&nbsp;</div>
+
+            <div className="post-tags">Tags: {post.tags.join(" ")}</div>
+
+            <div className="post-interactions">
+              <button
+                className={`post-button ${likeStatus ? "active" : ""}`}
+                onClick={handleLike}
+              >
+                Like ({likes})
+              </button>
+              <button
+                className={`post-button ${dislikeStatus ? "active" : ""}`}
+                onClick={handleDislike}
+              >
+                Dislike ({dislikes})
+              </button>
+              <button
+                className={`post-button ${laughStatus ? "active" : ""}`}
+                onClick={handleLaugh}
+              >
+                Laugh ({laughs})
+              </button>
+              <button
+                className={`post-button ${repostStatus ? "active" : ""}`}
+                onClick={handleRepost}
+              >
+                Repost ({reposts})
+              </button>
+            </div>
+            <div className="post-comments">
+              <button onClick={handleOpenShareModal} className="post-button">
+                Share
+              </button>
+
+              {comments.map(({ text, owner }, index) => {
+                return (
+                  <div key={index} className="comment">
+                    {owner} : {text}
+                  </div>
+                );
+              })}
+              <form onSubmit={handleCommentSubmit} className="comment-form">
+                <input
+                  type="text"
+                  className="comment-input"
+                  value={commentInput}
+                  onChange={(e) => setCommentInput(e.target.value)}
+                  placeholder="Add a comment..."
+                />
+                <button type="submit" className="submit-button">
+                  Comment
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
-      </>)
-      }</div>
+        </>
+      )}
+    </div>
   );
 };
 export default Post;
