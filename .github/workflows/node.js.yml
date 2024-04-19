@@ -27,6 +27,9 @@ jobs:
     - name: Build backend
       run: npm run build --if-present
       working-directory: backend
+    - name: Start backend
+      run: npm start
+      working-directory: backend
 
       
   # frontend:
