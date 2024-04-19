@@ -124,7 +124,7 @@ const Onboarding = () => {
             uid: auth.currentUser.uid,
             realname: realname,
             username: username,
-            accountType: 2,
+            accountType: 0,
             profilePic: fileLabel,
             genre: genre,
             description: description,

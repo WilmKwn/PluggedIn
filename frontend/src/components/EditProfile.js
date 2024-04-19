@@ -91,7 +91,7 @@ const EditProfile = () => {
 
   const handleChangeUsername = () => {
     console.log(userId, newUsername)
-    axios.put(`http://localhost:5001/user/${userId}`, { username: newUsername })
+    axios.put(`http://localhost:5001/user/${userId}`, { username: newUsername, name: 1 })
       .then(response => {
         console.log('Username changed successfully:', response.data);
       })
