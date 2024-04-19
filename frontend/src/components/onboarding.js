@@ -26,6 +26,7 @@ const Onboarding = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+<<<<<<< Updated upstream
         if (profilePic) {
             const picRef = ref(storage, "user/"+fileLabel);
             uploadBytes(picRef, profilePic).then(() => {
@@ -33,6 +34,56 @@ const Onboarding = () => {
             }).catch((err) => {
                 console.log(err.message);
             })
+=======
+    // Filter out the selected tags
+    const selectedTags = newsTags
+      .filter((tag) => tag.selected)
+      .map((tag) => `#${tag.name.toLowerCase()}`);
+
+    if (profilePic) {
+      const picRef = ref(storage, "user/" + fileLabel);
+      uploadBytes(picRef, profilePic)
+        .then(() => {
+          console.log("Successfully uploaded image");
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+    console.log("Setting account type");
+
+    console.log(isRecordLabelAccount);
+
+    if (auth.currentUser) {
+      if (isRecordLabelAccount === true) {
+        try {
+          const data = {
+            uid: auth.currentUser.uid,
+            realname: realname,
+            username: username,
+            accountType: 1,
+            profilePic: fileLabel,
+            genre: genre,
+            description: description,
+            recordLabelAccount: isRecordLabelAccount,
+            hashtags: selectedTags,
+          };
+
+          // console.log("data is " + data)
+
+          axios.post("http://localhost:5001/user", data).then(() => {
+            console.log("successfully onboarded");
+            localStorage.setItem("userId", auth.currentUser.uid);
+            localStorage.setItem(
+              "actualUserIdBecauseWilliamYongUkKwonIsAnnoying",
+              auth.currentUser.uid
+            );
+            localStorage.setItem("user", auth.currentUser);
+            navigate("/feed");
+          });
+        } catch (error) {
+          console.error("Error updating profile: ", error);
+>>>>>>> Stashed changes
         }
 
         if (auth.currentUser) {

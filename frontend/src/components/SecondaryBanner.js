@@ -38,7 +38,12 @@ const SecondaryBanner = () => {
   
   return (
     <div className="">
+<<<<<<< Updated upstream
       <div className="fixed w-full flex justify-between items-center p-3 pl-10 pr-10 bg-emerald-950">
+=======
+      
+      <div className="w-full flex justify-between items-center p-3 pl-10 pr-10 bg-emerald-950">
+>>>>>>> Stashed changes
         <div>
           <button onClick={handleBack}
             className="button">
