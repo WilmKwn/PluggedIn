@@ -76,7 +76,7 @@ const userSchema = mongoose.Schema(
             required: true,
         },
         recentActivity: {
-            WOW
+            // WOW
             type: [mongoose.Schema.Types.ObjectId],
             validate: {
                 validator: function (arr) {
