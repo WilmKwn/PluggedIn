@@ -12,7 +12,6 @@ import { faNewspaper } from "@fortawesome/free-solid-svg-icons";
 
 import Notification from "./Notification";
 
-import { toast } from "react-toastify";
 import ringingBell from "../ringing.gif";
 
 import "../App.css";
