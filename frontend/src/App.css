@@ -200,11 +200,11 @@ p {
   border-radius: 8px;
   margin: 20px auto;
   padding: 15px;
-  background-color: #fff;
+  background-color: #FFDEAD;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 600px;
   width: 100%;
-  border-color: #32CD32
+  border-color: #B8860B
 }
 
 .post-news {
@@ -212,7 +212,7 @@ p {
   border-radius: 8px;
   margin: 20px auto;
   padding: 15px;
-  background-color: #fff;
+  background-color: #D3D3D3;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 600px;
   width: 100%;
