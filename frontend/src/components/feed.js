@@ -5,6 +5,7 @@ import MainBottomBar from "./MainBottomBar";
 import Post from "./Post";
 import "../App.css";
 import "../index.css";
+import "../SortingSearching.css";
 
 import useSpeechToText from "./hooks/useSpeechToText";
 

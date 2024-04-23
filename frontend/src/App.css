@@ -89,47 +89,6 @@ body {
   cursor: pointer;
 }
 
-/* .landing label {
-  margin: 10px;
-  width: 80%;
-} */
-
-/* .landing input[type="text"],
-.landing input[type="file"],
-.landing textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-}
-
-.cta-button {
-  background-color: #0a66c2;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 18px;
-  margin-top: 20px;
-}
-
-.cta-button:hover {
-  background-color: #084392;
-} */
-
-
-/* .submit-button {
-  background-color: #0a66c2;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 18px;
-  margin-top: 20px;
-}
-
-.submit-button:hover {
-  background-color: #084392;
-} */
-
 .app-footer {
   background-color: #283e4a;
   color: white;
@@ -158,10 +117,6 @@ p {
   padding: 0;
   font-family: Arial, sans-serif;
 }
-
-
-
-
 
 
 
@@ -300,12 +255,6 @@ p {
 
 
 
-
-
-
-
-
-
 /*EDIT PROFILE*/
 
 
@@ -424,80 +373,30 @@ p {
 }
 
 
-.sort-by-text {
-  position: absolute;
-  left: 20px;
-  /* Adjust as needed */
-  top: 35%;
-  transform: translateY(-50%);
-  font-size: 16px;
-  color: #555;
-}
 
 .voice-assist {
   position: absolute;
   left: 20px;
-  /* Adjust as needed */
   top: 25%;
   font-size: 16px;
+  padding: 10px 20px; /* Adequate padding for better touch interaction */
+  background: linear-gradient(145deg, #6e8efb, #4a67d6); /* Modern gradient effect */
+  color: white; /* White text for high contrast */
+  border: none; /* No border for a clean look */
+  border-radius: 8px; /* Rounded corners for a softer, modern look */
+  cursor: pointer; /* Pointer to indicate it's clickable */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Subtle shadow for depth */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  outline: none; /* Remove outline to enhance the clean appearance */
 }
 
-.toggle-button-container {
-  position: absolute;
-  left: 20px;
-  /* Adjust as needed */
-  top: calc(35% + 20px);
-  /* Position below the text */
+.voice-assist:hover {
+  background: linear-gradient(145deg, #5a7be6, #3a5cb8); /* Slightly darker gradient on hover for interactive feedback */
+  box-shadow: 0 6px 12px rgba(0,0,0,0.20); /* Increased shadow on hover for a "lifted" effect */
 }
 
-.toggle-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  outline: none;
-}
 
-.toggle-button:hover {
-  background-color: #0056b3;
-}
 
-.search-for-text {
-  position: absolute;
-  left: 20px;
-  /* Adjust as needed */
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 16px;
-  color: #555;
-}
-
-.search-textbox {
-  position: absolute;
-  left: 20px;
-  /* Adjust as needed */
-  top: calc(50% + 20px);
-  /* Adjust as needed */
-}
-
-.search-textbox input[type="text"] {
-  width: 200px;
-  /* Adjust as needed */
-  height: 30px;
-  /* Adjust as needed */
-  font-size: 16px;
-  color: #333;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.search-textbox input[type="text"]::placeholder {
-  color: #999;
-}
 
 /*SETTINGS*/
 

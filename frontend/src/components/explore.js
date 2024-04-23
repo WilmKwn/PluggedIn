@@ -14,13 +14,13 @@ const Explore = () => {
   const [sortBy, setSortBy] = useState("Recent");
   const [selectedTag, setSelectedTag] = useState(null);
   const tagOptions = [
-    "Foryou",
+    "For You",
     "Song",
     "Pop",
     "EDM",
     "Cat",
     "R&B",
-    "HipHop",
+    "Hip-Hop",
     "Classical",
   ];
 

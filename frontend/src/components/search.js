@@ -5,6 +5,7 @@ import axios from "axios";
 import MainBanner from "./MainBanner";
 import "../App.css";
 import "../index.css";
+import "../Searching.css";
 import MainBottomBar from "./MainBottomBar";
 
 const Search = () => {
@@ -135,12 +136,12 @@ const Search = () => {
       <MainBanner />
       <div className="w-full h-screen flex flex-col items-center pt-32">
         <div>
-          <button onClick={handleExplore} className="button">
+          <button onClick={handleExplore} className="buttonSearching">
             Explore
           </button>
         </div>
         <input
-          type="text"
+          type="textSearch"
           placeholder="Enter here"
           value={searchText}
           onChange={(e) => updateSeatch(e)}

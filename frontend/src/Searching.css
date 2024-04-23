@@ -1,0 +1,33 @@
+.buttonSearching {
+    background-color: #007bff; /* Vivid blue */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+    outline: none; /* Remove the outline to enhance appearance */
+  }
+  
+  .buttonSearching:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2); /* Subtle shadow for depth */
+  }
+
+  input[type="textSearch"] {
+    width: 25%; /* Full width to maintain consistency */
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 2px solid #ccc; /* Subtle border */
+    border-radius: 5px; /* Rounded corners */
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  input[type="textSearch"]:focus {
+    border-color: #007bff; /* Highlight with a blue border on focus */
+    box-shadow: 0 0 8px rgba(0,123,255,0.2); /* Soft glow effect */
+  }
+
+ 
