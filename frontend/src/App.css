@@ -64,7 +64,7 @@ body {
   color: #ffffff;
 }
 
-.landing {
+/* .landing {
   padding: 5%;
   padding-right: 20%;
   padding-left: 20%;
@@ -75,7 +75,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
+} */
 
 .search-bar {
   flex: 2;
@@ -89,12 +89,12 @@ body {
   cursor: pointer;
 }
 
-.landing label {
+/* .landing label {
   margin: 10px;
   width: 80%;
-}
+} */
 
-.landing input[type="text"],
+/* .landing input[type="text"],
 .landing input[type="file"],
 .landing textarea {
   width: 100%;
@@ -114,10 +114,10 @@ body {
 
 .cta-button:hover {
   background-color: #084392;
-}
+} */
 
 
-.submit-button {
+/* .submit-button {
   background-color: #0a66c2;
   border: none;
   padding: 10px 20px;
@@ -128,7 +128,7 @@ body {
 
 .submit-button:hover {
   background-color: #084392;
-}
+} */
 
 .app-footer {
   background-color: #283e4a;
@@ -582,10 +582,13 @@ p {
   /* Smaller font size for the warning */
 }
 
+
+/*
 .error-message {
   color: red;
-  /* This sets the text color to red */
+
 }
+*/
 
 .scrollable-box {
   display: flex;

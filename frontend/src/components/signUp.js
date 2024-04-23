@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import "../App.css"; // Make sure the path to your CSS file is correct
+import "../SignInUp.css";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -68,10 +69,10 @@ const SignUp = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit">Sign Up</button>
-          <button type="button" onClick={signInWithGoogle}>
-            Sign up with Google
-          </button>
+          <button type="buttonSI" className="buttonSI standard-button">Sign Up</button>
+          <button type="buttonSI" onClick={signInWithGoogle} className="buttonSI google-button">
+    Sign Up With Google
+</button>
           {errorMessage && <div className="error-message">{errorMessage}</div>}
         </form>
       </main>

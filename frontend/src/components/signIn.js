@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import axios from "axios";
 import "../App.css"; // Make sure the path to your CSS file is correct
+import "../SignInUp.css";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -65,33 +66,32 @@ const SignIn = () => {
       </header>
 
       <main className="landing">
-        <form onSubmit={handleSignIn}>
-          <input
-            type="email" // Change this to email for semantic correctness
-            placeholder="Email" // Adjusted placeholder to reflect it's expecting an email
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            type="password" // Change this to password to hide the password input
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="submit">Sign In</button>
-          <button type="button" onClick={signInWithGoogle}>
-            Sign in with Google
-          </button>
-          {invalidCredentialError && (
-            <div className="error-message">Either wrong email or password</div>
-          )}
-          {invalidCredentialError && (
-            <div className="error-message">
-              otherwise, account already registered on google, sign in using
-              google
-            </div>
-          )}
-        </form>
+      <form onSubmit={handleSignIn}>
+  <input
+    type="email"
+    placeholder="Email"
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+  />
+  <input
+    type="password"
+    placeholder="Password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+  />
+  <button type="buttonSI" className="buttonSI standard-button">Sign In</button>
+  <button type="buttonSI" onClick={signInWithGoogle} className="buttonSI google-button">
+    Sign in with Google
+</button>
+  {invalidCredentialError && (
+    <div className="error-message">Either wrong email or password</div>
+  )}
+  {invalidCredentialError && (
+    <div className="error-message">
+      otherwise, account already registered on google, sign in using google
+    </div>
+  )}
+</form>
       </main>
 
       <footer className="app-footer">
