@@ -1,0 +1,96 @@
+/* Banner styles with gradient */
+.fixed-banner {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 100px; /* Reduced vertical padding */
+    background: #d8ddee;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    margin-bottom: 20px; /* Added space below the banner */
+}
+
+.secondary-banner {
+  position: fixed;
+  top: auto;
+  margin-bottom: 100px;
+}
+
+  
+  .logo {
+    width: 80px; /* Specific width for the logo */
+    cursor: pointer;
+    border-radius: 10px; /* Rounded corners for a softer, modern look */
+}
+
+  /* General button styling within the banner */
+.button {
+    padding: 10px 20px; /* Adequate padding for better touch interaction */
+    background: linear-gradient(145deg, #6e8efb, #4a67d6); /* Modern gradient effect */
+    color: white; /* White text for high contrast */
+    border: none; /* No border for a clean look */
+    border-radius: 8px; /* Rounded corners for a softer, modern look */
+    cursor: pointer; /* Pointer to indicate it's clickable */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Subtle shadow for depth */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    display: inline-flex; /* Aligns text and icons */
+    align-items: center;
+    outline: none; /* Remove outline to enhance the clean appearance */
+  }
+  
+  .button:hover {
+    background: linear-gradient(145deg, #4a67d6, #6e8efb); /* Reverse gradient for interactive feel on hover */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2); /* Slightly more pronounced shadow on hover */
+  }
+  
+  
+  /* Logo styling */
+  .logo {
+    width: 80px; /* Specific width for the logo */
+    cursor: pointer;
+  }
+  
+  /* Notification button */
+  .noti-button {
+    position: absolute;
+    text-align: center;
+    background-color: #808080;
+    padding: 5px;
+    right: 48px; /* Adjusted positioning */
+    top: 128px;
+    border-radius: 10%;
+    transition: background-color 0.2s;
+  }
+  
+  .noti-button:hover {
+    background-color: #808080;
+  }
+  
+  /* Notification panel styling */
+  .noti-panel {
+    position: absolute;
+    width: 25%;
+    height: 320px; /* Fixed height */
+    background-color: #808080;
+    padding: 8px;
+    right: 48px;
+    top: 176px;
+    overflow-y: scroll;
+    border: 2px solid black;
+  }
+  
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 768px) {
+    .fixed-banner {
+      padding: 3px 5px; /* Smaller padding on mobile */
+    }
+    .logo {
+      width: 60px; /* Smaller logo on mobile */
+    }
+  }
+  
+  

@@ -13,6 +13,7 @@ import { faNewspaper } from "@fortawesome/free-solid-svg-icons";
 import Notification from "./Notification";
 
 import ringingBell from "../ringing.gif";
+import "../Banner.css"; // Assuming the CSS file is in the same directory
 
 import "../App.css";
 import "../index.css";
@@ -97,64 +98,55 @@ const MainBanner = () => {
   }, []);
 
   return (
-    <div className="">
-      <div className="fixed w-full flex justify-between items-center p-3 pl-10 pr-10 bg-emerald-950">
-        <div>
-          <button onClick={handleSearch} className="button">
-            Search <FontAwesomeIcon icon={faSearch} />
-          </button>
-        </div>
+    <div className="fixed-banner">
+      <div className="button" onClick={handleSearch}>
+        Search <div>&nbsp;</div>
+        <FontAwesomeIcon icon={faSearch} />
+      </div>
 
-        <div>
-          <button onClick={handleGallery} className="button">
-            Gallery <FontAwesomeIcon icon={faList} />
-          </button>
+      <div className="button" onClick={handleGallery}>
+        Gallery <div>&nbsp;</div>
+        <FontAwesomeIcon icon={faList} />
+      </div>
+
+      <div className="flex items-center pl-7">
+        <a onClick={handleFeed}>
+          <img src="/PI.png" alt="PluggedIn Logo" className="logo" />
+        </a>
+      </div>
+
+      <div className="button" onClick={handleNews}>
+        News <div>&nbsp;</div>
+        <FontAwesomeIcon icon={faNewspaper} />
+      </div>
+
+      {isNewNotis ? (
+        <img
+          onClick={() => {
+            setOpenNoti(!openNoti);
+            setIsNewNotis(false);
+          }}
+          src={ringingBell}
+          alt=""
+          className="noti-button"
+        />
+      ) : (
+        <button onClick={() => setOpenNoti(!openNoti)} className="noti-button">
+          🔔
+        </button>
+      )}
+
+      {openNoti && (
+        <div className="noti-panel">
+          {notifications.map((noti, index) => (
+            <Notification key={index} message={noti} func={setOpenPopup} />
+          ))}
         </div>
-        <div className="flex items-center pl-7">
-          <a onClick={handleFeed}>
-            <img
-              src="/PI.png"
-              alt="PluggedIn Logo"
-              className="w-20 cursor-pointer "
-            ></img>
-          </a>
-        </div>
-        <nav>
-          <button onClick={handleNews} className="button">
-            News <FontAwesomeIcon icon={faNewspaper} />
-          </button>
-        </nav>
-        {!isNewNotis ? (
-          <button
-            onClick={() => setOpenNoti(!openNoti)}
-            className="absolute text-2xl bg-gray-500 p-1 right-12 top-32 hover:bg-gray-400"
-          >
-            🔔
-          </button>
-        ) : (
-          <img
-            onClick={() => {
-              setOpenNoti(!openNoti);
-              setIsNewNotis(false);
-            }}
-            alt=""
-            src={ringingBell}
-            className="absolute text-2xlp-1 right-12 top-32 w-10"
-          />
-        )}
-        {openNoti && (
-          <div className="absolute w-1/4 h-80 bg-gray-300 p-1 right-12 top-44 px-2 py-2 overflow-y-scroll border-2 border-black">
-            {notifications.map((noti, index) => (
-              <Notification key={index} message={noti} func={setOpenPopup} />
-            ))}
-          </div>
-        )}
-        {openPopup && showPopup(openPopup)}
-        <nav>
-          <button onClick={handleProfile} className="button">
-            Your Profile <FontAwesomeIcon icon={faUser} />
-          </button>
-        </nav>
+      )}
+
+      <div className="button" onClick={handleProfile}>
+        Your Profile <div>&nbsp;</div>
+        <FontAwesomeIcon icon={faUser} />
       </div>
     </div>
   );

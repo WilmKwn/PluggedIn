@@ -118,8 +118,7 @@ const Messaging = ({ title }) => {
         .catch((error) => {
           console.error("Error sending message:", error);
         });
-        setIsReply(false); // Now we reset the state for future messages
-
+      setIsReply(false); // Now we reset the state for future messages
     }
   };
 
@@ -368,7 +367,7 @@ const Messaging = ({ title }) => {
   return (
     <div>
       <button onClick={openModal} className="button">
-        Messages <FontAwesomeIcon icon={faMessage} />
+        Messages<div>&nbsp;</div> <FontAwesomeIcon icon={faMessage} />
       </button>
       <Modal
         isOpen={isModalOpen}

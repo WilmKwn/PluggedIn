@@ -14,9 +14,9 @@ body {
     align-items: center;
     padding-top: 20px; /* Increased padding */
     box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-    background: white; /* White background for the form area */
+    background: #d8ddee;
     border-radius: 8px; /* Smoothed corners */
-    padding: 20px; /* Padding inside the container */
+    padding: 40px; /* Padding inside the container */
   }
   
   .textarea-field, .file-input, .button-submit {
@@ -48,21 +48,22 @@ body {
   }
   
   .button-submit {
-    background: linear-gradient(135deg, #0066ff 10%, #0056b3 90%); /* Gradient from light to dark blue */
-    color: white;
-    font-weight: bold; /* Make button text stand out */
-    border: none; /* No border for buttons */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s; /* Smooth transition for interactive elements */
-    width: 20%; /* Width set as before */
-    padding: 10px 0; /* Padding for better vertical spacing */
-    border-radius: 10px; /* Increased border-radius for more rounded corners */
-    display: inline-block; /* Ensuring proper display */
+    padding: 10px 5px; /* Adequate padding for better touch interaction */
+    width: 20%;
+    background: linear-gradient(145deg, #6e8efb, #4a67d6); /* Modern gradient effect */
+    color: white; /* White text for high contrast */
+    border: none; /* No border for a clean look */
+    border-radius: 8px; /* Rounded corners for a softer, modern look */
+    cursor: pointer; /* Pointer to indicate it's clickable */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Subtle shadow for depth */
+    transition: all 0.3s ease; 
+    align-items: center;
+    outline: none; /* Remove outline to enhance the clean appearance */
   }
   
   .button-submit:hover {
-    background: linear-gradient(135deg, #0056b3 0%, #004494 100%); /* Darker gradient on hover */
-  }
+    background: linear-gradient(145deg, #4a67d6, #6e8efb); /* Reverse gradient for interactive feel on hover */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2); /* Slightly more pronounced shadow on hover */ }
   
   
   
@@ -87,16 +88,21 @@ body {
   }
 
   .custom-file-upload {
-    padding: 10px 15px;
-    background: linear-gradient(135deg, #0066ff 10%, #0056b3 90%);
-    color: white;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    display: inline-block;
+    padding: 10px 20px; /* Adequate padding for better touch interaction */
+    width: 20%;
+    background: linear-gradient(145deg, #6e8efb, #4a67d6); /* Modern gradient effect */
+    color: rgb(255, 255, 255); /* White text for high contrast */
+    border: none; /* No border for a clean look */
+    border-radius: 8px; /* Rounded corners for a softer, modern look */
+    cursor: pointer; /* Pointer to indicate it's clickable */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Subtle shadow for depth */
+    transition: all 0.3s ease; 
+    align-items: center;
+    outline: none; /* Remove outline to enhance the clean appearance */
   }
   
   .custom-file-upload:hover {
-    background-color: #004494;
+    background: linear-gradient(145deg, #4a67d6, #6e8efb); /* Reverse gradient for interactive feel on hover */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2); /* Slightly more pronounced shadow on hover */ 
   }
   

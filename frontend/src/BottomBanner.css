@@ -1,0 +1,41 @@
+/* Footer styles with a fixed position at the bottom */
+.app-footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 100px; /* Consistent padding */
+    background: #d8ddee; /* Solid color background */
+    position: fixed; /* Keeps the footer at the bottom */
+    bottom: 0; /* Position at the bottom */
+    left: 0;
+    z-index: 10; /* Ensures the footer stays above other content */
+    box-shadow: 0 -4px 8px rgba(0,0,0,0.15); /* Adjust shadow for upward effect */
+}
+
+/* Adjust existing button styles to be suitable for the footer as well */
+.button {
+    padding: 10px 20px; /* Adequate padding for better touch interaction */
+    background: linear-gradient(145deg, #6e8efb, #4a67d6); /* Modern gradient effect */
+    color: white; /* White text for high contrast */
+    border: none; /* No border for a clean look */
+    border-radius: 8px; /* Rounded corners for a softer, modern look */
+    cursor: pointer; /* Pointer to indicate it's clickable */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Subtle shadow for depth */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    display: inline-flex; /* Aligns text and icons */
+    align-items: center;
+    outline: none; /* Remove outline to enhance the clean appearance */
+}
+
+.button:hover {
+    background: linear-gradient(145deg, #4a67d6, #6e8efb); /* Reverse gradient for interactive feel on hover */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2); /* Slightly more pronounced shadow on hover */
+}
+
+/* Responsive adjustments for the footer on smaller screens */
+@media (max-width: 768px) {
+    .app-footer {
+      padding: 3px 5px; /* Smaller padding on mobile */
+    }
+}

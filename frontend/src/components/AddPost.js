@@ -12,7 +12,7 @@ const AddPost = () => {
   const [postTitle, setPostTitle] = useState("");
   const [postDescription, setPostDescription] = useState("");
   const [postMedia, setPostMedia] = useState(null);
-  const [postMediaName, setPostMediaName] = useState("Add Post +");
+  const [postMediaName, setPostMediaName] = useState("Add Media +");
   const [postTags, setPostTags] = useState("");
   const [isNewsAccount, setIsNewsAccount] = useState(false);
   const [isSong, setIsSong] = useState(false);
@@ -178,6 +178,11 @@ const AddPost = () => {
   return (
     <div>
       <SecondaryBanner />
+      <div>&nbsp;</div>
+      <div>&nbsp;</div>
+      <div>&nbsp;</div>
+      <div>&nbsp;</div>
+      <div>&nbsp;</div>
       <div className="w-full h-full text-center pt-28 mb-96">
         <div className="input-container">
           <input
@@ -193,6 +198,8 @@ const AddPost = () => {
             onChange={(e) => setPostDescription(e.target.value)}
             className="textarea-field"
           />
+
+          <div>&nbsp;</div>
           <div className="file-input-container">
             <label htmlFor="file-upload" className="custom-file-upload">
               {postMediaName}
@@ -204,25 +211,27 @@ const AddPost = () => {
               style={{ display: "none" }} // Hide the default file input
             />
           </div>
-
           <div>&nbsp;</div>
+
           {postMedia && isAudioOrVideo(postMediaName) && (
             <div>
               <div className="switch-container">
                 <span className="switch-label">Song</span>
+                <div>&nbsp;</div>
                 <Switch
                   checked={isSong}
                   onChange={handleSongSwitchChange}
-                  onColor="#007AFF"
+                  onColor="#6e8efb"
                   offColor="#E5E5EA"
                 />
               </div>
               <div className="switch-container">
                 <span className="switch-label">Producer Tag</span>
+                <div>&nbsp;</div>
                 <Switch
                   checked={isProducerTag}
                   onChange={handleTagSwitchChange}
-                  onColor="#007AFF"
+                  onColor="#6e8efb"
                   offColor="#E5E5EA"
                 />
               </div>
@@ -231,20 +240,22 @@ const AddPost = () => {
           {isNewsAccount && (
             <div className="switch-container">
               <span className="switch-label">News</span>
+              <div>&nbsp;</div>
               <Switch
                 checked={isNews}
                 onChange={handleNewsSwitchChange}
-                onColor="#007AFF"
+                onColor="#6e8efb"
                 offColor="#E5E5EA"
               />
             </div>
           )}
           <div className="switch-container">
             <span className="switch-label">Job</span>
+            <div>&nbsp;</div>
             <Switch
               checked={isJob}
               onChange={handleJobSwitchChange}
-              onColor="#007AFF"
+              onColor="#6e8efb"
               offColor="#E5E5EA"
             />
           </div>
@@ -255,6 +266,8 @@ const AddPost = () => {
             onChange={(e) => setPostTags(e.target.value)}
             className="input-field tags-input" // Added 'tags-input' class for specific styling
           />
+          <div>&nbsp;</div>
+
           <button onClick={handleSubmit} className="button-submit">
             Submit
           </button>
