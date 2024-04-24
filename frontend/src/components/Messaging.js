@@ -343,8 +343,8 @@ const Messaging = ({ title }) => {
   const modalStyles = {
     content: {
       position: "absolute",
-      bottom: 0,
-      right: 0,
+      bottom: "64px",
+      right: "0px",
       left: "auto",
       top: "auto",
       marginRight: "10px",
