@@ -1,0 +1,102 @@
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif; /* Professional, clean font */
+    background-color: #f4f4f9; /* Soft background color */
+    color: #333; /* Dark gray text for better readability */
+  }
+  
+  .input-container {
+    width: 80%; /* Slightly reduced for better focus */
+    max-width: 600px; /* Maximum width for better control on large screens */
+    margin: 0 auto; /* Center align the container */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px; /* Increased padding */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    background: white; /* White background for the form area */
+    border-radius: 8px; /* Smoothed corners */
+    padding: 20px; /* Padding inside the container */
+  }
+  
+  .textarea-field, .file-input, .button-submit {
+    width: 100%; /* Full width within container */
+    padding: 10px 15px; /* Comfortable padding inside fields */
+    margin-bottom: 15px; /* Spaced out elements */
+    border: 1px solid #ccc; /* Lighter, less invasive borders */
+    border-radius: 5px; /* Subtle curvature */
+  }
+
+  .input-field {
+    width: 100%; /* Full width within container */
+    padding: 10px 15px; /* Comfortable padding inside fields */
+    margin-bottom: 15px; /* Spaced out elements */
+    border: 1px solid #ccc; /* Lighter, less invasive borders */
+    border-radius: 5px; /* Subtle curvature */
+  }
+  
+  /* Specific style for the tags input field */
+  .tags-input {
+    width: 40%; /* Adjusted to 70% of the container width */
+  }
+  .textarea-field {
+    height: 150px; /* Fixed height for textarea */
+  }
+  
+  .file-input, .input-field {
+    height: 40px; /* Standard height for better touch */
+  }
+  
+  .button-submit {
+    background: linear-gradient(135deg, #0066ff 10%, #0056b3 90%); /* Gradient from light to dark blue */
+    color: white;
+    font-weight: bold; /* Make button text stand out */
+    border: none; /* No border for buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for interactive elements */
+    width: 20%; /* Width set as before */
+    padding: 10px 0; /* Padding for better vertical spacing */
+    border-radius: 10px; /* Increased border-radius for more rounded corners */
+    display: inline-block; /* Ensuring proper display */
+  }
+  
+  .button-submit:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004494 100%); /* Darker gradient on hover */
+  }
+  
+  
+  
+  
+  .switch-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px; /* Increased margin for better spacing */
+  }
+  
+  .switch-label {
+    margin-right: 5px; /* More spacing around text */
+    color: #666; /* Softened text color for labels */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .input-container {
+      width: 90%; /* More width on smaller screens for usability */
+    }
+  }
+
+  .custom-file-upload {
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #0066ff 10%, #0056b3 90%);
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    display: inline-block;
+  }
+  
+  .custom-file-upload:hover {
+    background-color: #004494;
+  }
+  

@@ -6,13 +6,13 @@ import { auth, storage, ref, uploadBytes } from "./firebase";
 import { useNavigate } from "react-router-dom";
 import Switch from "react-ios-switch";
 import { faHandMiddleFinger } from "@fortawesome/free-solid-svg-icons";
+import "../AddPost.css";
 
 const AddPost = () => {
-
   const [postTitle, setPostTitle] = useState("");
   const [postDescription, setPostDescription] = useState("");
   const [postMedia, setPostMedia] = useState(null);
-  const [postMediaName, setPostMediaName] = useState("");
+  const [postMediaName, setPostMediaName] = useState("Add Post +");
   const [postTags, setPostTags] = useState("");
   const [isNewsAccount, setIsNewsAccount] = useState(false);
   const [isSong, setIsSong] = useState(false);
@@ -52,10 +52,7 @@ const AddPost = () => {
       .catch((error) => {
         console.error("Error:", error);
       });
-  })
-
-
-
+  });
 
   const handleSongSwitchChange = (newValue) => {
     setIsSong(newValue);
@@ -132,7 +129,7 @@ const AddPost = () => {
         laughs: 0,
       },
       isSong: isSong,
-      hiddenBy: []
+      hiddenBy: [],
     };
 
     // Attempt to submit the post
@@ -163,7 +160,7 @@ const AddPost = () => {
         media: postMediaName,
         tags: tagsArray,
         owner: auth.currentUser.uid,
-        isTag: isProducerTag
+        isTag: isProducerTag,
       };
       axios.post("http://localhost:5001/song", song);
     }
@@ -182,83 +179,89 @@ const AddPost = () => {
     <div>
       <SecondaryBanner />
       <div className="w-full h-full text-center pt-28 mb-96">
-        <div className="w-full h-full flex flex-col items-center pt-5">
-          <div className="w-1/2 h-1/2">
+        <div className="input-container">
+          <input
+            type="text"
+            placeholder="Title"
+            value={postTitle}
+            onChange={(e) => setPostTitle(e.target.value)}
+            className="input-field"
+          />
+          <textarea
+            placeholder="Description"
+            value={postDescription}
+            onChange={(e) => setPostDescription(e.target.value)}
+            className="textarea-field"
+          />
+          <div className="file-input-container">
+            <label htmlFor="file-upload" className="custom-file-upload">
+              {postMediaName}
+            </label>
             <input
-              type="text"
-              placeholder="Title"
-              value={postTitle}
-              onChange={(e) => setPostTitle(e.target.value)}
-              className="w-full h-10 mb-3 border-2 border-black"
-            />
-            <textarea
-              placeholder="Description"
-              value={postDescription}
-              onChange={(e) => setPostDescription(e.target.value)}
-              className="w-full h-32 mb-3 border-2 border-black"
-            />
-            <input
+              id="file-upload"
               type="file"
-              placeholder="Media"
               onChange={handleMediaChange}
-              className="w-full h-10 mb-3 border-2 border-black"
+              style={{ display: "none" }} // Hide the default file input
             />
-            {postMedia && isAudioOrVideo(postMediaName) && (
-              <div>
-                <div className="flex items-center justify-center mb-3">
-                  <span className="mr-2">Song</span>
-                  <Switch
-                    checked={isSong}
-                    onChange={handleSongSwitchChange} // Updated to use the new handler
-                    onColor="#007AFF"
-                    offColor="#E5E5EA"
-                  />
-                </div>
-                <div className="flex items-center justify-center mb-3">
-                  <span className="mr-2">Producer Tag</span>
-                  <Switch
-                    checked={isProducerTag}
-                    onChange={handleTagSwitchChange} // Updated to use the new handler
-                    onColor="#007AFF"
-                    offColor="#E5E5EA"
-                  />
-                </div>
-              </div>
-            )}
-            {isNewsAccount &&
-              <div className="flex items-center justify-center mb-3">
-                <span className="mr-2">News</span>
+          </div>
+
+          <div>&nbsp;</div>
+          {postMedia && isAudioOrVideo(postMediaName) && (
+            <div>
+              <div className="switch-container">
+                <span className="switch-label">Song</span>
                 <Switch
-                  checked={isNews}
-                  onChange={handleNewsSwitchChange} // Updated to use the new handler
+                  checked={isSong}
+                  onChange={handleSongSwitchChange}
                   onColor="#007AFF"
                   offColor="#E5E5EA"
                 />
               </div>
-            }
-            <div className="flex items-center justify-center mb-3">
-              <span className="mr-2">Job</span>
+              <div className="switch-container">
+                <span className="switch-label">Producer Tag</span>
+                <Switch
+                  checked={isProducerTag}
+                  onChange={handleTagSwitchChange}
+                  onColor="#007AFF"
+                  offColor="#E5E5EA"
+                />
+              </div>
+            </div>
+          )}
+          {isNewsAccount && (
+            <div className="switch-container">
+              <span className="switch-label">News</span>
               <Switch
-                checked={isJob}
-                onChange={handleJobSwitchChange} // Updated to use the new handler
+                checked={isNews}
+                onChange={handleNewsSwitchChange}
                 onColor="#007AFF"
                 offColor="#E5E5EA"
               />
             </div>
-            <input
-              type="text"
-              placeholder="Tags"
-              value={postTags}
-              onChange={(e) => setPostTags(e.target.value)}
-              className="w-full h-10 mb-3 border-2 border-black"
+          )}
+          <div className="switch-container">
+            <span className="switch-label">Job</span>
+            <Switch
+              checked={isJob}
+              onChange={handleJobSwitchChange}
+              onColor="#007AFF"
+              offColor="#E5E5EA"
             />
-            <button onClick={handleSubmit} className="w-full h-10 bg-blue-500">
-              Submit
-            </button>
           </div>
+          <input
+            type="text"
+            placeholder="Tags"
+            value={postTags}
+            onChange={(e) => setPostTags(e.target.value)}
+            className="input-field tags-input" // Added 'tags-input' class for specific styling
+          />
+          <button onClick={handleSubmit} className="button-submit">
+            Submit
+          </button>
         </div>
-        <SecondaryBottomBar />
       </div>
+
+      <SecondaryBottomBar />
     </div>
   );
 };
