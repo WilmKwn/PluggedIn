@@ -93,6 +93,7 @@ const Profile = () => {
     followers: [],
   });
   const [userPosts, setUserPosts] = useState([]);
+  const [userGalPosts, setUserGalPosts] = useState([]);
 
   const [userSkills, setUserSkills] = useState([]);
   useEffect(() => {
@@ -694,6 +695,11 @@ const Profile = () => {
         console.log("got posts");
         console.log(res.data);
         setUserPosts(res.data);
+        const filteredPosts = res.data.filter(post => {
+          const tags = post.tags || [];
+          return tags.includes("#song") || tags.includes("#job") || tags.includes("#news");
+        });
+        setUserGalPosts(filteredPosts);
       })
       .catch((error) => {
         console.error("Error getting posts:", error);
@@ -701,32 +707,53 @@ const Profile = () => {
   }, []);
 
   const Gallery = () => {
+    const [showPostNumber, setShowPostNumber] = useState(5);
+    const [areThereMorePosts, setAreThereMorePosts] = useState(5 <= userGalPosts.length);
+    const handleShowMore = () => {
+      setShowPostNumber(showPostNumber+5);
+      if (showPostNumber >= userGalPosts.length) {
+        setAreThereMorePosts(false);
+      }
+    }
     return (
-      <div className="w-1/3 h-full text-center pt-28 border-2 border-black">
-        <div>Gallery</div>
-        <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
-          <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
-            <p>HI</p>
-          </div>
+      <div class="w-1/3 flex-row h-auto overflow-y-hidden">
+        <div class="h-64 overflow-y-scroll text-center border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg ">
+          {userGalPosts.map((post, index) => (
+            index < showPostNumber &&(
+              <MicroPost key={index} postParam={post} />
+            )
+            
+          ))}
+          {areThereMorePosts ? 
+          <button className="button m-5" onClick={handleShowMore}>
+            Show More
+          </button> : <div className="p-5">No additional posts</div>}
         </div>
       </div>
     );
   };
 
   const Activity = () => {
+    const [showPostNumber, setShowPostNumber] = useState(5);
+    const [areThereMorePosts, setAreThereMorePosts] = useState(5 <= userPosts.length);
+    const handleShowMore = () => {
+      setShowPostNumber(showPostNumber+5);
+      if (showPostNumber >= userGalPosts.length) {
+        setAreThereMorePosts(false);
+      }
+    }
     return (
-      <div className="w-1/3 flex-row h-auto overflow-y-hidden">
-        <div className="h-full text-center pt-28 border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg overflow-y-scroll">
-          {/* <div>Activity</div>
-        <div className="overflow-y-auto w-full h-full flex flex-col items-center pt-5">
-          <div className="w-5/12 h-52 bg-gray-300 border-2 border-black mb-5">
-            <p>HI</p>
-          </div>
-        </div> */}
+      <div class="w-1/3 flex h-auto overflow-y-hidden">
+        <div class="h-64 flex-col pt-5 pr-5 pl-5 overflow-y-scroll text-center border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg ">
           {userPosts.map((post, index) => (
-            // <Card key={index} post={post} />
-            <MicroPost key={index} postParam={post} />
+            index < showPostNumber && (
+              <MicroPost key={index} postParam={post} />
+            )
           ))}
+          {areThereMorePosts ? 
+          <button className="button m-5" onClick={handleShowMore}>
+            Show More
+          </button> : <div className="p-5">No additional posts</div>}
         </div>
       </div>
     );
@@ -795,7 +822,7 @@ const Profile = () => {
 
 
     return (
-      <div className="h-full pt-28 flex flex-col items-center">
+      <div className="w-1/3 h-auto flex flex-col items-center justify-start">
         {userProfilePic.profilePic === "No file chosen" ? (
           <div className="w-40 h-40 bg-gray-300"></div>
         ) : (
@@ -1124,11 +1151,11 @@ const Profile = () => {
   }
 
   return (
-    <div>
+    <div >
       <Banner id={userId} />
 
       {!userData.blockedUsers.includes(loggedInId) ? (
-        <><div className="w-full h-full flex justify-around items-center">
+        <><div className="h-full flex justify-around items-start pt-40 pb-80">
           <Gallery />
           <ProfileInfo />
           <Activity />
