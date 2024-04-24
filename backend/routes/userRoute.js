@@ -246,11 +246,12 @@ router.delete('/:id/skills/:delSkill', async (req, res) => {
 router.delete('/:id/hashtags/:delHashtag', async (req, res) => {
     try {
         const { id, delHashtag } = req.params;
+        const modified = "#"+delHashtag;
         // Find the user by id
         const user = await User.findOne({ uid: id });
         // If user found, delete the skill
         if (user) {
-            user.hashtags = user.hashtags.filter(hashtag => hashtag != delHashtag);
+            user.hashtags = user.hashtags.filter(hashtag => hashtag != modified);
             await user.save();
             return res.status(200).json(user);
         } else {

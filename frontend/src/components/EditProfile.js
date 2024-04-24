@@ -111,11 +111,9 @@ const EditProfile = () => {
       axios.post(`http://localhost:5001/user/${userId}/hashtags`, { hashtag: temp })
         .then(response => {
           console.log('Hashtag added successfully:', response.data);
-          // Optionally, update the UI or handle success
         })
         .catch(error => {
           console.error('Error adding skill:', error);
-          // Optionally, handle the error or revert local state changes
         });
       setNewHashtag("");
     }
@@ -126,14 +124,12 @@ const EditProfile = () => {
     setHashtags(hashtags.filter((hashtag) => hashtag !== hashtagToDelete));
 
     // Make API call to delete skill from the user
-    axios.delete(`http://localhost:5001/user/${userId}/hashtags/${hashtagToDelete}`)
+    axios.delete(`http://localhost:5001/user/${userId}/hashtags/${hashtagToDelete.substring(1)}`)
       .then(response => {
-        console.log('Skill deleted successfully:', response.data);
-        // Optionally, update the UI or handle success
+        console.log('hastag deleted successfully:', response.data);
       })
       .catch(error => {
-        console.error('Error deleting skill:', error);
-        // Optionally, handle the error or revert local state changes
+        console.error('Error deleting hashtag:', error);
       });
   }
 
