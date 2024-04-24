@@ -106,22 +106,28 @@ const Search = () => {
         onClick={() => {
           artistClicked(artist.uid);
         }}
-        className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer"
+        className="card" // Apply the card class
       >
         {artist.realname}
       </div>
     );
   };
+
   const SongCard = ({ song }) => {
     return (
-      <div className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer">
-        Song
+      <div className="card">
+        {" "}
+        {/* Apply the card class */}
+        Song: {song.title}
       </div>
     );
   };
+
   const PostCard = ({ post }) => {
     return (
-      <div className="w-auto m-2 p-2 h-32 bg-gray-400 hover:scale-105 duration-200 cursor-pointer">
+      <div className="card">
+        {" "}
+        {/* Apply the card class */}
         {post.title}
       </div>
     );
@@ -140,6 +146,7 @@ const Search = () => {
             Explore
           </button>
         </div>
+        <div>&nbsp;</div>
         <input
           type="textSearch"
           placeholder="Enter here"
@@ -147,6 +154,7 @@ const Search = () => {
           onChange={(e) => updateSeatch(e)}
           className="w-2/3 h-12 border-2 border-black pl-3"
         />
+        <div>&nbsp;</div>
         <div className="w-1/5 flex justify-between mt-1 mb-1">
           {filters.map((filter, index) => (
             <div
@@ -166,6 +174,7 @@ const Search = () => {
             </div>
           ))}
         </div>
+        <div>&nbsp;</div>
 
         <div className="w-4/5 h-full flex justify-center ">
           {showArtists.length > 0 && filters[0].checked && (

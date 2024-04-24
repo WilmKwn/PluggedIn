@@ -1,20 +1,43 @@
 .buttonSearching {
-    background-color: #007bff; /* Vivid blue */
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
-    outline: none; /* Remove the outline to enhance appearance */
-  }
-  
-  .buttonSearching:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    transform: translateY(-2px); /* Slight lift effect on hover */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2); /* Subtle shadow for depth */
-  }
+  padding: 10px 20px; /* Adequate padding for better touch interaction */
+  background: linear-gradient(145deg, #6e8efb, #4a67d6); /* Modern gradient effect */
+  color: white; /* White text for high contrast */
+  border: none; /* No border for a clean look */
+  border-radius: 8px; /* Rounded corners for a softer, modern look */
+  cursor: pointer; /* Pointer to indicate it's clickable */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Subtle shadow for depth */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  display: inline-flex; /* Aligns text and icons */
+  align-items: center;
+  outline: none; /* Remove outline to enhance the clean appearance */
+}
+
+.buttonSearching:hover {
+  background: linear-gradient(145deg, #4a67d6, #6e8efb); /* Reverse gradient for interactive feel on hover */
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2); /* Slightly more pronounced shadow on hover */
+}
+
+.card {
+  width: auto;
+  margin: 2px;
+  padding: 20px; /* Adjusted to provide more padding inside the card */
+  height: auto; /* Auto height for flexibility based on content */
+  background: linear-gradient(145deg, #6e8efb, #4a67d6); /* Gradient background from the button style */
+  color: white; /* Text color for contrast */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Shadow for depth */
+  transition: transform 0.3s ease; /* Smooth transition for transform */
+  display: flex; /* Flex display to align items inside */
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center content horizontally */
+  cursor: pointer; /* Pointer to indicate it's clickable */
+  outline: none; /* No outline for a clean look */
+}
+
+.card:hover {
+  transform: scale(1.05); /* Slightly increase size on hover */
+}
+
 
   input[type="textSearch"] {
     width: 25%; /* Full width to maintain consistency */
