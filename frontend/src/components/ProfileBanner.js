@@ -38,8 +38,7 @@ const ProfileBanner = ({id}) => {
   }
   
   return (
-    <div className="">
-      <div className="fixed w-full flex justify-between items-center p-3 pl-10 pr-10 bg-emerald-950">
+      <div className="fixed-banner w-full flex justify-between items-center p-3 pl-10 pr-10 ">
         <div>
           <button onClick={handleBack}
             className="button">
@@ -65,7 +64,6 @@ const ProfileBanner = ({id}) => {
                 Sign Out <FontAwesomeIcon icon={faUserSlash} /></button>
         </nav>
       </div>
-    </div>
   );
 };
 

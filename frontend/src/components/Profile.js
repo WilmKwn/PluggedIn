@@ -716,18 +716,31 @@ const Profile = () => {
       }
     }
     return (
-      <div class="w-1/3 flex-row h-auto overflow-y-hidden">
-        <div class="h-64 overflow-y-scroll text-center border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg ">
+<div class="w-1/3 h-100 overflow-hidden"
+      style={{borderRadius: "8px", // Rounded corners
+      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",}}> 
+  <div class="h-full flex overflow-x-auto border-2 border-solid border-#283e4a rounded-md shadow-lg"
+    style={{
+      background: "linear-gradient(145deg, #4a67d6, #6e8efb)",
+      width: "calc(100% + 2rem)", 
+      marginLeft: "-1rem", 
+      marginRight: "-1rem",
+      borderRadius: "8px", // Rounded corners
+  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+    }}>
           {userGalPosts.map((post, index) => (
             index < showPostNumber &&(
+              <div class="flex-shrink-0 w-2/3 px-4 py-6">
+
               <MicroPost key={index} postParam={post} />
+              </div>
             )
             
           ))}
           {areThereMorePosts ? 
           <button className="button m-5" onClick={handleShowMore}>
             Show More
-          </button> : <div className="p-5">No additional posts</div>}
+          </button> : <div className="p-5 pt-20 pb-20 text-center">No additional posts</div>}
         </div>
       </div>
     );
@@ -743,19 +756,31 @@ const Profile = () => {
       }
     }
     return (
-      <div class="w-1/3 flex h-auto overflow-y-hidden">
-        <div class="h-64 flex-col pt-5 pr-5 pl-5 overflow-y-scroll text-center border-2 border-solid border-#283e4a bg-gradient-to-br from-emerald-950 to-gray-500 rounded-md shadow-lg ">
-          {userPosts.map((post, index) => (
-            index < showPostNumber && (
-              <MicroPost key={index} postParam={post} />
-            )
-          ))}
-          {areThereMorePosts ? 
+      <div class="w-1/3 h-100 overflow-hidden"
+      style={{borderRadius: "8px", // Rounded corners
+      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",}}> 
+  <div class="h-full flex overflow-x-auto border-2 border-solid border-#283e4a rounded-md shadow-lg"
+    style={{
+      background: "linear-gradient(145deg, #4a67d6, #6e8efb)",
+      width: "calc(100% + 2rem)", 
+      marginLeft: "-1rem", 
+      marginRight: "-1rem",
+      borderRadius: "8px", // Rounded corners
+  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+    }}>
+    {userPosts.map((post, index) => (
+      index < showPostNumber &&(
+      <div class="flex-shrink-0 w-2/3 px-4 py-6">
+        <MicroPost key={index} postParam={post} />
+      </div>
+      )
+    ))}
+    {areThereMorePosts ? 
           <button className="button m-5" onClick={handleShowMore}>
             Show More
-          </button> : <div className="p-5">No additional posts</div>}
-        </div>
-      </div>
+          </button> : <div className="p-5 pt-20 pb-20 text-center">No additional posts</div>}
+  </div>
+</div>
     );
   };
 
@@ -1155,7 +1180,7 @@ const Profile = () => {
       <Banner id={userId} />
 
       {!userData.blockedUsers.includes(loggedInId) ? (
-        <><div className="h-full flex justify-around items-start pt-40 pb-80">
+        <><div className="h-full flex justify-around items-start pl-10 pr-10 pt-40 pb-80">
           <Gallery />
           <ProfileInfo />
           <Activity />
