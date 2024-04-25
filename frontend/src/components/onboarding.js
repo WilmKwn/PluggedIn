@@ -182,7 +182,7 @@ const Onboarding = () => {
 
   return (
     <div className="app">
-      <header className="app-header">
+      <header className="app-header fixed-banner">
         <div>PluggedIn</div>
         <nav>
           <button onClick={handleSignOut}>Sign Out</button>

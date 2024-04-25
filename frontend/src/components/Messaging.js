@@ -378,7 +378,7 @@ const Messaging = ({ title }) => {
         <div className="modal-container">
           <header className="flex">
             <div className="messaging-banner flex justify-between items-center">
-              <h2 className="text-2xl p-5 text-white font-bold mb-4">
+              <h2 className="text-2xl p-5 text-black font-bold mb-4">
                 {title}
               </h2>
               <button onClick={closeModal} className="button m-5">

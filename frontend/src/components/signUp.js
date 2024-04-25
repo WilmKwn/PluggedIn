@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong, faSearch } from "@fortawesome/free-solid-svg-icons";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -48,10 +50,17 @@ const SignUp = () => {
         }
       });
   };
-
+  const handleBack = () => {
+    window.history.back();
+  };  
   return (
     <div className="app">
-      <header className="app-header">
+      <header className="app-header fixed-banner">
+      <div>
+            <button onClick={handleBack} className="button">
+              <FontAwesomeIcon icon={faArrowLeftLong} /> <div>&nbsp;</div>Back
+            </button>
+          </div>
         <div>Sign Up</div>
       </header>
 
