@@ -10,7 +10,7 @@
     bottom: 0; /* Position at the bottom */
     left: 0;
     z-index: 10; /* Ensures the footer stays above other content */
-    box-shadow: 0 -4px 8px rgba(0,0,0,0.15); /* Adjust shadow for upward effect */
+    box-shadow: 0 -4px 8px rgba(0,0,0,0.1); /* Adjust shadow for upward effect */
 }
 
 /* Adjust existing button styles to be suitable for the footer as well */

@@ -31,29 +31,31 @@ const MainBottomBar = () => {
     <Messaging />;
   };
   return (
-    <footer className="app-footer flex justify-between items-center">
-      <div className="pl-4">
-        <button onClick={handleSettings} className="button">
-          Settings <div>&nbsp;</div>
-          <FontAwesomeIcon icon={faGear} />
-        </button>
-      </div>
-      <div>
-        <button
-          onClick={handleAddPost}
-          className={`button ${location.pathname !== "/feed" && "hidden"}`}
-        >
-          Add Post <div>&nbsp;</div>
-          <FontAwesomeIcon icon={faAdd} />
-        </button>
-      </div>
-      <div className="pr-4">
-        <Messaging
-          title="Messages"
-          content="Here you will see your conversations."
-        />
-      </div>
-    </footer>
+    <div className="">
+      <footer className="app-footer flex justify-between items-center">
+        <div className="pl-4">
+          <button onClick={handleSettings} className="button">
+            Settings <div>&nbsp;</div>
+            <FontAwesomeIcon icon={faGear} />
+          </button>
+        </div>
+        <div>
+          <button
+            onClick={handleAddPost}
+            className={`button ${location.pathname !== "/feed" && "hidden"}`}
+          >
+            Add Post <div>&nbsp;</div>
+            <FontAwesomeIcon icon={faAdd} />
+          </button>
+        </div>
+        <div className="pr-4">
+          <Messaging
+            title="Messages"
+            content="Here you will see your conversations."
+          />
+        </div>
+      </footer>
+    </div>
   );
 };
 export default MainBottomBar;
