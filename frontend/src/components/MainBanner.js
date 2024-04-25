@@ -128,7 +128,7 @@ const MainBanner = () => {
           }}
           src={ringingBell}
           alt=""
-          className="noti-button"
+          className="noti-button w-10"
         />
       ) : (
         <button onClick={() => setOpenNoti(!openNoti)} className="noti-button">
