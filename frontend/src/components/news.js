@@ -27,7 +27,9 @@ const Feed = () => {
         fetchedPosts.map(async (post) => {
           const ownerResponse = await axios.get(`http://localhost:5001/user/${post.owner}`);
           const owner = ownerResponse.data;
-          if (owner.accountType === 2 && (post.tags.some(tag => userHashtags.includes(tag)) || post.tags.includes('#news'))) {
+          console.log(userHashtags);
+          console.log(post.tags)
+          if (owner.accountType === 2 && (post.tags.some(tag => userHashtags.includes(tag.toLowerCase())))) {
             return post;
           }
           return null;

@@ -60,6 +60,17 @@ const pageId = inId;
     }
     
   };
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:8282");
+    ws.onmessage = (event) => {
+      //fetchUserAndLoggedData();
+      //fetchAffiliationListData();
+      console.log("fetched");
+    };
+    //fetchUserAndLoggedData();
+    //fetchAffiliationListData();
+
+  }, []);
     const handleConnect = () => {
         console.log("connect");
         console.log(pageId);
@@ -84,7 +95,9 @@ const pageId = inId;
           if (messageText) {
             handleSendMessageWithConnection();  
           }
+          closeNoteModal();
       };
+
       const handleInputChange = (e) => {
         e.stopPropagation(); // Prevent the click event from propagating
         setMessageText(e.target.value); // Update the messageText state

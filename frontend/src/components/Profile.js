@@ -722,9 +722,10 @@ const Profile = () => {
   <div class="h-full flex overflow-x-auto border-2 border-solid border-#283e4a rounded-md shadow-lg"
     style={{
       background: "linear-gradient(145deg, #4a67d6, #6e8efb)",
-      width: "calc(100% + 2rem)", 
+      width: "calc(100%)", 
+      height: "500px",
       marginLeft: "-1rem", 
-      marginRight: "-1rem",
+      marginRight: "5rem",
       borderRadius: "8px", 
   boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     }}>
@@ -762,8 +763,9 @@ const Profile = () => {
   <div class="h-full flex overflow-x-auto border-2 border-solid border-#283e4a rounded-md shadow-lg"
     style={{
       background: "linear-gradient(145deg, #4a67d6, #6e8efb)",
-      width: "calc(100% + 2rem)", 
-      marginLeft: "-1rem", 
+      width: "calc(100%)", 
+      height: "500px",
+      marginLeft: "1rem", 
       marginRight: "-1rem",
       borderRadius: "8px",
   boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
@@ -847,7 +849,16 @@ const Profile = () => {
 
 
     return (
-      <div className="w-1/3 h-auto flex flex-col items-center justify-start">
+      <div className="w-1/3 overflow-y-scroll p-5 h-auto flex flex-col items-center justify-start"
+      style={{
+        background: "linear-gradient(0deg, #d8ddee, #6e8efb)",
+        width: "33%",
+        height: "500px", 
+        marginLeft: "-1rem", 
+        marginRight: "-1rem",
+        borderRadius: "8px",
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+      }}>
         {userProfilePic.profilePic === "No file chosen" ? (
           <div className="w-40 h-40 bg-gray-300"></div>
         ) : (
@@ -1104,7 +1115,7 @@ const Profile = () => {
           )}
 
         </div>
-        <div className="edit-profile-container">
+        <div className="edit-profile-container mb-20">
           <div className="skills-profile">
             <h2>Skills</h2>
             <ul>
@@ -1179,11 +1190,11 @@ const Profile = () => {
   }
 
   return (
-    <div >
+    <div>
       <Banner id={userId} />
 
       {!userData.blockedUsers.includes(loggedInId) ? (
-        <><div className="h-full flex justify-around items-start pl-10 pr-10 pt-40 pb-80">
+        <><div className="h-full flex overflow-y-hidden justify-around items-start pl-10 pr-10 pt-40 pb-80">
           <Gallery />
           <ProfileInfo />
           <Activity />
