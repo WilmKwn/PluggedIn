@@ -73,7 +73,7 @@
   /* Notification panel styling */
   .noti-panel {
     position: absolute;
-    width: 25%;
+    width: 10%;
     height: 320px; /* Fixed height */
     background-color: #808080;
     padding: 8px;

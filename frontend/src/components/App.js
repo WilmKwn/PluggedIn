@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import "../App.css"; // Ensure the path matches your project structure
+import "../Banner.css";
 
 library.add(faSearch);
 
