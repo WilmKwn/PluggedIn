@@ -697,7 +697,7 @@ const Profile = () => {
         setUserPosts(res.data);
         const filteredPosts = res.data.filter(post => {
           const tags = post.tags || [];
-          return tags.includes("#song") || tags.includes("#job") || tags.includes("#news");
+          return tags.includes("#song");
         });
         setUserGalPosts(filteredPosts);
       })
@@ -717,7 +717,7 @@ const Profile = () => {
     }
     return (
 <div class="w-1/3 h-100 overflow-hidden"
-      style={{borderRadius: "8px", // Rounded corners
+      style={{borderRadius: "8px", 
       boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",}}> 
   <div class="h-full flex overflow-x-auto border-2 border-solid border-#283e4a rounded-md shadow-lg"
     style={{
@@ -725,7 +725,7 @@ const Profile = () => {
       width: "calc(100% + 2rem)", 
       marginLeft: "-1rem", 
       marginRight: "-1rem",
-      borderRadius: "8px", // Rounded corners
+      borderRadius: "8px", 
   boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     }}>
           {userGalPosts.map((post, index) => (
@@ -757,7 +757,7 @@ const Profile = () => {
     }
     return (
       <div class="w-1/3 h-100 overflow-hidden"
-      style={{borderRadius: "8px", // Rounded corners
+      style={{borderRadius: "8px", 
       boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",}}> 
   <div class="h-full flex overflow-x-auto border-2 border-solid border-#283e4a rounded-md shadow-lg"
     style={{
@@ -765,7 +765,7 @@ const Profile = () => {
       width: "calc(100% + 2rem)", 
       marginLeft: "-1rem", 
       marginRight: "-1rem",
-      borderRadius: "8px", // Rounded corners
+      borderRadius: "8px",
   boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     }}>
     {userPosts.map((post, index) => (
@@ -859,12 +859,14 @@ const Profile = () => {
         <div>{userData.genre}</div>
         <div>{userData.description}</div>
         <div>{userData.projects}</div>
-        {userData.accountType === 0 ? (<div>
-          <button onClick={handleViewFriends}>View Friends</button>
+        {userData.accountType === 0 ? (
+          <><button class="button" onClick={handleViewFriends}>View Friends</button>
+        <div className="flex-col items-justify-center">
+          
 
           {showFriends && (friendArray.size > 0 ? (
-            <div>
-              <div>Friends</div>
+            <div className="flex-col items-justify-center">
+              <div className="align-center">{userData.realname}'s Friends</div>
               <div className="flex bg-gray-300">
                 {[...friendArray].map((affil, index) => (
                   <div key={index} className="flex items-center border-b border-gray-300 p-2">
@@ -886,10 +888,11 @@ const Profile = () => {
           ) : (friendArray.size === 0 && (<div>User does not yet have any affilitations</div>))
           )}
 
-        </div>) : (<></>)
+        </div></>) : (<></>)
         }
+                  <button class="button" onClick={handleViewAffiliations}>View Affiliations</button>
+
         <div>
-          <button onClick={handleViewAffiliations}>View Affiliations</button>
 
           {showAffiliations && (affiliationArray.size > 0 ? (
             <div>
