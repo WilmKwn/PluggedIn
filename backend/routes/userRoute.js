@@ -242,6 +242,7 @@ router.delete('/:id/skills/:delSkill', async (req, res) => {
         return res.status(500).send(err.message);
     }
 });
+aslkhafslajkjlk
 // delete hashtag from user
 router.delete('/:id/hashtags/:delHashtag', async (req, res) => {
     try {

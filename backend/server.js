@@ -38,7 +38,6 @@ mongoose.connect(process.env.MONGODB_URL).then((client) => {
             console.log("Client disconnected");
         });
     });
-    halhafhfasklfalkfhsaklfalkfsjlkfsaj
 
     const convoStream = mongoose.connection.collection('conversations').watch();
     const convoWss = new WebSocketServer({ port: 8181 });
